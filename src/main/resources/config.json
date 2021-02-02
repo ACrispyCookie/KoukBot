@@ -1,0 +1,11 @@
+{
+  "bot": {
+    "botToken": "NzY0OTM5MDEzNzc3Nzg0ODQz.X4Ni-A.nC9obC0lTCdzEgNL17qVtyKMGCk",
+    "guildId": 764909800890826823,
+    "prefix": "!"
+  },
+  "settings": {
+    "errorColor": "#c43333",
+    "announcementChannel": 785805196168527912
+  }
+}

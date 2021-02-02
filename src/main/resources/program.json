@@ -1,0 +1,194 @@
+{
+  "1": {
+    "monday": {
+      "type": "kat",
+      "bthet1": "MATHS",
+      "bthet2": "FYSIKH_KAT",
+      "anth": "ANCIENT_GREEK"
+    },
+    "tuesday": {
+      "type": "normal",
+      "b1": "PHYSICS",
+      "b2": "PHYSICS"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "GEOMETRY",
+      "b2": "HISTORY"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "ENGLISH",
+      "b2": "GEOMETRY"
+    },
+    "friday": {
+      "type": "normal",
+      "b1": "RELIGION",
+      "b2": "HISTORY"
+    }
+  },
+  "2": {
+    "monday": {
+      "type": "normal",
+      "b1": "LITERATURE",
+      "b2": "ENGLISH"
+    },
+    "tuesday": {
+      "type": "normal",
+      "b1": "CHEMISTRY",
+      "b2": "GYMNASTICS"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "HISTORY",
+      "b2": "ENGLISH"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "BIOLOGY",
+      "b2": "GREEK"
+    },
+    "friday": {
+      "type": "normal",
+      "b1": "ANTIGONH",
+      "b2": "PHILOSOPHY"
+    }
+  },
+  "3": {
+    "monday": {
+      "type": "normal",
+      "b1": "LITERATURE",
+      "b2": "ALGEBRA"
+    },
+    "tuesday": {
+      "type": "normal",
+      "b1": "GEOMETRY",
+      "b2": "RELIGION"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "CHEMISTRY",
+      "b2": "COMPUTER_SCIENCE"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "ALGEBRA",
+      "b2": "GREEK"
+    },
+    "friday": {
+      "type": "kat",
+      "bthet1": "MATHS",
+      "bthet2": "FYSIKH_KAT",
+      "anth": "ANCIENT_GREEK"
+    }
+  },
+  "4": {
+    "monday": {
+      "type": "normal",
+      "b1": "RELIGION",
+      "b2": "COMPUTER_SCIENCE"
+    },
+    "tuesday": {
+      "type": "kat",
+      "bthet1": "FYSIKH_KAT",
+      "bthet2": "MATHS",
+      "anth": "ANCIENT_GREEK"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "GREEK",
+      "b2": "CHEMISTRY"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "ANTIGONH",
+      "b2": "PHYSICS"
+    },
+    "friday": {
+      "type": "kat",
+      "bthet1": "FYSIKH_KAT",
+      "bthet2": "MATHS",
+      "anth": "LATIN"
+    }
+  },
+  "5": {
+    "monday": {
+      "type": "normal",
+      "b1": "ALGEBRA",
+      "b2": "CHEMISTRY"
+    },
+    "tuesday": {
+      "type": "kat",
+      "bthet1": "MATHS",
+      "bthet2": "MATHS",
+      "anth": "LATIN"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "GREEK",
+      "b2": "ALGEBRA"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "GYMNASTICS",
+      "b2": "ANTIGONH"
+    },
+    "friday": {
+      "type": "normal",
+      "b1": "ENGLISH",
+      "b2": "ALGEBRA"
+    }
+  },
+  "6": {
+    "monday": {
+      "type": "normal",
+      "b1": "PHYSICS",
+      "b2": "ANTIGONH"
+    },
+    "tuesday": {
+      "type": "normal",
+      "b1": "GYMNASTICS",
+      "b2": "LITERATURE"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "ALGEBRA",
+      "b2": "RELIGION"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "HISTORY",
+      "b2": "GYMNASTICS"
+    },
+    "friday": {
+      "type": "normal",
+      "b1": "PHILOSOPHY",
+      "b2": "BIOLOGY"
+    }
+  },
+  "7": {
+    "monday": {
+      "type": "lang"
+    },
+    "tuesday": {
+      "type": "normal",
+      "b1": "PHILOSOPHY",
+      "b2": "LITERATURE"
+    },
+    "wednesday": {
+      "type": "normal",
+      "b1": "COMPUTER_SCIENCE",
+      "b2": "BIOLOGY"
+    },
+    "thursday": {
+      "type": "normal",
+      "b1": "COMPUTER_SCIENCE",
+      "b2": "PHILOSOPHY"
+    },
+    "friday": {
+      "type": "normal",
+      "b1": "BIOLOGY",
+      "b2": "GEOMETRY"
+    }
+  }
+}

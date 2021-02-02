@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "GIVE_XP": [
+      0
+    ],
+    "REMOVE_XP": [
+      0
+    ]
+  }
+}
