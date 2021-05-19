@@ -3,6 +3,7 @@ package me.acrispycookie.commands;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.EmbedMessage;
 import me.acrispycookie.utility.Perm;
+import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
@@ -19,7 +20,8 @@ public class MessageCommand extends BotCommand {
     @Override
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
         if(Perm.hasPermission(m, Perm.MESSAGE)){
-            if(m.getGuild().getTextChannelById(args[0]) != null){
+            message.delete().queue();
+            if(Utils.isInt(args[0]) && m.getGuild().getTextChannelById(args[0]) != null){
                 TextChannel textChannel = m.getGuild().getTextChannelById(args[0]);
                 ArrayList<String> newArgs = new ArrayList<>(Arrays.asList(args));
                 newArgs.remove(0);
