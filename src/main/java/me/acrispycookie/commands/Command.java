@@ -15,7 +15,8 @@ public enum Command {
     LEVELS(new RankCommand(), new String[] {"levels", "leaderboard"}),
     HELP(new HelpCommand(), new String[]{"help", "?"}),
     TODO(new ToDoCommand(), new String[]{"todo", "task"}),
-    NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"});
+    NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
+    MESSAGE(new MessageCommand(), new String[]{"msg"});
 
     BotCommand botCommand;
     String[] aliases;

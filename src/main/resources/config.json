@@ -6,6 +6,8 @@
   },
   "settings": {
     "errorColor": "#c43333",
-    "announcementChannel": 785805196168527912
+    "announcementChannel": 785805196168527912,
+    "moviePollChannel": 828644608421789716,
+    "countToChannel": 841055069944152135
   }
 }

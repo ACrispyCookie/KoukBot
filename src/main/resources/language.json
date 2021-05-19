@@ -14,7 +14,8 @@
         "setcolor": "Please use the command like this:\n`%prefixsetcolor [member] <hex color>`\n\nArguments:\n`member` - Mention a member\n`hex color` - A color represented in hexadecimal (#ffffff - White)",
         "rank": "Please use the command like this:\n`%prefixrank [optional member]`\n\nArguments:\n`member` - Mention a member",
         "give-xp": "Please use the command like this:\n`%prefixgive-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number (smaller than 1 million)",
-        "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number"
+        "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
+        "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number"
       }
     },
     "success": {
@@ -39,7 +40,18 @@
         },
         "give-xp": "%1 XP have been given to %2",
         "remove-xp": "%1 XP have been taken from %2",
-        "help": "Here is a list of all the available commands:\n`%prefixrank` - Shows your server card.\n`%prefixgive-xp` - Gives you or another user xp.\n`%prefixremove-xp` - Removes xp from you or from another user.\n`%prefixsetperm` - Allow/Deny a permission from a role.\n`%prefixsetprefix` - Sets this bot's prefix."
+        "help": [
+          "Here is a list of all the available commands:",
+          "`%prefixrank` - Shows your server card.",
+          "`%prefixgive-xp` - Gives you or another user xp.",
+          "`%prefixremove-xp` - Removes xp from you or from another user.",
+          "`%prefixsetperm` - Allow/Deny a permission from a role.",
+          "`%prefixsetprefix` - Sets this bot's prefix.",
+          "`%prefixsetcolor` - Sets the color of your user card.",
+          "`%prefixnotify` - Notify a user while they are deafened.",
+          "`%prefixtodo` - Creates a todo for you until you declare it as done.",
+          "`%prefixmoviepoll` - Creates a movie poll."
+        ]
       }
     },
     "failed": {
@@ -51,6 +63,9 @@
           "not-deafened": "User not defeaned",
           "not-in-your-channel": "Not in your channel",
           "not-in-channel": "Not in a channel"
+        },
+        "moviepoll": {
+          "not-active": "Not Active"
         }
       },
       "description": {
@@ -62,6 +77,9 @@
           "not-in-your-channel": "This user is not in your voice channel!",
           "not-in-channel": "This user is not in a voice channel!",
           "user-not-in-channel": "You are not currently in a channel!"
+        },
+        "moviepoll": {
+          "not-active": "Movie poll is not currently active. \nTo start it please run the command `%prefixmoviepoll start <duration>`"
         }
       }
     }

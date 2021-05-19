@@ -1,4 +1,4 @@
-package me.acrispycookie.school.enums;
+package me.acrispycookie.managers.school.enums;
 
 import net.dv8tion.jda.api.entities.Role;
 
@@ -19,7 +19,7 @@ public enum EnumLesson {
     HISTORY("Ιστορία", "normal", "https://minedu-secondary.webex.com/meet/kardupap", "https://minedu-secondary.webex.com/meet/kardupap"),
     RELIGION("Θρησκευτικά", "normal", "https://minedu-secondary.webex.com/meet/asmitroula", "https://minedu-secondary.webex.com/meet/asmitroula"),
     PHILOSOPHY("Φιλοσοφία", "normal", "https://minedu-secondary.webex.com/meet/akaliakouda", "https://minedu-secondary.webex.com/meet/akaliakouda"),
-    MATHS("Μαθηματικά κατεύθυνσης", "kat", "https://minedu-secondary.webex.com/meet/gkdionysia", "https://minedu-secondary.webex.com/meet/mpatsas"),
+    MATHS("Μαθηματικά κατεύθυνσης", "kat", "https://minedu-secondary.webex.com/meet/mpatsas", "https://minedu-secondary.webex.com/meet/gkdionysia"),
     FYSIKH_KAT("Φυσική κατεύθυνσης", "kat", "https://minedu-secondary.webex.com/meet/chsaltas", "https://minedu-secondary.webex.com/meet/chsaltas"),
     ANCIENT_GREEK("Αρχαία κατεύθυνσης", "kat", "https://minedu-secondary.webex.com/meet/ehrantou", "https://minedu-secondary.webex.com/meet/ehrantou"),
     LATIN("Λατινικά", "kat", "https://minedu-secondary.webex.com/meet/ehrantou", "https://minedu-secondary.webex.com/meet/ehrantou");
@@ -43,6 +43,13 @@ public enum EnumLesson {
     public String getUrl(Role role) {
         switch (type) {
             case "kat":
+                if(this == EnumLesson.MATHS){
+                    if (role.getIdLong() == 787997819889516554L) {
+                        return b1url;
+                    } else if (role.getIdLong() == 788351437540687913L) {
+                        return b2url;
+                    }
+                }
             case "lang":
                 return b1url;
             case "normal":

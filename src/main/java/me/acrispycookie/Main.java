@@ -1,12 +1,12 @@
 package me.acrispycookie;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.acrispycookie.commands.BotCommand;
 import me.acrispycookie.levelsystem.MessageSentEvent;
 import me.acrispycookie.managers.*;
-import me.acrispycookie.school.SchoolManager;
+import me.acrispycookie.managers.MoviePollManager;
+import me.acrispycookie.managers.school.SchoolManager;
 import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,6 +17,7 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class Main {
 
@@ -28,6 +29,7 @@ public class Main {
     private SchoolManager schoolManager;
     private ProgramManager programManager;
     private ToDoManager toDoManager;
+    private MoviePollManager moviePollManager;
     private static Main instance;
 
     public Main(){
@@ -45,6 +47,7 @@ public class Main {
         main.startBot();
         main.loadSchoolManager();
         main.loadToDoManager();
+        //main.loadMoviePollManager();
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
     }
@@ -82,6 +85,7 @@ public class Main {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Sarine-Regular.ttf")));
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/PrimaSansBT-Roman.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Cera-Pro-Light.otf")));
         } catch (IOException|FontFormatException e) {
             e.printStackTrace();
             Console.println("Couldn't load the fonts!");
@@ -167,6 +171,24 @@ public class Main {
         Console.println("User data has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
+    private void loadMoviePollManager(){
+        long startTime = System.currentTimeMillis();
+        Console.println("Loading movie poll manager...");
+        try {
+            File dataFile = new File("./data/movie_polls.json");
+            if(!dataFile.exists()){
+                dataFile = getResource("movie_polls.json");
+                dataFile.createNewFile();
+            }
+            moviePollManager = new MoviePollManager(this, new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Console.println("Error occured while trying to load the user data file!");
+            System.exit(-1);
+        }
+        Console.println("Movie poll manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
     private void startBot(){
         long startTime = System.currentTimeMillis();
         Console.println("Starting discord bot...");
@@ -246,6 +268,10 @@ public class Main {
 
     public ToDoManager getToDoManager(){
         return toDoManager;
+    }
+
+    public MoviePollManager getMoviePollManager() {
+        return moviePollManager;
     }
 
     public User getDiscordUser(long discordId){

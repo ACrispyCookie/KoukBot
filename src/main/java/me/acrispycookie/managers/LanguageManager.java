@@ -42,9 +42,18 @@ public class LanguageManager {
                 element = element.getAsJsonObject().get(s);
             }
         }
-        return element.getAsString()
-                .replaceAll("%perms", getAvailablePerms())
-                .replaceAll("%prefix", Main.getInstance().getPrefix());
+        if(element.getAsJsonArray() != null){
+            return element.getAsString()
+                    .replaceAll("%perms", getAvailablePerms())
+                    .replaceAll("%prefix", Main.getInstance().getPrefix());
+        }
+        else{
+            StringBuilder content = new StringBuilder();
+            for(int i = 0; i < element.getAsJsonArray().size(); i++){
+                content.append(element.getAsJsonArray().get(i)).append("\n");
+            }
+            return content.toString();
+        }
     }
 
     public String getRandomLevelUp(ArrayList<String> special){

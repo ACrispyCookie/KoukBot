@@ -1,11 +1,11 @@
 package me.acrispycookie.managers;
 
 import com.google.gson.JsonObject;
-import me.acrispycookie.school.classes.KatLesson;
-import me.acrispycookie.school.classes.LangLesson;
-import me.acrispycookie.school.classes.Lesson;
-import me.acrispycookie.school.classes.NormalLesson;
-import me.acrispycookie.school.enums.EnumLesson;
+import me.acrispycookie.managers.school.classes.KatLesson;
+import me.acrispycookie.managers.school.classes.LangLesson;
+import me.acrispycookie.managers.school.classes.Lesson;
+import me.acrispycookie.managers.school.classes.NormalLesson;
+import me.acrispycookie.managers.school.enums.EnumLesson;
 
 import java.util.Calendar;
 

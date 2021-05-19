@@ -9,6 +9,7 @@ public enum Perm {
     GIVE_XP,
     REMOVE_XP,
     SET_PERMISSION,
+    MESSAGE,
     SET_COLOR_OTHER,
     SET_PREFIX;
 

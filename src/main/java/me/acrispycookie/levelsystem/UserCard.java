@@ -107,7 +107,7 @@ public class UserCard {
     }
 
     private void addTag(){
-        font = new Font("PrimaSansBT-Roman", Font.PLAIN, LARGE_FONT_SIZE);
+        font = new Font("Cera Pro", Font.PLAIN, LARGE_FONT_SIZE);
         graphics.setFont(font);
         int offsetX = width(getNameLine());
         graphics.setColor(WHITE);
@@ -207,7 +207,7 @@ public class UserCard {
     }
 
     private String getNameLine(){
-        return user.getDiscordUser().getName();
+        return user.getDiscordUser().getName().length() > 16 ? user.getDiscordUser().getName().substring(0,16) : user.getDiscordUser().getName();
     }
 
     private String getTag(){
