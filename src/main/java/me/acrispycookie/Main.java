@@ -234,6 +234,7 @@ public class Main {
     }
 
     public void reload(){
+        loadConfig();
         loadLanguage();
         loadPermissions();
         Main.getInstance().getUserDataManager().save();
