@@ -2,7 +2,11 @@
   "bot": {
     "botToken": "",
     "guildId": 764909800890826823,
-    "prefix": "!"
+    "prefix": "!",
+    "activity": {
+      "type": "WATCHING",
+      "status": "your school program"
+    }
   },
   "settings": {
     "errorColor": "#c43333",
