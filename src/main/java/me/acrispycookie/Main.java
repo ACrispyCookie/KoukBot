@@ -234,11 +234,11 @@ public class Main {
     }
 
     public void reload(){
-        loadConfig();
         loadLanguage();
         loadPermissions();
         Main.getInstance().getUserDataManager().save();
         loadUserData();
+        bot.getPresence().setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")));
         Console.println("Configuration files and user data have been reloaded successfully!");
     }
 
