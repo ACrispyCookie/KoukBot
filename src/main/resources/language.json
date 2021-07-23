@@ -28,8 +28,7 @@
         "remove-xp": "XP Removed",
         "help": "List of Commands",
         "setcolor": "Card color has changed",
-        "clear": "Chat cleared",
-        "panellhnies": "Reminder posted"
+        "clear": "Chat cleared"
       },
       "description": {
         "notify": "The mentioned user has been notified",
@@ -45,7 +44,6 @@
         "give-xp": "%1 XP have been given to %2",
         "remove-xp": "%1 XP have been taken from %2",
         "clear": "You have cleared %1 message from this channel",
-        "panellhnies": "Your reminder has been posted to the channel %1",
         "help": [
           "Here is a list of all the available commands:",
           "`%prefixrank` - Shows your server card.",

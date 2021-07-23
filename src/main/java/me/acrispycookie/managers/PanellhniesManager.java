@@ -32,10 +32,10 @@ public class PanellhniesManager {
 
     public void sendMessage(Member m, TextChannel channel){
         if(m == null){
-            channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ήρθε η ώρα να σας υπνεθυμίσω οτι γράφετε σε **" + getCountdown() + "**").queue();
+            this.channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ήρθε η ώρα να σας υπνεθυμίσω οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
         else{
-            this.channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
+            channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
     }
 
