@@ -30,19 +30,19 @@ public class PanellhniesManager {
         }
     }
 
-    public void sendMessage(Member m){
+    public void sendMessage(Member m, TextChannel channel){
         if(m == null){
             channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ήρθε η ώρα να σας υπνεθυμίσω οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
         else{
-            channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
+            this.channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
     }
 
     private void schedule(){
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         ses.schedule(() -> {
-            sendMessage(null);
+            sendMessage(null, null);
             PanellhniesManager.this.secondsLeft = getSecondsLeft();
             PanellhniesManager.this.schedule();
         }, secondsLeft, TimeUnit.SECONDS);

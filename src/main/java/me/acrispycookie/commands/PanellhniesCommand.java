@@ -14,7 +14,7 @@ public class PanellhniesCommand extends BotCommand{
 
     @Override
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
-        Main.getInstance().getPanellhniesManager().sendMessage(m);
+        Main.getInstance().getPanellhniesManager().sendMessage(m, t);
         message.delete().queue();
         t.sendMessage(new EmbedMessage(m.getUser(), Main.getInstance().getLanguageManager().get("commands.success.title.panellhnies"),
                 Main.getInstance().getLanguageManager().get("commands.success.description.panellhnies",
