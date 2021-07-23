@@ -38,21 +38,17 @@ public class ToDoCommand extends BotCommand {
                 Collection<Permission> denied = new ArrayList<>();
                 denied.add(Permission.MESSAGE_WRITE);
                 denied.add(Permission.VIEW_CHANNEL);
-                AtomicBoolean atomicBoolean = new AtomicBoolean(false);
-                AtomicLong channelId = new AtomicLong(0);
-                Main.getInstance().getGuild().createTextChannel(Main.getInstance().getDiscordUser(m.getIdLong()).getName()).setParent(Main.getInstance().getGuild().getCategoryById(803289238498050058L))
-                        .addMemberPermissionOverride(m.getIdLong(), allowed, null).addPermissionOverride(Main.getInstance().getGuild().getPublicRole(), null, denied).queue((q) -> {
-                    new ToDoChannel(m.getIdLong(), q.getIdLong());
-                    channelId.set(q.getIdLong());
-                    atomicBoolean.set(true);
+                Main.getInstance().getGuild().createTextChannel(
+                        Main.getInstance().getDiscordUser(m.getIdLong()).getName())
+                        .setParent(Main.getInstance().getGuild().getCategoryById(803289238498050058L))
+                        .addMemberPermissionOverride(m.getIdLong(), allowed, null)
+                        .addPermissionOverride(Main.getInstance().getGuild().getPublicRole(), null, denied).
+                        queue((q) -> {
+                    ToDoChannel channel = new ToDoChannel(m.getIdLong(), q.getIdLong());
+                    ToDo toDo = new ToDo(st, m.getUser().getIdLong(), q.getIdLong());
+                    toDo.send();
+                    channel.addToDo(toDo);
                 });
-                while (true){
-                    if(atomicBoolean.get()){
-                        break;
-                    }
-                }
-                ToDo toDo = new ToDo(st, m.getUser().getIdLong(), channelId.get());
-                toDo.send();
             }
             message.delete().queue();
         }

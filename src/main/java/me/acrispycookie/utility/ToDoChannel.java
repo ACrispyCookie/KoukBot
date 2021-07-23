@@ -55,8 +55,14 @@ public class ToDoChannel {
         return userId;
     }
 
+    public void addToDo(ToDo toDo){
+        toDos.add(toDo);
+    }
+
     public ToDo getByMessageId(long messageId){
         for(ToDo toDo : toDos){
+            System.out.println(toDo.getMessageId());
+            System.out.println(messageId + " real");
             if(toDo.getMessageId() == messageId){
                 return toDo;
             }

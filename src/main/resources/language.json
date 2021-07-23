@@ -15,7 +15,9 @@
         "rank": "Please use the command like this:\n`%prefixrank [optional member]`\n\nArguments:\n`member` - Mention a member",
         "give-xp": "Please use the command like this:\n`%prefixgive-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number (smaller than 1 million)",
         "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
-        "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number"
+        "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
+        "message": "Please use the command like this:\n`%prefixmessage [channel ID] <message>`\n\nArguments:\n`channel ID` - A channel ID\n`message` - Your message",
+        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number"
       }
     },
     "success": {
@@ -25,7 +27,9 @@
         "give-xp": "XP Added",
         "remove-xp": "XP Removed",
         "help": "List of Commands",
-        "setcolor": "Card color has changed"
+        "setcolor": "Card color has changed",
+        "clear": "Chat cleared",
+        "panellhnies": "Reminder posted"
       },
       "description": {
         "notify": "The mentioned user has been notified",
@@ -40,6 +44,8 @@
         },
         "give-xp": "%1 XP have been given to %2",
         "remove-xp": "%1 XP have been taken from %2",
+        "clear": "You have cleared %1 message from this channel",
+        "panellhnies": "Your reminder has been posted to the channel %1",
         "help": [
           "Here is a list of all the available commands:",
           "`%prefixrank` - Shows your server card.",
@@ -50,7 +56,9 @@
           "`%prefixsetcolor` - Sets the color of your user card.",
           "`%prefixnotify` - Notify a user while they are deafened.",
           "`%prefixtodo` - Creates a todo for you until you declare it as done.",
-          "`%prefixmoviepoll` - Creates a movie poll."
+          "`%prefixmoviepoll` - Creates a movie poll.",
+          "`%prefixclear` - Clears the chat.",
+          "`%prefixpanellhnies` - Remind yourself (and everyone else)."
         ]
       }
     },

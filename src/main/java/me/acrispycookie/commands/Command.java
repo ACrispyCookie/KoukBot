@@ -16,7 +16,9 @@ public enum Command {
     HELP(new HelpCommand(), new String[]{"help", "?"}),
     TODO(new ToDoCommand(), new String[]{"todo", "task"}),
     NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
-    MESSAGE(new MessageCommand(), new String[]{"msg"});
+    MESSAGE(new MessageCommand(), new String[]{"msg"}),
+    CLEAR(new ClearCommand(), new String[]{"clear"}),
+    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ"});
 
     BotCommand botCommand;
     String[] aliases;

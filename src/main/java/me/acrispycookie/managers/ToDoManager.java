@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.acrispycookie.utility.ToDo;
 import me.acrispycookie.utility.ToDoChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
@@ -39,16 +40,17 @@ public class ToDoManager extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()) != null) {
-            if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
-                ToDo todo = ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong());
-                if(!e.getUser().equals(e.getJDA().getSelfUser())){
-                    e.getReaction().removeReaction(e.getUser()).queue();
-                }
+        ToDoChannel channel = ToDoChannel.getByChannelId(e.getTextChannel().getIdLong());
+        if(channel != null) {
+            ToDo todo = channel.getByMessageId(e.getMessageIdLong());
+            if(todo != null){
                 if(e.getUserIdLong() == todo.getUserId()){
                     if(e.getReactionEmote().getIdLong() == 801012687806529556L){
                         todo.remove();
                     }
+                }
+                else if(!e.getUser().equals(e.getJDA().getSelfUser())){
+                    e.getReaction().removeReaction(e.getUser()).queue();
                 }
             }
         }

@@ -11,7 +11,8 @@ public enum Perm {
     SET_PERMISSION,
     MESSAGE,
     SET_COLOR_OTHER,
-    SET_PREFIX;
+    SET_PREFIX,
+    CLEAR;
 
     public static boolean hasPermission(Member user, Perm permission){
         if(user.getPermissions().contains(Permission.ADMINISTRATOR)){

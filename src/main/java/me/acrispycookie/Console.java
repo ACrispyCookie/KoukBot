@@ -45,8 +45,10 @@ public class Console {
         else if(cmd == ConsoleCommand.RESTART){
             try {
                 System.out.println("Restarting...");
-                Desktop.getDesktop().open(new File("start.bat"));
-                Main.getInstance().disable();
+                String scriptPath = new File("start.sh").getAbsolutePath();
+                String[] commands = new String[] {"C:\\Program Files\\Git\\git-bash.exe", scriptPath};
+                ProcessBuilder pb = new ProcessBuilder(commands);
+                pb.start();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("Start batch file not found! Exiting...");

@@ -42,7 +42,7 @@ public class LanguageManager {
                 element = element.getAsJsonObject().get(s);
             }
         }
-        if(element.getAsJsonArray() != null){
+        if(!element.isJsonArray()){
             return element.getAsString()
                     .replaceAll("%perms", getAvailablePerms())
                     .replaceAll("%prefix", Main.getInstance().getPrefix());
@@ -50,7 +50,10 @@ public class LanguageManager {
         else{
             StringBuilder content = new StringBuilder();
             for(int i = 0; i < element.getAsJsonArray().size(); i++){
-                content.append(element.getAsJsonArray().get(i)).append("\n");
+                content.append(element.getAsJsonArray().get(i)
+                        .getAsString()
+                        .replaceAll("%perms", getAvailablePerms())
+                        .replaceAll("%prefix", Main.getInstance().getPrefix())).append("\n");
             }
             return content.toString();
         }

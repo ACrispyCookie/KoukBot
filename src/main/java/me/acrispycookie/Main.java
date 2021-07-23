@@ -30,6 +30,7 @@ public class Main {
     private ProgramManager programManager;
     private ToDoManager toDoManager;
     private MoviePollManager moviePollManager;
+    private PanellhniesManager panellhniesManager;
     private static Main instance;
 
     public Main(){
@@ -47,6 +48,7 @@ public class Main {
         main.startBot();
         main.loadSchoolManager();
         main.loadToDoManager();
+        main.loadPanellhniesManager();
         //main.loadMoviePollManager();
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
@@ -171,6 +173,13 @@ public class Main {
         Console.println("User data has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
+    private void loadPanellhniesManager(){
+        long startTime = System.currentTimeMillis();
+        Console.println("Loading panellhnies manager...");
+        panellhniesManager = new PanellhniesManager(this);
+        Console.println("Panellhnies manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
     private void loadMoviePollManager(){
         long startTime = System.currentTimeMillis();
         Console.println("Loading movie poll manager...");
@@ -273,6 +282,10 @@ public class Main {
 
     public MoviePollManager getMoviePollManager() {
         return moviePollManager;
+    }
+
+    public PanellhniesManager getPanellhniesManager() {
+        return panellhniesManager;
     }
 
     public User getDiscordUser(long discordId){
