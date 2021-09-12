@@ -71,7 +71,8 @@
           "not-in-channel": "Not in a channel"
         },
         "moviepoll": {
-          "not-active": "Not Active"
+          "not-active": "Not Active",
+          "already-active": "Already Active"
         }
       },
       "description": {
@@ -85,7 +86,8 @@
           "user-not-in-channel": "You are not currently in a channel!"
         },
         "moviepoll": {
-          "not-active": "Movie poll is not currently active. \nTo start it please run the command `%prefixmoviepoll start <duration>`"
+          "not-active": "Movie poll is not currently active. \nTo start it please run the command `%prefixmoviepoll start <duration>`",
+          "already-active": "Movie poll is already active. \nTo stop it please run the command `%prefixmoviepoll stop`"
         }
       }
     }

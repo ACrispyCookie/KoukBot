@@ -2,7 +2,6 @@ package me.acrispycookie.commands;
 
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.EmbedMessage;
-import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
@@ -16,7 +15,7 @@ public class MovieCommand extends BotCommand {
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
         boolean isActive = Main.getInstance().getMoviePollManager().isActive();
         if(args.length == 1){
-            if(args[0].equals("stop")){
+            if(args[0].equals("cancel")){
                 if(isActive){
                     Main.getInstance().getMoviePollManager().getActive().end();
                 }
@@ -31,9 +30,6 @@ public class MovieCommand extends BotCommand {
             else{
                 invalidUsage(m, t);
             }
-        }
-        else if(args.length == 2 && args[0].equals("start")){
-
         }
         else if(args.length >= 2){
             if(isActive){

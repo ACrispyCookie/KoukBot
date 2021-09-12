@@ -1,8 +1,8 @@
-package me.acrispycookie.managers.school;
+package me.acrispycookie.school.managers;
 
 import me.acrispycookie.Console;
 import me.acrispycookie.Main;
-import me.acrispycookie.managers.school.classes.Lesson;
+import me.acrispycookie.school.classes.Lesson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

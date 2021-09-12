@@ -6,7 +6,10 @@ import me.acrispycookie.commands.BotCommand;
 import me.acrispycookie.levelsystem.MessageSentEvent;
 import me.acrispycookie.managers.*;
 import me.acrispycookie.managers.MoviePollManager;
-import me.acrispycookie.managers.school.SchoolManager;
+import me.acrispycookie.school.managers.PanellhniesManager;
+import me.acrispycookie.school.managers.ProgramCreatorManager;
+import me.acrispycookie.school.managers.ProgramManager;
+import me.acrispycookie.school.managers.SchoolManager;
 import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -17,7 +20,6 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
-import java.util.concurrent.*;
 
 public class Main {
 
@@ -31,6 +33,7 @@ public class Main {
     private ToDoManager toDoManager;
     private MoviePollManager moviePollManager;
     private PanellhniesManager panellhniesManager;
+    private ProgramCreatorManager programCreator;
     private static Main instance;
 
     public Main(){
@@ -46,9 +49,8 @@ public class Main {
         main.loadLanguage();
         main.loadUserData();
         main.startBot();
-        main.loadSchoolManager();
+        main.loadSchoolManagers();
         main.loadToDoManager();
-        main.loadPanellhniesManager();
         //main.loadMoviePollManager();
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
@@ -88,6 +90,9 @@ public class Main {
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Sarine-Regular.ttf")));
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/PrimaSansBT-Roman.otf")));
             ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Cera-Pro-Light.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Cera-Pro-Medium.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Cera-Pro-Bold.otf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("./images/Cera-Pro-Black.otf")));
         } catch (IOException|FontFormatException e) {
             e.printStackTrace();
             Console.println("Couldn't load the fonts!");
@@ -173,13 +178,6 @@ public class Main {
         Console.println("User data has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
-    private void loadPanellhniesManager(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Loading panellhnies manager...");
-        panellhniesManager = new PanellhniesManager(this);
-        Console.println("Panellhnies manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-
     private void loadMoviePollManager(){
         long startTime = System.currentTimeMillis();
         Console.println("Loading movie poll manager...");
@@ -218,13 +216,24 @@ public class Main {
         Console.println("Bot has started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
-    private void loadSchoolManager(){
+    private void loadSchoolManagers(){
         long startTime = System.currentTimeMillis();
-        Console.println("Starting school announcement manager...");
-        loadProgramManager();
-        long channelId = Long.parseLong(configManager.get("settings.announcementChannel"));
-        schoolManager = new SchoolManager(channelId, instance);
-        Console.println("Announcement manager has started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        Console.println("Starting school managers...");
+        if(Boolean.parseBoolean(configManager.get("settings.schoolManagerEnabled"))){
+            loadProgramManager();
+            long channelId = Long.parseLong(configManager.get("settings.announcementChannel"));
+            schoolManager = new SchoolManager(channelId, instance);
+        }
+        loadPanellhniesManager();
+        loadProgramCreatorManager();
+        Console.println("School managers have started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    private void loadPanellhniesManager(){
+        long startTime = System.currentTimeMillis();
+        Console.println("Loading panellhnies manager...");
+        panellhniesManager = new PanellhniesManager(this);
+        Console.println("Panellhnies manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
     private void loadProgramManager(){
@@ -239,6 +248,23 @@ public class Main {
             e.printStackTrace();
             Console.println("Error occured while trying to load the program file!");
             System.exit(-1);
+        }
+    }
+
+    private void loadProgramCreatorManager(){
+        try {
+            long startTime = System.currentTimeMillis();
+            Console.println("Loading program creator manager...");
+            File programCreatorFile = new File("./data/program_creator.json");
+            if(!programCreatorFile.exists()){
+                programCreatorFile = getResource("program_creator.json");
+                programCreatorFile.createNewFile();
+            }
+            programCreator = new ProgramCreatorManager(this, new Gson().fromJson(new FileReader(programCreatorFile), JsonObject.class));
+            bot.addEventListener(programCreator);
+            Console.println("Program creator has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        } catch (IOException e){
+            e.printStackTrace();
         }
     }
 
@@ -286,6 +312,10 @@ public class Main {
 
     public PanellhniesManager getPanellhniesManager() {
         return panellhniesManager;
+    }
+
+    public ProgramCreatorManager getProgramCreator(){
+        return programCreator;
     }
 
     public User getDiscordUser(long discordId){

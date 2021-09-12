@@ -1,4 +1,4 @@
-package me.acrispycookie.managers.school.classes;
+package me.acrispycookie.school.classes;
 
 public abstract class Lesson {
 

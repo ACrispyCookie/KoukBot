@@ -36,6 +36,20 @@ public class ConfigManager {
         save();
     }
 
+    public void set(String key, JsonElement value){
+        String[] parents = key.split("\\.");
+        JsonObject finalParent = null;
+        for(int i = 0; i < parents.length - 1; i++){
+            if(finalParent == null){
+                finalParent = config.getAsJsonObject(parents[i]);
+                continue;
+            }
+            finalParent = finalParent.getAsJsonObject(parents[i]);
+        }
+        finalParent.add(parents[parents.length - 1], value);
+        save();
+    }
+
     private void save(){
         try {
             FileWriter file = new FileWriter("./data/config.json");

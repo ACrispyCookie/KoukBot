@@ -1,7 +1,7 @@
-package me.acrispycookie.managers.school;
+package me.acrispycookie.school;
 
 import me.acrispycookie.Main;
-import me.acrispycookie.managers.school.enums.EnumLesson;
+import me.acrispycookie.school.enums.EnumLesson;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.concurrent.Executors;

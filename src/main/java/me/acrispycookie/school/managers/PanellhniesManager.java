@@ -1,4 +1,4 @@
-package me.acrispycookie.managers;
+package me.acrispycookie.school.managers;
 
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.Time;

@@ -40,7 +40,7 @@ public class ToDo {
         EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId), "**NEW TO-DO FOR:** __" + Main.getInstance().getDiscordUser(userId).getAsTag() + "__", "Task: " + content +
                 "\n\nReact with " + Main.getInstance().getGuild().getEmoteById(801012687806529556L).getAsMention() + " to complete this task!");
         Emote emote = Main.getInstance().getGuild().retrieveEmoteById(801012687806529556L).complete();
-        Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage(msg.build()).queue((q) -> {
+        Main.getInstance().getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build()).queue((q) -> {
             q.addReaction(emote).queue();
             this.messageId = q.getIdLong();
             save();
@@ -50,7 +50,7 @@ public class ToDo {
     public void remove(){
         EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId), "**TO-DO TASK COMPLETED FOR:** __" + Main.getInstance().getDiscordUser(userId).getAsTag() + "__",
                 Main.getInstance().getDiscordUser(userId).getAsMention() + " you have completed your task! Deleting...");
-        Main.getInstance().getGuild().getTextChannelById(channelId).editMessageById(messageId, msg.build()).queue((q) -> {
+        Main.getInstance().getGuild().getTextChannelById(channelId).editMessageEmbedsById(messageId, msg.build()).queue((q) -> {
             q.delete().queueAfter(10, TimeUnit.SECONDS);
         });
         removeFromConfig();

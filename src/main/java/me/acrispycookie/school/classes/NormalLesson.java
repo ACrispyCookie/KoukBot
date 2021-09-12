@@ -1,8 +1,8 @@
-package me.acrispycookie.managers.school.classes;
+package me.acrispycookie.school.classes;
 
 import me.acrispycookie.Main;
-import me.acrispycookie.managers.school.Announcement;
-import me.acrispycookie.managers.school.enums.EnumLesson;
+import me.acrispycookie.school.Announcement;
+import me.acrispycookie.school.enums.EnumLesson;
 
 public class NormalLesson extends Lesson{
 
