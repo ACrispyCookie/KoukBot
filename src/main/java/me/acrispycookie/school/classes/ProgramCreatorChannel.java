@@ -168,7 +168,9 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             }
             else if(reactions.contains(reaction)){
                 int lesson = reactions.indexOf(reaction);
-                maxStage++;
+                if(stage == maxStage){
+                    maxStage++;
+                }
                 if(stage == 0){
                     data.add(String.valueOf(stage), new JsonPrimitive(lesson == 0 ? "m" : "a"));
                 }
