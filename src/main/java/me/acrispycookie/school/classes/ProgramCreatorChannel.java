@@ -181,8 +181,8 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                     data.add(String.valueOf(stage), new JsonPrimitive(String.valueOf(lesson)));
                 }
                 nextStage();
-                save();
             }
+            save();
         }
     }
 
