@@ -9,15 +9,18 @@ import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     Main main;
     User user;
     int stage;
+    int maxStage;
     Message message;
     JsonObject data;
     static ArrayList<ProgramCreatorChannel> channels = new ArrayList<>();
@@ -49,17 +53,19 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         this.main = main;
         this.user = user;
         this.stage = 0;
+        this.maxStage = 0;
         this.data = new JsonObject();
         channels.add(this);
         create();
         main.getGuild().getJDA().addEventListener(this);
     }
 
-    public ProgramCreatorChannel(Main main, long userId, long channelId, long messageId, int stage, JsonObject data){
+    public ProgramCreatorChannel(Main main, long userId, long channelId, long messageId, int stage, int maxStage, JsonObject data){
         this.main = main;
         this.user = main.getDiscordUser(userId);
         this.message = main.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete();
         this.stage = stage;
+        this.maxStage = maxStage;
         this.data = data;
         channels.add(this);
         setVars();
@@ -97,26 +103,33 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         if(stage == totalStages){
             complete();
         }
-        else if(stage + 1 == totalStages){
-            message.editMessageEmbeds(getNextMessage()).queue((m) -> {
-                m.clearReactions().queue();
-                for(String s : getReactions()){
-                    m.addReaction(s).queue();
-                }
-                ProgramCreatorChannel.this.message = m;
-            });
-        }
         else{
             message.editMessageEmbeds(getNextMessage()).queue((m) -> {
-                if(stage == 1){
+                if(stage == 1 || stage + 1 == totalStages){
                     m.clearReactions().queue();
                     for(String s : getReactions()){
                         m.addReaction(s).queue();
                     }
                 }
+                checkArrowReactions();
                 ProgramCreatorChannel.this.message = m;
             });
         }
+    }
+
+    public void previousStage(){
+        stage--;
+        setVars();
+        message.editMessageEmbeds(getNextMessage()).queue((m) -> {
+            if(stage + 2 == totalStages){
+                m.clearReactions().queue();
+                for(String s : getReactions()){
+                    m.addReaction(s).queue();
+                }
+            }
+            checkArrowReactions();
+            ProgramCreatorChannel.this.message = m;
+        });
     }
 
     private void complete(){
@@ -146,8 +159,16 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             e.getReaction().removeReaction(e.getUser()).queue();
             if(reaction.equals("❌")){ //cancel emote
                 cancel();
-            } else if(reactions.contains(reaction)){
+            }
+            else if(reaction.equals("◀") && stage > 1){
+                previousStage();
+            }
+            else if(reaction.equals("▶") && stage < maxStage){
+                nextStage();
+            }
+            else if(reactions.contains(reaction)){
                 int lesson = reactions.indexOf(reaction);
+                maxStage++;
                 if(stage == 0){
                     data.add(String.valueOf(stage), new JsonPrimitive(lesson == 0 ? "m" : "a"));
                 }
@@ -186,6 +207,10 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         return stage;
     }
 
+    public int getMaxStage() {
+        return maxStage;
+    }
+
     public Message getMessage() {
         return message;
     }
@@ -215,15 +240,13 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     }
 
     private ArrayList<String> getReactions(){
+        ArrayList<String> list = new ArrayList<>();
         if(stage == 0){
-            ArrayList<String> list = new ArrayList<>();
             list.add("1️⃣"); //1 button
             list.add("2️⃣"); //2 button
             list.add("❌"); //cancel button
-            return list;
         }
         else if(stage + 1 == totalStages){
-            ArrayList<String> list = new ArrayList<>();
             list.add("🟥");
             list.add("🟧");
             list.add("🟨");
@@ -232,15 +255,28 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             list.add("🟪");
             list.add("🟫");
             list.add("⬛");
-            return list;
         }
         else {
-            ArrayList<String> reactions = new ArrayList<>();
             for(EnumLesson l : EnumLesson.values()){
-                reactions.add(l.getEmoji());
+                list.add(l.getEmoji());
             }
-            reactions.add("❌"); //cancel button
-            return reactions;
+            list.add("❌"); //cancel button
+        }
+        return list;
+    }
+
+    private void checkArrowReactions(){
+        if(stage > 1){
+            message.addReaction("◀").queue();
+        }
+        else{
+            message.removeReaction("◀").queue();
+        }
+        if(stage < maxStage){
+            message.addReaction("▶").queue();
+        }
+        else{
+            message.removeReaction("▶").queue();
         }
     }
 
@@ -373,6 +409,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             ImageIO.write(finalImage, "png", bytes);
             bytes.flush();
+            FileUtils.writeByteArrayToFile(new File("./saved-programs/" + user.getName() + "-" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(System.currentTimeMillis()))), bytes.toByteArray());
             message.getTextChannel().sendFile(bytes.toByteArray(), "program.png").queue();
         } catch (IOException e) {
             e.printStackTrace();

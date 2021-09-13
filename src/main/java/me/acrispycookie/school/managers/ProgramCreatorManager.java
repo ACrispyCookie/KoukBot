@@ -71,6 +71,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
                     object.getAsJsonObject(key).get("channel").getAsLong(),
                     object.getAsJsonObject(key).get("message").getAsLong(),
                     object.getAsJsonObject(key).get("stage").getAsInt(),
+                    object.getAsJsonObject(key).get("maxStageReached").getAsInt(),
                     object.getAsJsonObject(key).getAsJsonObject("data"));
         }
     }
@@ -80,6 +81,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
         JsonObject finished = new JsonObject();
         finished.add("channel", new JsonPrimitive(channel.getMessage().getTextChannel().getIdLong()));
         finished.add("message", new JsonPrimitive(channel.getMessage().getIdLong()));
+        finished.add("maxStageReached", new JsonPrimitive(channel.getMaxStage()));
         finished.add("stage", new JsonPrimitive(channel.getStage()));
         finished.add("data", data);
         object.add(String.valueOf(channel.getUser().getIdLong()), finished);
