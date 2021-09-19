@@ -28,10 +28,11 @@ public class Main {
     private PermissionManager permissionManager;
     private ConfigManager configManager;
     private UserDataManager userDataManager;
-    private SchoolManager schoolManager;
-    private ProgramManager programManager;
     private ToDoManager toDoManager;
     private MoviePollManager moviePollManager;
+    private MusicManager musicManager;
+    private SchoolManager schoolManager;
+    private ProgramManager programManager;
     private PanellhniesManager panellhniesManager;
     private ProgramCreatorManager programCreator;
     private static Main instance;
@@ -51,6 +52,7 @@ public class Main {
         main.startBot();
         main.loadSchoolManagers();
         main.loadToDoManager();
+        main.loadMusicManager();
         //main.loadMoviePollManager();
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
@@ -58,6 +60,7 @@ public class Main {
 
     public void disable(){
         Main.getInstance().getUserDataManager().save();
+        Main.getInstance().getMusicManager().stop();
         bot.shutdown();
         Console.println("Άντε παιδιά.. Καλη όρεξη");
         System.exit(-1);
@@ -190,11 +193,19 @@ public class Main {
             moviePollManager = new MoviePollManager(this, new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the user data file!");
+            Console.println("Error occured while trying to load the movie poll data file!");
             System.exit(-1);
         }
         Console.println("Movie poll manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
+
+    private void loadMusicManager(){
+        long startTime = System.currentTimeMillis();
+        Console.println("Loading music manager...");
+        musicManager = new MusicManager(this);
+        Console.println("Music manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
 
     private void startBot(){
         long startTime = System.currentTimeMillis();
@@ -316,6 +327,10 @@ public class Main {
 
     public ProgramCreatorManager getProgramCreator(){
         return programCreator;
+    }
+
+    public MusicManager getMusicManager() {
+        return musicManager;
     }
 
     public User getDiscordUser(long discordId){

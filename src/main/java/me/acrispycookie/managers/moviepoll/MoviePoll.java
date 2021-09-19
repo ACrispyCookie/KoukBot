@@ -1,4 +1,4 @@
-package me.acrispycookie.moviepoll;
+package me.acrispycookie.managers.moviepoll;
 
 import me.acrispycookie.Main;
 

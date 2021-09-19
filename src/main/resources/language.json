@@ -17,7 +17,8 @@
         "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
         "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
         "message": "Please use the command like this:\n`%prefixmessage [channel ID] <message>`\n\nArguments:\n`channel ID` - A channel ID\n`message` - Your message",
-        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number"
+        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number",
+        "play": "Please use the command like this:\n`%prefixplay <video>`\n\nArguments:\n`video` - A search term or a link for a video"
       }
     },
     "success": {
@@ -28,7 +29,16 @@
         "remove-xp": "XP Removed",
         "help": "List of Commands",
         "setcolor": "Card color has changed",
-        "clear": "Chat cleared"
+        "clear": "Chat cleared",
+        "play": {
+          "now-playing": "▶ Now Playing",
+          "queued": "Queued song"
+        },
+        "pause": "⏸ Paused player",
+        "resume": "▶ Resumed player",
+        "stop": "⏹ Stopped player",
+        "next": "⏭ Jumped to the next song",
+        "previous": "⏮ Jumped to the previous song"
       },
       "description": {
         "notify": "The mentioned user has been notified",
@@ -46,18 +56,43 @@
         "clear": "You have cleared %1 message from this channel",
         "help": [
           "Here is a list of all the available commands:",
+          "",
+          "**__Ranks:__**",
           "`%prefixrank` - Shows your server card.",
           "`%prefixgive-xp` - Gives you or another user xp.",
           "`%prefixremove-xp` - Removes xp from you or from another user.",
+          "",
+          "**__School:__**",
+          "`%prefixtodo` - Creates a todo for you until you declare it as done.",
+          "`%prefixpanellhnies` - Remind yourself (and everyone else).",
+          "",
+          "**__Music:__**",
+          "`%prefixplay` - Play a video from YouTube.",
+          "`%prefixpause` - Pause the playlist.",
+          "`%prefixresume` - Resume the playlist.",
+          "`%prefixnext` - Skip to the next song on the playlist.",
+          "`%prefixprevious` - Go back to the previous song on the playlist.",
+          "`%prefixstop` - Stop the playlist.",
+          "",
+          "**__Movies:__**",
+          "`%prefixmoviepoll` - Creates a movie poll.",
+          "",
+          "**__Utility:__**",
           "`%prefixsetperm` - Allow/Deny a permission from a role.",
           "`%prefixsetprefix` - Sets this bot's prefix.",
           "`%prefixsetcolor` - Sets the color of your user card.",
           "`%prefixnotify` - Notify a user while they are deafened.",
-          "`%prefixtodo` - Creates a todo for you until you declare it as done.",
-          "`%prefixmoviepoll` - Creates a movie poll.",
-          "`%prefixclear` - Clears the chat.",
-          "`%prefixpanellhnies` - Remind yourself (and everyone else)."
-        ]
+          "`%prefixclear` - Clears the chat."
+        ],
+        "play": {
+          "now-playing": "%1 [%2]",
+          "queued": "Queued %1 [%2]"
+        },
+        "pause": "The player has been paused. [%1]",
+        "resume": "The player has been resumed. [%1]",
+        "stop": "The player has been stopped. [%1]",
+        "next": "The player has jumped one song forward. %1 [%2]",
+        "previous": "The player has jumped one song backwards. %1 [%2]"
       }
     },
     "failed": {
@@ -73,9 +108,31 @@
         "moviepoll": {
           "not-active": "Not Active",
           "already-active": "Already Active"
+        },
+        "play": {
+          "not-playing": "Not playing",
+          "already-playing": "Already playing",
+          "not-in-channel": "Not in a channel",
+          "not-in-your-channel": "Not in your channel",
+          "no-matches": "No matched found",
+          "error-playing": "Player error"
+        },
+        "next": {
+          "end-of-queue": "End of queue"
+        },
+        "previous": {
+          "top-of-queue": "Top of queue"
         }
       },
       "description": {
+        "play": {
+          "not-playing": "KoukBot is not currently playing any music!",
+          "already-playing": "KoukBot is already playing some music!",
+          "not-in-channel": "You must be in a voice channel to play music!",
+          "not-in-your-channel": "Someone else is using KoukBot to play music in another voice channel!",
+          "no-matches": "We couldn't find any videos matching your search query!",
+          "error-playing": "There was an error adding your video to the queue. Please try again later!"
+        },
         "setperm": {
           "alreadyHas": "This role already has this permission!"
         },
@@ -88,6 +145,12 @@
         "moviepoll": {
           "not-active": "Movie poll is not currently active. \nTo start it please run the command `%prefixmoviepoll start <duration>`",
           "already-active": "Movie poll is already active. \nTo stop it please run the command `%prefixmoviepoll stop`"
+        },
+        "next": {
+          "end-of-queue": "You have reached the end of queue!"
+        },
+        "previous": {
+          "top-of-queue": "You are already at the top of the queue!"
         }
       }
     }

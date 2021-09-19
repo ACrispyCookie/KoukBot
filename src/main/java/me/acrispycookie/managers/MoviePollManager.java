@@ -3,8 +3,8 @@ package me.acrispycookie.managers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import me.acrispycookie.Main;
-import me.acrispycookie.moviepoll.Movie;
-import me.acrispycookie.moviepoll.MoviePoll;
+import me.acrispycookie.managers.moviepoll.Movie;
+import me.acrispycookie.managers.moviepoll.MoviePoll;
 
 import java.util.ArrayList;
 

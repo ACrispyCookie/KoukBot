@@ -1,9 +1,9 @@
 package me.acrispycookie.commands;
 
 import me.acrispycookie.Main;
-import me.acrispycookie.utility.ToDo;
+import me.acrispycookie.managers.todo.ToDo;
 import me.acrispycookie.utility.EmbedMessage;
-import me.acrispycookie.utility.ToDoChannel;
+import me.acrispycookie.managers.todo.ToDoChannel;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 

@@ -9,17 +9,22 @@ public enum Command {
     SET_PREFIX(new SetPrefixCommand(), new String[]{"setprefix", "set-prefix"}),
     SET_PERM(new SetPermCommand(), new String[] {"setperm", "set-perm"}),
     SET_COLOR(new SetColorCommand(), new String[] {"setcolor", "set-color"}),
-    GIVE_XP(new GiveExpCommand(), new String[] {"give-xp", ""}),
-    REMOVE_XP(new RemoveExpCommand(), new String[] {"remove-xp", ""}),
-    RANK(new RankCommand(), new String[] {"rank", ""}),
+    GIVE_XP(new GiveExpCommand(), new String[] {"give-xp"}),
+    REMOVE_XP(new RemoveExpCommand(), new String[] {"remove-xp"}),
+    RANK(new RankCommand(), new String[] {"rank"}),
     LEVELS(new RankCommand(), new String[] {"levels", "leaderboard"}),
     HELP(new HelpCommand(), new String[]{"help", "?"}),
     TODO(new ToDoCommand(), new String[]{"todo", "task"}),
     NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
     MESSAGE(new MessageCommand(), new String[]{"msg"}),
     CLEAR(new ClearCommand(), new String[]{"clear"}),
-    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ"});
-
+    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ"}),
+    PLAY(new PlayCommand(), new String[]{"play", "queue", "q"}),
+    PAUSE(new PauseCommand(), new String[]{"pause"}),
+    RESUME(new ResumeCommand(), new String[]{"resume", "res"}),
+    NEXT(new NextCommand(), new String[]{"next"}),
+    PREVIOUS(new PreviousCommand(), new String[]{"previous", "prev"}),
+    STOP(new StopCommand(), new String[]{"stop"});
     BotCommand botCommand;
     String[] aliases;
 

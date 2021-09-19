@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,13 +21,12 @@ public class ClearCommand extends BotCommand {
         if(Perm.hasPermission(m, Perm.CLEAR)){
             if(args.length == 1){
                 if(Utils.isInt(args[0])){
-                    message.delete().queue();
-                    t.getHistory().retrievePast(Integer.parseInt(args[0])).complete().forEach(ms -> ms.delete().queue());
+                    t.getHistory().retrievePast(Integer.parseInt(args[0]) + 1).complete().forEach(ms -> ms.delete().queue());
                     t.sendMessage(new EmbedMessage(m.getUser(),
                             Main.getInstance().getLanguageManager().get("commands.success.title.clear"),
                             Main.getInstance().getLanguageManager().get("commands.success.description.clear", args[0]),
                             Main.getInstance().getBotColor()).build()).queue(after -> {
-                                after.delete().queueAfter(5, TimeUnit.SECONDS);
+                        after.delete().queueAfter(5, TimeUnit.SECONDS);
                     });
                 }
                 else{

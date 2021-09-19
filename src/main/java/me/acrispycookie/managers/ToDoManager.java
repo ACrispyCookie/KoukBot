@@ -2,9 +2,8 @@ package me.acrispycookie.managers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import me.acrispycookie.utility.ToDo;
-import me.acrispycookie.utility.ToDoChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import me.acrispycookie.managers.todo.ToDo;
+import me.acrispycookie.managers.todo.ToDoChannel;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
