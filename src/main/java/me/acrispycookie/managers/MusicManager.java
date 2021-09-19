@@ -8,7 +8,6 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import javafx.scene.layout.Pane;
 import me.acrispycookie.Main;
 import me.acrispycookie.managers.music.AudioPlayerSendHandler;
 import me.acrispycookie.managers.music.MusicEntry;
@@ -17,8 +16,6 @@ import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.AudioManager;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MusicManager {
 
@@ -26,6 +23,7 @@ public class MusicManager {
     VoiceChannel channel;
     boolean isPlaying = false;
     boolean isConnected = false;
+    boolean reachedEnd = false;
     TextChannel t;
     Message nowPlaying;
     AudioPlayerManager playerManager;
@@ -108,7 +106,8 @@ public class MusicManager {
     public void pause(User user, TextChannel channel){
         if(user == null){
             isPlaying = false;
-            nowPlaying.delete().queue();
+            reachedEnd = true;
+            nowPlaying.delete().queue((m) -> {}, (f) -> {});
             player.setPaused(true);
         }
         else{
@@ -133,10 +132,16 @@ public class MusicManager {
         if(!isPlaying){
             if(scheduler.getTracks().size() > 0){
                 isPlaying = true;
-                sendOrChange(new EmbedMessage(user,
-                        Main.getInstance().getLanguageManager().get("commands.success.title.play.now-playing"),
-                        Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
-                        Main.getInstance().getBotColor()).build());
+                if(reachedEnd){
+                    reachedEnd = false;
+                    scheduler.restart();
+                }
+                else{
+                    sendOrChange(new EmbedMessage(user,
+                            Main.getInstance().getLanguageManager().get("commands.success.title.play.now-playing"),
+                            Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
+                            Main.getInstance().getBotColor()).build());
+                }
                 player.setPaused(false);
             }
             else{
@@ -189,22 +194,22 @@ public class MusicManager {
         return isPlaying;
     }
 
+    public boolean hasReachedEnd(){
+        return reachedEnd;
+    }
+
+    public void setReachedEnd(boolean reachedEnd) {
+        this.reachedEnd = reachedEnd;
+    }
+
     public MusicEntry getCurrentSong(){
         return scheduler.getTracks().get(scheduler.getIndex());
-    }
-
-    public Message getNowPlaying() {
-        return nowPlaying;
-    }
-
-    public void setNowPlaying(Message nowPlaying) {
-        this.nowPlaying = nowPlaying;
     }
 
     public void sendOrChange(MessageEmbed message){
         if(nowPlaying != null){
             TextChannel channel = nowPlaying.getTextChannel();
-            nowPlaying.delete().queue();
+            nowPlaying.delete().queue((m) -> {}, (f) -> {});
             channel.sendMessageEmbeds(message).queue((q) -> {
                 nowPlaying = q;
             });

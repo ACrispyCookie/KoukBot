@@ -25,11 +25,17 @@ public class TrackScheduler extends AudioEventAdapter {
             sendOrChange(tracks.get(index));
             player.startTrack(tracks.get(index).getTrack(), true);
         }
+        else if(Main.getInstance().getMusicManager().hasReachedEnd()){
+            Main.getInstance().getMusicManager().setReachedEnd(false);
+            nextTrack();
+            player.setPaused(false);
+        }
     }
 
     public void nextTrack(){
         if(index + 1 < tracks.size()){
             index++;
+            sendOrChange(tracks.get(index));
             player.stopTrack();
             player.startTrack(tracks.get(index).getTrack().makeClone(), true);
         }
@@ -42,6 +48,7 @@ public class TrackScheduler extends AudioEventAdapter {
     public void previousTrack(){
         if(index > 0){
             index--;
+            sendOrChange(tracks.get(index));
             player.stopTrack();
             player.startTrack(tracks.get(index).getTrack().makeClone(), true);
         }
@@ -51,6 +58,14 @@ public class TrackScheduler extends AudioEventAdapter {
         index = 0;
         tracks.clear();
         player.destroy();
+    }
+
+    public void restart(){
+        index = 0;
+        sendOrChange(tracks.get(index));
+        player.stopTrack();
+        player.startTrack(tracks.get(index).getTrack().makeClone(), true);
+        player.setPaused(false);
     }
 
     public ArrayList<MusicEntry> getTracks() {
