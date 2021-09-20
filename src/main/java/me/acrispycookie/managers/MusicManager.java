@@ -16,10 +16,15 @@ import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.managers.AudioManager;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Random;
+
 
 public class MusicManager {
 
     Main main;
+    ArrayList<File> voiceLines = new ArrayList<>();
     VoiceChannel channel;
     boolean isPlaying = false;
     boolean isConnected = false;
@@ -30,11 +35,12 @@ public class MusicManager {
     AudioPlayer player;
     TrackScheduler scheduler;
 
-    public MusicManager(Main main){
+    public MusicManager(Main main, ArrayList<File> voiceLines){
         this.main = main;
-
+        this.voiceLines.addAll(voiceLines);
         playerManager = new DefaultAudioPlayerManager();
         AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioSourceManagers.registerLocalSource(playerManager);
     }
 
     public void add(String query, User user, VoiceChannel channel, TextChannel t){
@@ -43,7 +49,12 @@ public class MusicManager {
             connect(channel);
             isPlaying = true;
         }
-        MusicEntry entry = new MusicEntry(query, user);
+        File line = getRandomLine();
+        if(line != null){
+            MusicEntry voiceLine = new MusicEntry(getRandomLine().getAbsolutePath(), null, true);
+            playerManager.loadItem(voiceLine.resolveQuery(), new ResultHandler(user, t, voiceLine));
+        }
+        MusicEntry entry = new MusicEntry(query, user, false);
         playerManager.loadItem(entry.resolveQuery(), new ResultHandler(user, t, entry));
     }
 
@@ -107,7 +118,9 @@ public class MusicManager {
         if(user == null){
             isPlaying = false;
             reachedEnd = true;
-            nowPlaying.delete().queue((m) -> {}, (f) -> {});
+            if(nowPlaying != null){
+                nowPlaying.delete().queue((m) -> {}, (f) -> {});
+            }
             player.setPaused(true);
         }
         else{
@@ -206,6 +219,13 @@ public class MusicManager {
         return scheduler.getTracks().get(scheduler.getIndex());
     }
 
+    public File getRandomLine(){
+        if(voiceLines.size() > 0){
+            return voiceLines.get(new Random().nextInt(voiceLines.size()));
+        }
+        return null;
+    }
+
     public void sendOrChange(MessageEmbed message){
         if(nowPlaying != null){
             TextChannel channel = nowPlaying.getTextChannel();
@@ -236,10 +256,12 @@ public class MusicManager {
         @Override
         public void trackLoaded(AudioTrack audioTrack) {
             entry.setTrack(audioTrack);
-            t.sendMessageEmbeds(new EmbedMessage(requested,
-                    Main.getInstance().getLanguageManager().get("commands.success.title.play.queued"),
-                    Main.getInstance().getLanguageManager().get("commands.success.description.play.queued", "[" + audioTrack.getInfo().title + "](" + audioTrack.getInfo().uri + ")", requested.getAsMention()),
-                    Main.getInstance().getBotColor()).build()).queue();
+            if(!entry.isVoiceLine()){
+                t.sendMessageEmbeds(new EmbedMessage(requested,
+                        Main.getInstance().getLanguageManager().get("commands.success.title.play.queued"),
+                        Main.getInstance().getLanguageManager().get("commands.success.description.play.queued", "[" + audioTrack.getInfo().title + "](" + audioTrack.getInfo().uri + ")", requested.getAsMention()),
+                        Main.getInstance().getBotColor()).build()).queue();
+            }
             scheduler.queue(entry);
         }
 
@@ -247,10 +269,12 @@ public class MusicManager {
         public void playlistLoaded(AudioPlaylist audioPlaylist) {
             AudioTrack audioTrack = audioPlaylist.getTracks().get(0);
             entry.setTrack(audioTrack);
-            t.sendMessageEmbeds(new EmbedMessage(requested,
-                    Main.getInstance().getLanguageManager().get("commands.success.title.play.queued"),
-                    Main.getInstance().getLanguageManager().get("commands.success.description.play.queued", "[" + audioTrack.getInfo().title + "](" + audioTrack.getInfo().uri + ")", requested.getAsMention()),
-                    Main.getInstance().getBotColor()).build()).queue();
+            if(!entry.isVoiceLine()){
+                t.sendMessageEmbeds(new EmbedMessage(requested,
+                        Main.getInstance().getLanguageManager().get("commands.success.title.play.queued"),
+                        Main.getInstance().getLanguageManager().get("commands.success.description.play.queued", "[" + audioTrack.getInfo().title + "](" + audioTrack.getInfo().uri + ")", requested.getAsMention()),
+                        Main.getInstance().getBotColor()).build()).queue();
+            }
             scheduler.queue(entry);
         }
 

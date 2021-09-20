@@ -8,13 +8,18 @@ public class MusicEntry {
     String query;
     User user;
     AudioTrack track;
+    boolean voiceLine;
 
-    public MusicEntry(String query, User user){
+    public MusicEntry(String query, User user, boolean voiceLine){
         this.query = query;
         this.user = user;
+        this.voiceLine = voiceLine;
     }
 
     public String resolveQuery(){
+        if(voiceLine){
+            return query;
+        }
         String pattern = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
         if (!query.isEmpty() && query.matches(pattern)) {
             return query;
@@ -22,10 +27,6 @@ public class MusicEntry {
         else{
             return "ytsearch:" + query;
         }
-    }
-
-    public String getQuery() {
-        return query;
     }
 
     public User getUser() {
@@ -38,5 +39,9 @@ public class MusicEntry {
 
     public void setTrack(AudioTrack track){
         this.track = track;
+    }
+
+    public boolean isVoiceLine() {
+        return voiceLine;
     }
 }

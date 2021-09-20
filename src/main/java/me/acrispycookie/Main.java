@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -118,7 +120,7 @@ public class Main {
             configManager = new ConfigManager(new Gson().fromJson(new FileReader(configFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the config file!");
+            Console.println("Error occured while trying to read the config file!");
             System.exit(-1);
         }
         Console.println("Configuration settings have been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -136,7 +138,7 @@ public class Main {
             permissionManager = new PermissionManager(new Gson().fromJson(new FileReader(permissionFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the permission file!");
+            Console.println("Error occured while trying to read the permission file!");
             System.exit(-1);
         }
         Console.println("Permission settings have been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -157,7 +159,7 @@ public class Main {
             languageManager = new LanguageManager(new Gson().fromJson(new FileReader(languageFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the language file!");
+            Console.println("Error occured while trying to read the language file!");
             System.exit(-1);
         }
         Console.println("Language files have been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -175,7 +177,7 @@ public class Main {
             userDataManager = new UserDataManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the user data file!");
+            Console.println("Error occured while trying to read the user data file!");
             System.exit(-1);
         }
         Console.println("User data has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -193,7 +195,7 @@ public class Main {
             moviePollManager = new MoviePollManager(this, new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the movie poll data file!");
+            Console.println("Error occured while trying to read the movie poll data file!");
             System.exit(-1);
         }
         Console.println("Movie poll manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
@@ -202,7 +204,19 @@ public class Main {
     private void loadMusicManager(){
         long startTime = System.currentTimeMillis();
         Console.println("Loading music manager...");
-        musicManager = new MusicManager(this);
+        File folder = new File("./kouk_lines");
+        ArrayList<File> files = new ArrayList<>();
+        if(!folder.exists()){
+            folder.mkdir();
+        }
+        else{
+            for(File file : folder.listFiles()){
+                if(file.getName().endsWith(".mp3")){
+                    files.add(file);
+                }
+            }
+        }
+        musicManager = new MusicManager(this, files);
         Console.println("Music manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
@@ -257,7 +271,7 @@ public class Main {
             programManager = new ProgramManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
         } catch (IOException e) {
             e.printStackTrace();
-            Console.println("Error occured while trying to load the program file!");
+            Console.println("Error occured while trying to read the program file!");
             System.exit(-1);
         }
     }
@@ -276,6 +290,8 @@ public class Main {
             Console.println("Program creator has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
         } catch (IOException e){
             e.printStackTrace();
+            Console.println("Error occured while trying to read the program creator file!");
+            System.exit(-1);
         }
     }
 

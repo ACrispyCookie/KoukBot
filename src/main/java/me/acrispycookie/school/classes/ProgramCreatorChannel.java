@@ -320,12 +320,12 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             if(typeOfProgram.equals("m")){
                 totalStages = 5 * 7 + 2;
                 stagesPerDay = 7;
-                startingTime = 29700000;
+                startingTime = Long.parseLong(main.getConfigManager().get("settings.programCreator.startingTimeMorning"));
             }
             else if(typeOfProgram.equals("a")){
                 totalStages = 5 * 12 + 2;
                 stagesPerDay = 12;
-                startingTime = 54000000;
+                startingTime = Long.parseLong(main.getConfigManager().get("settings.programCreator.startingTimeAfternoon"));
             }
         }
     }

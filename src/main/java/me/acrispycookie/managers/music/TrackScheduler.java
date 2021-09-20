@@ -22,7 +22,9 @@ public class TrackScheduler extends AudioEventAdapter {
     public void queue(MusicEntry track){
         tracks.add(track);
         if(tracks.size() == 1){
-            sendOrChange(tracks.get(index));
+            if(!track.isVoiceLine()){
+                sendOrChange(tracks.get(index));
+            }
             player.startTrack(tracks.get(index).getTrack(), true);
         }
         else if(Main.getInstance().getMusicManager().hasReachedEnd()){
@@ -34,7 +36,12 @@ public class TrackScheduler extends AudioEventAdapter {
 
     public void nextTrack(){
         if(index + 1 < tracks.size()){
-            index++;
+            if(tracks.get(index).isVoiceLine()){
+                tracks.remove(index);
+            }
+            else{
+                index++;
+            }
             sendOrChange(tracks.get(index));
             player.stopTrack();
             player.startTrack(tracks.get(index).getTrack().makeClone(), true);
