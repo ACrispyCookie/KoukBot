@@ -25,7 +25,7 @@ public class TrackScheduler extends AudioEventAdapter {
             if(!track.isVoiceLine()){
                 sendOrChange(tracks.get(index));
             }
-            player.startTrack(tracks.get(index).getTrack(), true);
+            player.startTrack(tracks.get(index).getTrack().makeClone(), true);
         }
         else if(Main.getInstance().getMusicManager().hasReachedEnd()){
             Main.getInstance().getMusicManager().setReachedEnd(false);

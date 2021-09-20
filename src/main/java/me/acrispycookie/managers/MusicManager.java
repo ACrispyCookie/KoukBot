@@ -25,28 +25,26 @@ public class MusicManager {
 
     Main main;
     ArrayList<File> voiceLines = new ArrayList<>();
-    VoiceChannel channel;
+    AudioPlayerManager playerManager;
     boolean isPlaying = false;
     boolean isConnected = false;
     boolean reachedEnd = false;
+    VoiceChannel channel;
     TextChannel t;
     Message nowPlaying;
-    AudioPlayerManager playerManager;
     AudioPlayer player;
     TrackScheduler scheduler;
 
     public MusicManager(Main main, ArrayList<File> voiceLines){
         this.main = main;
         this.voiceLines.addAll(voiceLines);
-        playerManager = new DefaultAudioPlayerManager();
-        AudioSourceManagers.registerRemoteSources(playerManager);
-        AudioSourceManagers.registerLocalSource(playerManager);
     }
 
     public void add(String query, User user, VoiceChannel channel, TextChannel t){
         if(!isConnected){
             this.t = t;
-            connect(channel);
+            this.channel = channel;
+            connect();
             isPlaying = true;
         }
         File line = getRandomLine();
@@ -174,25 +172,35 @@ public class MusicManager {
 
     public void stop(){
         if(isConnected){
-            pause(null, null);
-            disconnect();
+            player.setPaused(true);
+            playerManager.shutdown();
             scheduler.clear();
-            nowPlaying = null;
+            disconnect();
+
+            isPlaying = false;
+            isConnected = false;
+            reachedEnd = false;
+
+            playerManager = null;
+            channel = null;
             t = null;
+            nowPlaying = null;
+            player = null;
+            scheduler = null;
         }
     }
 
     private void disconnect(){
-        channel = null;
-        isConnected = false;
         main.getGuild().getAudioManager().closeAudioConnection();
     }
 
-    private void connect(VoiceChannel channel){
+    private void connect(){
         isConnected = true;
-        this.channel = channel;
         AudioManager manager = main.getGuild().getAudioManager();
         manager.openAudioConnection(channel);
+        playerManager = new DefaultAudioPlayerManager();
+        AudioSourceManagers.registerRemoteSources(playerManager);
+        AudioSourceManagers.registerLocalSource(playerManager);
         this.player = playerManager.createPlayer();
         this.scheduler = new TrackScheduler(player);
         player.addListener(scheduler);
