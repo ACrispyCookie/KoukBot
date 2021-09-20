@@ -21,7 +21,8 @@ public class ClearCommand extends BotCommand {
         if(Perm.hasPermission(m, Perm.CLEAR)){
             if(args.length == 1){
                 if(Utils.isInt(args[0])){
-                    t.getHistory().retrievePast(Integer.parseInt(args[0]) + 1).complete().forEach(ms -> ms.delete().queue());
+                    List<Message> messages = t.getHistory().retrievePast(Integer.parseInt(args[0]) + 1).complete();
+                    t.deleteMessages(messages).queue();
                     t.sendMessage(new EmbedMessage(m.getUser(),
                             Main.getInstance().getLanguageManager().get("commands.success.title.clear"),
                             Main.getInstance().getLanguageManager().get("commands.success.description.clear", args[0]),
