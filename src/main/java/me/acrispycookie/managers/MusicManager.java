@@ -176,6 +176,9 @@ public class MusicManager {
             playerManager.shutdown();
             scheduler.clear();
             disconnect();
+            if(nowPlaying != null){
+                nowPlaying.delete().queue((m) -> {}, (f) -> {});
+            }
 
             isPlaying = false;
             isConnected = false;
