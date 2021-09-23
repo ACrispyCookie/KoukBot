@@ -47,7 +47,15 @@ public class PlayCommand extends BotCommand {
             }
         }
         else{
-            Main.getInstance().getMusicManager().resume(m.getUser(), t);
+            if(Main.getInstance().getMusicManager().isPlaying()){
+                Main.getInstance().getMusicManager().resume(m.getUser(), t);
+            }
+            else{
+                t.sendMessage(new EmbedMessage(m.getUser(),
+                        Main.getInstance().getLanguageManager().get("commands.invalid.title"),
+                        Main.getInstance().getLanguageManager().get("commands.invalid.description.play"),
+                        Main.getInstance().getErrorColor()).build()).queue();
+            }
         }
     }
 }
