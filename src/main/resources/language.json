@@ -17,7 +17,7 @@
         "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
         "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
         "message": "Please use the command like this:\n`%prefixmessage [channel ID] <message>`\n\nArguments:\n`channel ID` - A channel ID\n`message` - Your message",
-        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number",
+        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number ∈ [2, 100]",
         "play": "Please use the command like this:\n`%prefixplay <video>`\n\nArguments:\n`video` - A search term or a link for a video"
       }
     },
@@ -53,7 +53,7 @@
         },
         "give-xp": "%1 XP have been given to %2",
         "remove-xp": "%1 XP have been taken from %2",
-        "clear": "You have cleared %1 message from this channel",
+        "clear": "You have cleared %1 message%2 from this channel",
         "help": [
           "Here is a list of all the available commands:",
           "",

@@ -61,8 +61,6 @@ public class ToDoChannel {
 
     public ToDo getByMessageId(long messageId){
         for(ToDo toDo : toDos){
-            System.out.println(toDo.getMessageId());
-            System.out.println(messageId + " real");
             if(toDo.getMessageId() == messageId){
                 return toDo;
             }

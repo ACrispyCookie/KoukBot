@@ -46,11 +46,11 @@ public class MusicManager {
             this.channel = channel;
             connect();
             isPlaying = true;
-        }
-        File line = getRandomLine();
-        if(line != null){
-            MusicEntry voiceLine = new MusicEntry(getRandomLine().getAbsolutePath(), null, true);
-            playerManager.loadItem(voiceLine.resolveQuery(), new ResultHandler(user, t, voiceLine));
+            File line = getRandomLine();
+            if(line != null){
+                MusicEntry voiceLine = new MusicEntry(getRandomLine().getAbsolutePath(), null, true);
+                playerManager.loadItem(voiceLine.resolveQuery(), new ResultHandler(user, t, voiceLine));
+            }
         }
         MusicEntry entry = new MusicEntry(query, user, false);
         playerManager.loadItem(entry.resolveQuery(), new ResultHandler(user, t, entry));
@@ -59,15 +59,11 @@ public class MusicManager {
     public void next(User user, TextChannel channel){
         if(scheduler.getTracks().size() > 0){
             if(scheduler.getIndex() + 1 < scheduler.getTracks().size()){
-                scheduler.nextTrack();
                 t.sendMessageEmbeds(new EmbedMessage(user,
                         Main.getInstance().getLanguageManager().get("commands.success.title.next"),
-                        Main.getInstance().getLanguageManager().get("commands.success.description.next", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
+                        Main.getInstance().getLanguageManager().get("commands.success.description.next", "[" + getRelSong(1).getTrack().getInfo().title + "](" + getRelSong(1).getTrack().getInfo().uri + ")", getRelSong(1).getUser().getAsMention()),
                         Main.getInstance().getBotColor()).build()).queue();
-                sendOrChange(new EmbedMessage(user,
-                        Main.getInstance().getLanguageManager().get("commands.success.title.play.now-playing"),
-                        Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
-                        Main.getInstance().getBotColor()).build());
+                scheduler.nextTrack();
             }
             else{
                 channel.sendMessage(new EmbedMessage(user,
@@ -87,15 +83,11 @@ public class MusicManager {
     public void prev(User user, TextChannel channel){
         if(scheduler.getTracks().size() > 0){
             if(scheduler.getIndex() > 0){
-                scheduler.previousTrack();
                 t.sendMessageEmbeds(new EmbedMessage(user,
                         Main.getInstance().getLanguageManager().get("commands.success.title.previous"),
-                        Main.getInstance().getLanguageManager().get("commands.success.description.previous", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
+                        Main.getInstance().getLanguageManager().get("commands.success.description.previous", "[" +getRelSong(-1).getTrack().getInfo().title + "](" + getRelSong(-1).getTrack().getInfo().uri + ")", getRelSong(-1).getUser().getAsMention()),
                         Main.getInstance().getBotColor()).build()).queue();
-                sendOrChange(new EmbedMessage(user,
-                        Main.getInstance().getLanguageManager().get("commands.success.title.play.now-playing"),
-                        Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
-                        Main.getInstance().getBotColor()).build());
+                scheduler.previousTrack();
             }
             else{
                 channel.sendMessage(new EmbedMessage(user,
@@ -150,7 +142,7 @@ public class MusicManager {
                 else{
                     sendOrChange(new EmbedMessage(user,
                             Main.getInstance().getLanguageManager().get("commands.success.title.play.now-playing"),
-                            Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getCurrentSong().getTrack().getInfo().title + "](" + getCurrentSong().getTrack().getInfo().uri + ")", getCurrentSong().getUser().getAsMention()),
+                            Main.getInstance().getLanguageManager().get("commands.success.description.play.now-playing", "[" + getRelSong(0).getTrack().getInfo().title + "](" + getRelSong(0).getTrack().getInfo().uri + ")", getRelSong(0).getUser().getAsMention()),
                             Main.getInstance().getBotColor()).build());
                 }
                 player.setPaused(false);
@@ -226,8 +218,8 @@ public class MusicManager {
         this.reachedEnd = reachedEnd;
     }
 
-    public MusicEntry getCurrentSong(){
-        return scheduler.getTracks().get(scheduler.getIndex());
+    public MusicEntry getRelSong(int dIndex){
+        return scheduler.getTracks().get(scheduler.getIndex() + dIndex);
     }
 
     public File getRandomLine(){

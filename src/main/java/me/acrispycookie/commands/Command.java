@@ -22,7 +22,7 @@ public enum Command {
     PLAY(new PlayCommand(), new String[]{"play", "queue", "q"}),
     PAUSE(new PauseCommand(), new String[]{"pause"}),
     RESUME(new ResumeCommand(), new String[]{"resume", "res"}),
-    NEXT(new NextCommand(), new String[]{"next"}),
+    NEXT(new NextCommand(), new String[]{"next", "skip"}),
     PREVIOUS(new PreviousCommand(), new String[]{"previous", "prev"}),
     STOP(new StopCommand(), new String[]{"stop"});
     BotCommand botCommand;

@@ -20,12 +20,16 @@ public class ClearCommand extends BotCommand {
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
         if(Perm.hasPermission(m, Perm.CLEAR)){
             if(args.length == 1){
-                if(Utils.isInt(args[0])){
-                    List<Message> messages = t.getHistory().retrievePast(Integer.parseInt(args[0]) + 1).complete();
-                    t.deleteMessages(messages).queue();
+                if(Utils.isInt(args[0]) && Integer.parseInt(args[0]) <= 100 && Integer.parseInt(args[0]) >= 2){
+                    message.delete().complete();
+                    t.getHistory().retrievePast(Integer.parseInt(args[0])).queue((l) -> {
+                        if(l.size() > 1){
+                            t.deleteMessages(l).queue();
+                        }
+                    });
                     t.sendMessage(new EmbedMessage(m.getUser(),
                             Main.getInstance().getLanguageManager().get("commands.success.title.clear"),
-                            Main.getInstance().getLanguageManager().get("commands.success.description.clear", args[0]),
+                            Main.getInstance().getLanguageManager().get("commands.success.description.clear", args[0], (Integer.parseInt(args[0]) != 1 ? "s" : "")),
                             Main.getInstance().getBotColor()).build()).queue(after -> {
                         after.delete().queueAfter(5, TimeUnit.SECONDS);
                     });
