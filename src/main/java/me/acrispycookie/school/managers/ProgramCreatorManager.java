@@ -31,8 +31,8 @@ public class ProgramCreatorManager extends ListenerAdapter {
     }
 
     private void start(){
-        TextChannel channel = main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("settings.programCreator.channel")));
-        long messageId = Long.parseLong(main.getConfigManager().get("settings.programCreator.messageId"));
+        TextChannel channel = main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("features.program-creator.channel")));
+        long messageId = Long.parseLong(main.getConfigManager().get("features.program-creator.messageId"));
         if(channel != null){
             channel.retrieveMessageById(messageId).queue((m) -> {
                 m.clearReactions().queue((mm) -> {
@@ -46,19 +46,19 @@ public class ProgramCreatorManager extends ListenerAdapter {
                     channel.sendMessageEmbeds(msg.build()).queue((m) -> {
                         m.addReaction("📆").queue();
                         ProgramCreatorManager.this.message = m;
-                        main.getConfigManager().set("settings.programCreator.messageId", new JsonPrimitive(m.getIdLong()));
+                        main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     });
                 }
             });
         }
         else {
-            main.getGuild().createTextChannel("get-your-program", main.getGuild().getCategoryById(main.getConfigManager().get("settings.schoolCategory"))).queue((q) -> {
+            main.getGuild().createTextChannel("get-your-program", main.getGuild().getCategoryById(main.getConfigManager().get("features.announcer.schoolCategory"))).queue((q) -> {
                 EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(764939013777784843L), "Δημιούργησε το ψηφιακό σου πρόγραμμα!", main.getGuild().getRoleById(867487114508501022L).getAsMention() +
                         "! Αυτό είναι ειδικά για εσένα!\nΒάλε το εβδομαδιαίο σου πρόγραμμα και πάρε\nένα ψηφιακό αντίγραφο του!");
                 q.sendMessageEmbeds(msg.build()).queue((m) -> {
                     m.addReaction("📆").queue();
-                    main.getConfigManager().set("settings.programCreator.channel", new JsonPrimitive(q.getIdLong()));
-                    main.getConfigManager().set("settings.programCreator.messageId", new JsonPrimitive(m.getIdLong()));
+                    main.getConfigManager().set("features.program-creator.channel", new JsonPrimitive(q.getIdLong()));
+                    main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     ProgramCreatorManager.this.message = m;
                 });
             });

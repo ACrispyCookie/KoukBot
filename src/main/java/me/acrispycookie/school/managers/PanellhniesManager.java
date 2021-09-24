@@ -22,10 +22,10 @@ public class PanellhniesManager {
     public PanellhniesManager(Main main){
         this.main = main;
         this.secondsLeft = getSecondsLeft();
-        this.premiereDate = parseDate(main.getConfigManager().get("settings.panellhnies.date"));
-        this.channel = Main.getInstance().getGuild().getTextChannelById(Main.getInstance().getConfigManager().get("settings.panellhnies.channel"));
-        this.role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("settings.panellhnies.3hLykeiouRole"));
-        if(Main.getInstance().getConfigManager().get("settings.panellhnies.enabled").equals("true")){
+        this.premiereDate = parseDate(main.getConfigManager().get("features.panellhnies.date"));
+        this.channel = Main.getInstance().getGuild().getTextChannelById(Main.getInstance().getConfigManager().get("features.panellhnies.channel"));
+        this.role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.panellhnies.3hLykeiouRole"));
+        if(Boolean.parseBoolean(Main.getInstance().getConfigManager().get("features.panellhnies.enabled"))){
             schedule();
         }
     }

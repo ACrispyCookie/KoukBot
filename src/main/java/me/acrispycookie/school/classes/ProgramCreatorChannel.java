@@ -90,7 +90,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                 }
                 ProgramCreatorChannel.this.message = m;
                 save();
-                m.getGuild().getTextChannelById(main.getConfigManager().get("settings.programCreator.channel")).sendMessage(user.getAsMention() + " πήγαινε στο κανάλι " + message.getTextChannel().getAsMention() + " για να ξεκινήσεις!").queue((s) -> {
+                m.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).sendMessage(user.getAsMention() + " πήγαινε στο κανάλι " + message.getTextChannel().getAsMention() + " για να ξεκινήσεις!").queue((s) -> {
                     s.delete().queueAfter(10, TimeUnit.SECONDS);
                 });
             });
@@ -139,7 +139,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                     delete(340);
                     sendFinished();
                     m.getTextChannel().getGuild().getTextChannelById(783655696423714816L).sendMessage("Ο/Η " + user.getAsMention() + " έφτιαξε το δικό του ψηφιακό πρόγραμμα στο "
-                            + main.getGuild().getTextChannelById(main.getConfigManager().get("settings.programCreator.channel")).getAsMention() + "!").queue();
+                            + main.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).getAsMention() + "!").queue();
                 });
     }
 
@@ -320,12 +320,12 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             if(typeOfProgram.equals("m")){
                 totalStages = 5 * 7 + 2;
                 stagesPerDay = 7;
-                startingTime = Long.parseLong(main.getConfigManager().get("settings.programCreator.startingTimeMorning"));
+                startingTime = Long.parseLong(main.getConfigManager().get("features.program-creator.startingTimeMorning"));
             }
             else if(typeOfProgram.equals("a")){
                 totalStages = 5 * 12 + 2;
                 stagesPerDay = 12;
-                startingTime = Long.parseLong(main.getConfigManager().get("settings.programCreator.startingTimeAfternoon"));
+                startingTime = Long.parseLong(main.getConfigManager().get("features.program-creator.startingTimeAfternoon"));
             }
         }
     }

@@ -31,13 +31,13 @@ public class Announcement {
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
         if(l != null){
             ses.schedule(() -> {
-                long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("settings.announcementChannel"));
+                long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("features.announcer.announcementChannel"));
                 Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("Ει " + toMention.getAsMention() + ", έχεις μάθημα σε 5'\nΤο μάθημα σας είναι: " + l.getName() + "\nΆντε πάρε και το link: " + l.getUrl(toMention)).queue();
             }, delay, TimeUnit.MILLISECONDS);
         }
         else{
             ses.schedule(() -> {
-                long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("settings.announcementChannel"));
+                long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("features.announcer.announcementChannel"));
                 StringBuilder msg = null;
                 for(Role mention : mentions){
                     if(msg == null){

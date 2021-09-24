@@ -20,7 +20,6 @@ import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -52,10 +51,12 @@ public class Main {
         main.loadLanguage();
         main.loadUserData();
         main.startBot();
-        main.loadSchoolManagers();
+        main.loadAnnouncerManager();
+        main.loadPanellhniesManager();
+        main.loadProgramCreatorManager();
         main.loadToDoManager();
         main.loadMusicManager();
-        //main.loadMoviePollManager();
+        main.loadMoviePollManager();
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
     }
@@ -66,25 +67,6 @@ public class Main {
         bot.shutdown();
         Console.println("Άντε παιδιά.. Καλη όρεξη");
         System.exit(-1);
-    }
-
-    private void loadToDoManager(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Loading To-Dos...");
-        try {
-            bot.addEventListener(new ToDoManager(null));
-            File todoFile = new File("./data/todo.json");
-            if(!todoFile.exists()){
-                todoFile = getResource("todo.json");
-                todoFile.createNewFile();
-            }
-            toDoManager = new ToDoManager(new Gson().fromJson(new FileReader(todoFile), JsonObject.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Console.println("Error occured while trying to load the permission file!");
-            System.exit(-1);
-        }
-        Console.println("To-Dos have been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
     private void loadFont(){
@@ -183,43 +165,6 @@ public class Main {
         Console.println("User data has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
-    private void loadMoviePollManager(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Loading movie poll manager...");
-        try {
-            File dataFile = new File("./data/movie_polls.json");
-            if(!dataFile.exists()){
-                dataFile = getResource("movie_polls.json");
-                dataFile.createNewFile();
-            }
-            moviePollManager = new MoviePollManager(this, new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Console.println("Error occured while trying to read the movie poll data file!");
-            System.exit(-1);
-        }
-        Console.println("Movie poll manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-
-    private void loadMusicManager(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Loading music manager...");
-        File folder = new File("./kouk_lines");
-        ArrayList<File> files = new ArrayList<>();
-        if(!folder.exists()){
-            folder.mkdir();
-        }
-        else{
-            for(File file : folder.listFiles()){
-                if(file.getName().endsWith(".mp3")){
-                    files.add(file);
-                }
-            }
-        }
-        musicManager = new MusicManager(this, files);
-        Console.println("Music manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-
 
     private void startBot(){
         long startTime = System.currentTimeMillis();
@@ -238,60 +183,118 @@ public class Main {
             Console.println("Error occured while trying to start the discord bot!");
             System.exit(-1);
         }
-        Console.println("Bot has started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        Console.println("Bot has been started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
     }
 
-    private void loadSchoolManagers(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Starting school managers...");
-        if(Boolean.parseBoolean(configManager.get("settings.schoolManagerEnabled"))){
-            loadProgramManager();
-            long channelId = Long.parseLong(configManager.get("settings.announcementChannel"));
-            schoolManager = new SchoolManager(channelId, instance);
+    private void loadMusicManager(){
+        if(Boolean.parseBoolean(configManager.get("features.music.enabled"))){
+            long startTime = System.currentTimeMillis();
+            Console.println("Loading music manager...");
+            File folder = new File("./kouk_lines");
+            ArrayList<File> files = new ArrayList<>();
+            if(!folder.exists()){
+                folder.mkdir();
+            }
+            else{
+                for(File file : folder.listFiles()){
+                    if(file.getName().endsWith(".mp3")){
+                        files.add(file);
+                    }
+                }
+            }
+            musicManager = new MusicManager(this, files);
+            Console.println("Music manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
         }
-        loadPanellhniesManager();
-        loadProgramCreatorManager();
-        Console.println("School managers have started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    private void loadMoviePollManager(){
+        if(Boolean.parseBoolean(configManager.get("features.movies.enabled"))){
+            long startTime = System.currentTimeMillis();
+            Console.println("Loading movie poll manager...");
+            try {
+                File dataFile = new File("./data/movie_polls.json");
+                if(!dataFile.exists()){
+                    dataFile = getResource("movie_polls.json");
+                    dataFile.createNewFile();
+                }
+                moviePollManager = new MoviePollManager(this, new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Console.println("Error occured while trying to read the movie poll data file!");
+                System.exit(-1);
+            }
+            Console.println("Movie poll manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        }
+    }
+
+    private void loadToDoManager(){
+        long startTime = System.currentTimeMillis();
+        Console.println("Loading To-Dos...");
+        try {
+            bot.addEventListener(new ToDoManager(null));
+            File todoFile = new File("./data/todo.json");
+            if(!todoFile.exists()){
+                todoFile = getResource("todo.json");
+                todoFile.createNewFile();
+            }
+            toDoManager = new ToDoManager(new Gson().fromJson(new FileReader(todoFile), JsonObject.class));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Console.println("Error occured while trying to load the permission file!");
+            System.exit(-1);
+        }
+        Console.println("To-Do manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    private void loadAnnouncerManager(){
+        if(Boolean.parseBoolean(configManager.get("features.announcer.enabled"))){
+            long startTime = System.currentTimeMillis();
+            Console.println("Starting announcer manager...");
+            long channelId = Long.parseLong(configManager.get("features.announcer.announcementChannel"));
+            schoolManager = new SchoolManager(channelId, instance);
+            try {
+                File dataFile = new File("./data/program.json");
+                if(!dataFile.exists()){
+                    dataFile = getResource("program.json");
+                    dataFile.createNewFile();
+                }
+                programManager = new ProgramManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+            } catch (IOException e) {
+                e.printStackTrace();
+                Console.println("Error occured while trying to read the program file!");
+                System.exit(-1);
+            }
+            Console.println("Announcer manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        }
     }
 
     private void loadPanellhniesManager(){
-        long startTime = System.currentTimeMillis();
-        Console.println("Loading panellhnies manager...");
-        panellhniesManager = new PanellhniesManager(this);
-        Console.println("Panellhnies manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
-    }
-
-    private void loadProgramManager(){
-        try {
-            File dataFile = new File("./data/program.json");
-            if(!dataFile.exists()){
-                dataFile = getResource("program.json");
-                dataFile.createNewFile();
-            }
-            programManager = new ProgramManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
-        } catch (IOException e) {
-            e.printStackTrace();
-            Console.println("Error occured while trying to read the program file!");
-            System.exit(-1);
+        if(Boolean.parseBoolean(configManager.get("features.panellhnies.enabled"))) {
+            long startTime = System.currentTimeMillis();
+            Console.println("Loading panellhnies manager...");
+            panellhniesManager = new PanellhniesManager(this);
+            Console.println("Panellhnies manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
         }
     }
 
     private void loadProgramCreatorManager(){
-        try {
-            long startTime = System.currentTimeMillis();
-            Console.println("Loading program creator manager...");
-            File programCreatorFile = new File("./data/program_creator.json");
-            if(!programCreatorFile.exists()){
-                programCreatorFile = getResource("program_creator.json");
-                programCreatorFile.createNewFile();
+        if(Boolean.parseBoolean(configManager.get("features.program-creator.enabled"))) {
+            try {
+                long startTime = System.currentTimeMillis();
+                Console.println("Loading program creator manager...");
+                File programCreatorFile = new File("./data/program_creator.json");
+                if(!programCreatorFile.exists()){
+                    programCreatorFile = getResource("program_creator.json");
+                    programCreatorFile.createNewFile();
+                }
+                programCreator = new ProgramCreatorManager(this, new Gson().fromJson(new FileReader(programCreatorFile), JsonObject.class));
+                bot.addEventListener(programCreator);
+                Console.println("Program creator has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+            } catch (IOException e){
+                e.printStackTrace();
+                Console.println("Error occured while trying to read the program creator file!");
+                System.exit(-1);
             }
-            programCreator = new ProgramCreatorManager(this, new Gson().fromJson(new FileReader(programCreatorFile), JsonObject.class));
-            bot.addEventListener(programCreator);
-            Console.println("Program creator has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
-        } catch (IOException e){
-            e.printStackTrace();
-            Console.println("Error occured while trying to read the program creator file!");
-            System.exit(-1);
         }
     }
 
@@ -366,11 +369,11 @@ public class Main {
     }
 
     public String getPrefix(){
-        return getConfigManager().get("bot.prefix");
+        return getConfigManager().get("settings.prefix");
     }
 
     public Guild getGuild(){
-        return bot.getGuildById(Long.parseLong(configManager.get("bot.guildId")));
+        return bot.getGuildById(Long.parseLong(configManager.get("settings.guildId")));
     }
 
     public static Main getInstance(){

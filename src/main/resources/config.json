@@ -1,31 +1,45 @@
 {
   "bot": {
     "botToken": "",
-    "OMDbKey": "",
-    "guildId": 764909800890826823,
-    "prefix": "!",
     "activity": {
       "type": "WATCHING",
       "status": "your school program"
     }
   },
   "settings": {
-    "errorColor": "#c43333",
-    "moviePollChannel": 828644608421789716,
-    "schoolCategory": 785791668213121024,
-    "announcementChannel": 785805196168527912,
-    "schoolManagerEnabled": "false",
+    "guildId": 764909800890826823,
+    "prefix": "!",
+    "OMDbKey": "",
+    "errorColor": "#c43333"
+  },
+  "features": {
+    "announcer": {
+      "enabled": false,
+      "schoolCategory": 785791668213121024,
+      "announcementChannel": 785805196168527912
+    },
     "panellhnies": {
       "enabled": false,
       "channel": 868090236910075967,
       "date": "14/06/2022",
       "3hLykeiouRole": 867487114508501022
     },
-    "programCreator": {
+    "program-creator": {
+      "enabled": true,
       "channel": 1234567890,
       "messageId": 1234567890,
       "startingTimeMorning": 29700000,
       "startingTimeAfternoon": 54000000
+    },
+    "movies": {
+      "enabled": false,
+      "channel": 828644608421789716
+    },
+    "todo": {
+      "enabled": true
+    },
+    "music": {
+      "enabled": true
     }
   }
 }

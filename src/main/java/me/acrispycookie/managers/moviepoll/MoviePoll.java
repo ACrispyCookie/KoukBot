@@ -56,7 +56,7 @@ public class MoviePoll {
             else if(winners.get(0).getUpVotes() == m.getUpVotes()){
                 winners.add(m);
             }
-            main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("settings.moviePollChannel"))).retrieveMessageById(m.getMessageId()).complete().delete().queue();
+            main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("features.movies.channel"))).retrieveMessageById(m.getMessageId()).complete().delete().queue();
         }
         editVoteMessage();
     }
