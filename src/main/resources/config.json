@@ -19,7 +19,8 @@
       "announcementChannel": 785805196168527912
     },
     "panellhnies": {
-      "enabled": false,
+      "enabled": true,
+      "scheduler-enabled": false,
       "channel": 868090236910075967,
       "date": "14/06/2022",
       "3hLykeiouRole": 867487114508501022

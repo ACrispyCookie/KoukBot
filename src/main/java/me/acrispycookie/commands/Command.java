@@ -18,7 +18,7 @@ public enum Command {
     NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
     MESSAGE(new MessageCommand(), new String[]{"msg"}),
     CLEAR(new ClearCommand(), new String[]{"clear"}),
-    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ"}),
+    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ", "panell"}),
     PLAY(new PlayCommand(), new String[]{"play", "queue", "q"}),
     PAUSE(new PauseCommand(), new String[]{"pause"}),
     RESUME(new ResumeCommand(), new String[]{"resume", "res"}),

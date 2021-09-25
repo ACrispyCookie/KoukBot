@@ -25,7 +25,7 @@ public class PanellhniesManager {
         this.premiereDate = parseDate(main.getConfigManager().get("features.panellhnies.date"));
         this.channel = Main.getInstance().getGuild().getTextChannelById(Main.getInstance().getConfigManager().get("features.panellhnies.channel"));
         this.role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.panellhnies.3hLykeiouRole"));
-        if(Boolean.parseBoolean(Main.getInstance().getConfigManager().get("features.panellhnies.enabled"))){
+        if(Boolean.parseBoolean(Main.getInstance().getConfigManager().get("features.panellhnies.scheduler-enabled"))){
             schedule();
         }
     }
