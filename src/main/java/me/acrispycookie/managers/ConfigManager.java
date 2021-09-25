@@ -31,7 +31,7 @@ public class ConfigManager {
     }
 
     public void changePrefix(String prefix){
-        JsonObject object = config.getAsJsonObject("bot");
+        JsonObject object = config.getAsJsonObject("settings");
         object.add("prefix", new JsonPrimitive(prefix));
         save();
     }
