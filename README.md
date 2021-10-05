@@ -105,3 +105,4 @@ A to-do task on a user's channel:
 KoukBot also has some commands which are very basic and are used very frequently by a lot of users. These commands are:
 * **!clear <amount>** - Clears the amount of messages specified in the channel the command was sent to. (2 <= amount <= 99)
 * **!notify <user>** - Notifies a defeaned user by moving them in a random voice channel and moving them back.
+* **!message <message>** - Makes KoukBot post a message in the chat. (Aliases: msg)
