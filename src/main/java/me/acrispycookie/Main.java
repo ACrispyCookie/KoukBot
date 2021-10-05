@@ -251,7 +251,6 @@ public class Main {
             long startTime = System.currentTimeMillis();
             Console.println("Starting announcer manager...");
             long channelId = Long.parseLong(configManager.get("features.announcer.announcementChannel"));
-            schoolManager = new SchoolManager(channelId, instance);
             try {
                 File dataFile = new File("./data/program.json");
                 if(!dataFile.exists()){
@@ -259,6 +258,7 @@ public class Main {
                     dataFile.createNewFile();
                 }
                 programManager = new ProgramManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+                schoolManager = new SchoolManager(channelId, instance);
             } catch (IOException e) {
                 e.printStackTrace();
                 Console.println("Error occured while trying to read the program file!");
