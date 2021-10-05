@@ -89,7 +89,7 @@ public class LevelUser {
             });
         } catch (IOException e) {
             e.printStackTrace();
-            Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("There was a problem obtaining the card template! Please contact ACrispyCookie#4252").queue();
+            Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("There was a problem obtaining the card template! Please contact ACrispyCookie#7780").queue();
         }
     }
 

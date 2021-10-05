@@ -82,7 +82,8 @@
           "`%prefixsetprefix` - Sets this bot's prefix.",
           "`%prefixsetcolor` - Sets the color of your user card.",
           "`%prefixnotify` - Notify a user while they are deafened.",
-          "`%prefixclear` - Clears the chat."
+          "`%prefixclear` - Clears the chat.",
+          "`%prefixmessage` - Makes KoukBot post messages."
         ],
         "play": {
           "now-playing": "%1 [%2]",
