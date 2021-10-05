@@ -3,6 +3,7 @@ KoukBot is a discord bot that was created as a joke for a private discord server
 
 This features include:
 * [Program announcer](https://github.com/ACrispyCookie/KoukBot#program-announcer)
+* [Program creator](https://github.com/ACrispyCookie/KoukBot#program-creator)
 * [Music player](https://github.com/ACrispyCookie/KoukBot#music-player)
 * [Chat leveling system](https://github.com/ACrispyCookie/KoukBot#chat-leveling)
 * [To-do task manager](https://github.com/ACrispyCookie/KoukBot#to-do-task-manager)
@@ -47,6 +48,19 @@ A class object which also contains `global` subjects:
 An announcement for 2 sub-classes:
 
 ![image](https://user-images.githubusercontent.com/30019341/136095376-b33f3698-6a5e-4b03-8d1a-59e020c56f2f.png)
+
+
+## Program creator
+Program creator is a system created to make the process of saving a program on their phone very easy. It is an very user friendly process which uses message reactions to gather input from the users. There are 2 types of programs, morning and afternoon. The morning programs are used for school while the afternoon for after-school lessons. To start the creation of a program you first have to react on a message to start the process. After that you will be directed to your own channel in which you will have to input your program by clicking the corresponding reaction for each subject.
+
+### Examples:
+Starting message which begins the process of creation:
+
+![image](https://user-images.githubusercontent.com/30019341/136101362-0ae82bab-8c9e-470e-b6ca-bcf5ddbce0d1.png)
+
+The message you react to, to give input to the bot:
+
+![image](https://user-images.githubusercontent.com/30019341/136101613-09d03187-428a-4631-a4b5-5e04768a9298.png)
 
 
 ## Music player
