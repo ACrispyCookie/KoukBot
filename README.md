@@ -2,7 +2,7 @@
 KoukBot was created as a joke for a private discord server. It started when due to the pandemic of COVID-19 we had online school. It was meant to announce the upcoming lesson for everyone on the server. After online school ended I decided to add more functionality into it and put in more useful features.
 
 This features include:
-* Program announcer
+* [Program announcer](https://github.com/ACrispyCookie/KoukBot#program-announcer)
 * Chat leveling system
 * To-do task manager
 * Music player
