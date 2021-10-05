@@ -22,11 +22,11 @@ public class ILesson extends Lesson {
 
     @Override
     public void startAnnouncements() {
-        Announcement ann = new Announcement(id, timeToAnnouce, role);
-        ann.start();
-        if(announceBreak){
-            boolean shouldAnnounceBreak = id[0] != 15;
-            if(shouldAnnounceBreak){
+        boolean shouldAnnounce = id[0] != 15;
+        if(shouldAnnounce){
+            Announcement ann = new Announcement(id, timeToAnnouce, role);
+            ann.start();
+            if(announceBreak){
                 Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
                 dialeima.start();
             }
