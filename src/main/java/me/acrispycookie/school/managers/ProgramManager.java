@@ -1,6 +1,7 @@
 package me.acrispycookie.school.managers;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import me.acrispycookie.Main;
 import me.acrispycookie.school.classes.ILesson;
@@ -21,7 +22,7 @@ public class ProgramManager {
     public Lesson[] getByDate(int day, int schoolHour, long timeToAnnounce){
         ArrayList<Lesson> lesson = new ArrayList<>();
         for(int i = 0; i < 4; i++){
-            JsonObject dayObject = program.get(String.valueOf(i)).getAsJsonObject().get(String.valueOf(getIndex(schoolHour, day))).getAsJsonObject();
+            JsonElement dayObject = program.get(String.valueOf(i)).getAsJsonObject().get(String.valueOf(getIndex(schoolHour, day)));
             if(dayObject.isJsonArray()){
                 JsonArray array = dayObject.getAsJsonArray();
                 int lessonId = array.get(0).getAsInt();
@@ -31,8 +32,8 @@ public class ProgramManager {
                 }
             }
             else {
-                JsonArray array1 = dayObject.get("0").getAsJsonArray();
-                JsonArray array2 = dayObject.get("1").getAsJsonArray();
+                JsonArray array1 = dayObject.getAsJsonObject().get("0").getAsJsonArray();
+                JsonArray array2 = dayObject.getAsJsonObject().get("1").getAsJsonArray();
                 lesson.add(new NLesson(new int[]{array1.get(0).getAsInt(), array2.get(1).getAsInt()}, new int[]{array2.get(0).getAsInt(), array2.get(1).getAsInt()}, timeToAnnounce));
                 break;
             }
