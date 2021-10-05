@@ -31,11 +31,10 @@ public class SchoolManager {
         int minute = calendar.get(Calendar.MINUTE);
         if(day != Calendar.SUNDAY && day != Calendar.SATURDAY){
             if(hour < 13 || (hour == 13 && minute < 25)){
-                ArrayList<Lesson[]> announcements = new ArrayList<>();
-                addAll(announcements, day, hour, minute);
-                startAnnouncements(announcements);
+                ArrayList<Lesson[]> announcements = getAll(day - 2, hour, minute);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                Console.println("The next lesson is at " + simpleDateFormat.format(new Date(announcements.get(0)[0].getTimeToAnnouce())));
+                Console.println("The next lesson is at " + simpleDateFormat.format(new Date(getTimeToAnnounce(getNextSchoolHour(hour, minute)))));
+                startAnnouncements(announcements);
             }
             else{
                 Console.println("There is no lesson left today! Will try again tomorrow...");
@@ -71,48 +70,50 @@ public class SchoolManager {
         scheduleNextDay();
     }
 
-    public void addAll(ArrayList<Lesson[]> announcements, int day, int hour, int minute){
+    public ArrayList<Lesson[]> getAll(int day, int hour, int minute){
+        ArrayList<Lesson[]> announcements = new ArrayList<>();
         int schoolHour = getNextSchoolHour(hour, minute);
         for(int i = schoolHour; i < 7; i++){
             Lesson[] l = Main.getInstance().getProgramManager().getByDate(day, i, getTimeToAnnounce(i));
             announcements.add(l);
         }
+        return announcements;
     }
 
     private long getTimeToAnnounce(int schoolHour) {
         Calendar calendar = Calendar.getInstance();
         switch (schoolHour){
-            case 1:
+            case 0:
                 calendar.set(Calendar.HOUR_OF_DAY, 8);
                 calendar.set(Calendar.MINUTE, 25);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 2:
+            case 1:
                 calendar.set(Calendar.HOUR_OF_DAY, 9);
                 calendar.set(Calendar.MINUTE, 15);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 3:
+            case 2:
                 calendar.set(Calendar.HOUR_OF_DAY, 10);
                 calendar.set(Calendar.MINUTE, 5);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 4:
+            case 3:
                 calendar.set(Calendar.HOUR_OF_DAY, 10);
                 calendar.set(Calendar.MINUTE, 55);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 5:
+            case 4:
                 calendar.set(Calendar.HOUR_OF_DAY, 11);
                 calendar.set(Calendar.MINUTE, 45);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 6:
+            case 5:
                 calendar.set(Calendar.HOUR_OF_DAY, 12);
                 calendar.set(Calendar.MINUTE, 35);
                 calendar.set(Calendar.SECOND, 0);
                 return calendar.getTimeInMillis();
-            case 7:
+            case 6:
                 calendar.set(Calendar.HOUR_OF_DAY, 13);
                 calendar.set(Calendar.MINUTE, 25);
                 calendar.set(Calendar.SECOND, 0);

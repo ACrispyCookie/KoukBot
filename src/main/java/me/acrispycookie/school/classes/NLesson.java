@@ -32,10 +32,7 @@ public class NLesson extends Lesson {
             Announcement g2 = new Announcement(id2, timeToAnnouce, Main.getInstance().getGuild().getRoleById(890980375910809630L));
             g2.start();
         }
-        boolean shouldAnnounceBreak = (id2[0] != 15) || (id1[0] != 15);
-        if(shouldAnnounceBreak){
-            Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
-            dialeima.start();
-        }
+        Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
+        dialeima.start();
     }
 }

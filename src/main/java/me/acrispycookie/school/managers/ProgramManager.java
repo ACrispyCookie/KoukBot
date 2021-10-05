@@ -27,9 +27,7 @@ public class ProgramManager {
                 JsonArray array = dayObject.getAsJsonArray();
                 int lessonId = array.get(0).getAsInt();
                 int urlId = array.get(1).getAsInt();
-                if(lessonId != 15){
-                    lesson.add(new ILesson(new int[]{lessonId, urlId}, timeToAnnounce, getRole(i)));
-                }
+                lesson.add(new ILesson(new int[]{lessonId, urlId}, timeToAnnounce, getRole(i), i == 0));
             }
             else {
                 JsonArray array1 = dayObject.getAsJsonObject().get("0").getAsJsonArray();

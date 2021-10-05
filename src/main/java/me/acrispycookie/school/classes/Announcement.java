@@ -1,9 +1,12 @@
 package me.acrispycookie.school.classes;
 
+import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.school.enums.EnumLesson;
 import net.dv8tion.jda.api.entities.Role;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,8 +32,8 @@ public class Announcement {
     public void start(){
         long delay = time - System.currentTimeMillis();
         ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
-        EnumLesson l = EnumLesson.get(id[0]);
-        if(l != null){
+        if(id != null){
+            EnumLesson l = EnumLesson.values()[id[0]];
             ses.schedule(() -> {
                 long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("features.announcer.announcementChannel"));
                 Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("Ει " + toMention.getAsMention() + ", έχεις μάθημα σε 5'\nΤο μάθημα σας είναι: " + l.getName() + "\nΆντε πάρε και το link: " + l.getUrl(id[1])).queue();
