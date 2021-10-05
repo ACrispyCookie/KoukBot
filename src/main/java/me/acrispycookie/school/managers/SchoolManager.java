@@ -31,11 +31,11 @@ public class SchoolManager {
         int minute = calendar.get(Calendar.MINUTE);
         if(day != Calendar.SUNDAY && day != Calendar.SATURDAY){
             if(hour < 13 || (hour == 13 && minute < 25)){
-                ArrayList<Lesson> announcements = new ArrayList<>();
+                ArrayList<Lesson[]> announcements = new ArrayList<>();
                 addAll(announcements, day, hour, minute);
                 startAnnouncements(announcements);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-                Console.println("The next lesson is at " + simpleDateFormat.format(new Date(announcements.get(0).getTimeToAnnouce())));
+                Console.println("The next lesson is at " + simpleDateFormat.format(new Date(announcements.get(0)[0].getTimeToAnnouce())));
             }
             else{
                 Console.println("There is no lesson left today! Will try again tomorrow...");
@@ -62,17 +62,19 @@ public class SchoolManager {
         }, delay, TimeUnit.MILLISECONDS);
     }
 
-    public void startAnnouncements(ArrayList<Lesson> announcements){
-        for(Lesson lesson : announcements){
-            lesson.startAnnouncements();
+    public void startAnnouncements(ArrayList<Lesson[]> announcements){
+        for(Lesson[] lessons : announcements){
+            for(Lesson l : lessons) {
+                l.startAnnouncements();
+            }
         }
         scheduleNextDay();
     }
 
-    public void addAll(ArrayList<Lesson> announcements, int day, int hour, int minute){
+    public void addAll(ArrayList<Lesson[]> announcements, int day, int hour, int minute){
         int schoolHour = getNextSchoolHour(hour, minute);
-        for(int i = schoolHour; i < 8; i++){
-            Lesson l = Main.getInstance().getProgramManager().getByDate(day, i, getTimeToAnnounce(i));
+        for(int i = schoolHour; i < 7; i++){
+            Lesson[] l = Main.getInstance().getProgramManager().getByDate(day, i, getTimeToAnnounce(i));
             announcements.add(l);
         }
     }
@@ -121,50 +123,50 @@ public class SchoolManager {
 
     private int getNextSchoolHour(int hour, int minute){
         if(hour < 8){
-            return 1;
+            return 0;
         }
         else if(hour == 8){
             if(minute < 25){
+                return 0;
+            }
+            else{
+                return 1;
+            }
+        }
+        else if(hour == 9){
+            if(minute < 15){
                 return 1;
             }
             else{
                 return 2;
             }
         }
-        else if(hour == 9){
-            if(minute < 15){
+        else if(hour == 10){
+            if(minute < 5){
                 return 2;
             }
             else{
                 return 3;
             }
         }
-        else if(hour == 10){
-            if(minute < 5){
-                return 3;
-            }
-            else{
-                return 4;
-            }
-        }
         else if(hour == 11){
             if(minute < 45){
+                return 4;
+            }
+            else {
+                return 5;
+            }
+        }
+        else if(hour == 12) {
+            if(minute < 35){
                 return 5;
             }
             else {
                 return 6;
             }
         }
-        else if(hour == 12) {
-            if(minute < 35){
-                return 6;
-            }
-            else {
-                return 7;
-            }
-        }
         else if(hour == 13 && minute < 25) {
-            return 7;
+            return 6;
         }
         return -1;
     }

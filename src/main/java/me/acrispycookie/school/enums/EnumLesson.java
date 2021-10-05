@@ -1,52 +1,51 @@
 package me.acrispycookie.school.enums;
 
-import net.dv8tion.jda.api.entities.Role;
-
 public enum EnumLesson {
     GREEK("Έκθεση",
-            "normal", "", "", "📖"),
+            new String[] {"https://minedu-secondary.webex.com/meet/karatzidou",
+                    "https://minedu-secondary.webex.com/meet/ekartsiouk"}, "📖"),
     LITERATURE("Λογοτεχνία",
-            "normal", "", "", "📚"),
+            new String[] {"https://minedu-secondary.webex.com/meet/karatzidou",
+                    "https://minedu-secondary.webex.com/meet/ekartsiouk"}, "📚"),
     MATHS("Μαθηματικά",
-            "normal", "", "", "📐"),
+            new String[] {"https://minedu-secondary.webex.com/meet/tenia84",
+                    "https://minedu-secondary.webex.com/meet/skukiotis",
+                    "https://minedu-secondary.webex.com/meet/parasiri"}, "📐"),
     PHYSICS("Φυσική",
-            "normal", "", "", "👨‍🔬"),
+            new String[] {"https://minedu-secondary.webex.com/meet/gbatziak"}, "👨‍🔬"),
     CHEMISTRY("Χημεία",
-            "normal", "", "", "🧪"),
+            new String[] {"https://minedu-secondary.webex.com/meet/ekamvisi"}, "🧪"),
     BIOLOGY("Βιολογία",
-            "normal", "", "", "🧬"),
+            new String[] {"https://minedu-secondary.webex.com/meet/gbatziak"}, "🧬"),
     ECONOMICS("Οικονομικά",
-            "normal", "", "", "📊"),
+            new String[] {"https://minedu-secondary.webex.com/meet/geodypap"}, "📊"),
     COMPUTER_SCIENCE("Πληροφορική",
-            "normal", "", "", "💻"),
+            new String[] {""}, "💻"),
     HISTORY("Ιστορία",
-            "normal", "", "", "🏛"),
+            new String[] {"https://minedu-secondary.webex.com/meet/davanouf",
+                    "https://minedu-secondary.webex.com/meet/ekartsiouk"}, "🏛"),
     LATIN("Λατινικά",
-            "normal", "", "", "🔡"),
+            new String[] {"https://minedu-secondary.webex.com/meet/ekartsiouk"}, "🔡"),
     ANCIENT_GREEK_G("Αρχαία διδαγμένο",
-            "normal", "", "", "📃"),
+            new String[] {"https://minedu-secondary.webex.com/meet/akaliakouda"}, "📃"),
     ANCIENT_GREEK_A("Αρχαία αδίδακτο",
-            "normal", "", "", "📜"),
+            new String[] {"https://minedu-secondary.webex.com/meet/akaliakouda"}, "📜"),
     GYMNASTICS("Γυμναστική",
-            "normal", "", "", "🤸‍♂️"),
+            new String[] {"https://minedu-secondary.webex.com/meet/grammato"}, "🤸‍♂️"),
     ENGLISH("Αγγλικά",
-            "normal", "", "", "🔠"),
+            new String[] {"https://minedu-secondary.webex.com/meet/georgbesas"}, "🔠"),
     RELIGIOUS_EDUCATION("Θρησκευτικά",
-            "normal", "", "", "✝"),
+            new String[] {"https://minedu-secondary.webex.com/meet/asmitroula"}, "✝"),
     NOTHING("Τίποτα",
-                    "normal", "", "", "🆓");
+            new String[] {""}, "🆓");
 
     String name;
-    String type;
-    String b1url;
-    String b2url;
+    String url[];
     String emoji;
 
-    EnumLesson(String name, String type, String b1url, String b2url, String emoji){
+    EnumLesson(String name, String[] url, String emoji){
         this.name = name;
-        this.type = type;
-        this.b1url = b1url;
-        this.b2url = b2url;
+        this.url = url;
         this.emoji = emoji;
     }
 
@@ -58,26 +57,11 @@ public enum EnumLesson {
         return emoji;
     }
 
-    public String getUrl(Role role) {
-        switch (type) {
-            case "kat":
-                if(this == EnumLesson.MATHS){
-                    if (role.getIdLong() == 787997819889516554L) {
-                        return b1url;
-                    } else if (role.getIdLong() == 788351437540687913L) {
-                        return b2url;
-                    }
-                }
-            case "lang":
-                return b1url;
-            case "normal":
-                if (role.getIdLong() == 786225886311481355L) {
-                    return b1url;
-                } else if (role.getIdLong() == 786225699668361238L) {
-                    return b2url;
-                }
-                break;
-        }
-        return null;
+    public String getUrl(int index){
+        return this.url[index];
+    }
+
+    public static EnumLesson get(int index){
+        return values()[index];
     }
 }

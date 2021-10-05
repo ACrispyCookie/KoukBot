@@ -2,12 +2,10 @@ package me.acrispycookie.school.classes;
 
 public abstract class Lesson {
 
-    String type;
     long timeToAnnouce;
     public abstract void startAnnouncements();
 
-    public Lesson(String type, long timeToAnnounce){
-        this.type = type;
+    public Lesson(long timeToAnnounce){
         this.timeToAnnouce = timeToAnnounce;
     }
 

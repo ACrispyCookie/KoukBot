@@ -1,12 +1,14 @@
 package me.acrispycookie.school.managers;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import me.acrispycookie.school.classes.KatLesson;
+import me.acrispycookie.Main;
+import me.acrispycookie.school.classes.ILesson;
 import me.acrispycookie.school.classes.Lesson;
-import me.acrispycookie.school.classes.NormalLesson;
-import me.acrispycookie.school.enums.EnumLesson;
+import me.acrispycookie.school.classes.NLesson;
+import net.dv8tion.jda.api.entities.Role;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 
 public class ProgramManager {
 
@@ -16,39 +18,46 @@ public class ProgramManager {
         this.program = program;
     }
 
-    public Lesson getByDate(int day, int schoolHour, long timeToAnnounce){
-        JsonObject dayObject = program.get(String.valueOf(schoolHour)).getAsJsonObject().get(getDayName(day)).getAsJsonObject();
-        String type = dayObject.get("type").getAsString();
-        switch (type) {
-            case "normal":
-                String b1 = dayObject.get("b1").getAsString();
-                String b2 = dayObject.get("b2").getAsString();
-                return new NormalLesson(EnumLesson.valueOf(b1), EnumLesson.valueOf(b2), timeToAnnounce);
-            case "kat":
-                String bthet1 = dayObject.get("bthet1").getAsString();
-                String bthet2 = dayObject.get("bthet2").getAsString();
-                String anth = dayObject.get("anth").getAsString();
-                return new KatLesson(EnumLesson.valueOf(bthet1), EnumLesson.valueOf(bthet2), EnumLesson.valueOf(anth), timeToAnnounce);
+    public Lesson[] getByDate(int day, int schoolHour, long timeToAnnounce){
+        ArrayList<Lesson> lesson = new ArrayList<>();
+        for(int i = 0; i < 4; i++){
+            JsonObject dayObject = program.get(String.valueOf(i)).getAsJsonObject().get(String.valueOf(getIndex(schoolHour, day))).getAsJsonObject();
+            if(dayObject.isJsonArray()){
+                JsonArray array = dayObject.getAsJsonArray();
+                int lessonId = array.get(0).getAsInt();
+                int urlId = array.get(1).getAsInt();
+                if(lessonId != 15){
+                    lesson.add(new ILesson(new int[]{lessonId, urlId}, timeToAnnounce, getRole(i)));
+                }
+            }
+            else {
+                JsonArray array1 = dayObject.get("0").getAsJsonArray();
+                JsonArray array2 = dayObject.get("1").getAsJsonArray();
+                lesson.add(new NLesson(new int[]{array1.get(0).getAsInt(), array2.get(1).getAsInt()}, new int[]{array2.get(0).getAsInt(), array2.get(1).getAsInt()}, timeToAnnounce));
+                break;
+            }
         }
-        return null;
+        return lesson.toArray(new Lesson[lesson.size()]);
     }
 
-    private String getDayName(int day){
-        if(day == Calendar.MONDAY){
-            return "monday";
+    private int getIndex(int hourIndex, int dayIndex){
+        return dayIndex * 7 + hourIndex;
+    }
+
+    private Role getRole(int i){
+        Role role = null;
+        if(i == 0){
+            role = Main.getInstance().getGuild().getRoleById(885614146777911327L);
         }
-        else if(day == Calendar.TUESDAY){
-            return "tuesday";
+        else if(i == 1){
+            role = Main.getInstance().getGuild().getRoleById(885614089399861329L);
         }
-        else if(day == Calendar.WEDNESDAY){
-            return "wednesday";
+        else if(i == 2){
+            role = Main.getInstance().getGuild().getRoleById(885614210963361882L);
         }
-        else if(day == Calendar.THURSDAY){
-            return "thursday";
+        else if(i == 3){
+            role = Main.getInstance().getGuild().getRoleById(885909387665874964L);
         }
-        else if(day == Calendar.FRIDAY){
-            return "friday";
-        }
-        return null;
+        return role;
     }
 }
