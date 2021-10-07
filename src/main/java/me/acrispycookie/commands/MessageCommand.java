@@ -1,6 +1,7 @@
 package me.acrispycookie.commands;
 
 import me.acrispycookie.Main;
+import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.utility.EmbedMessage;
 import me.acrispycookie.utility.Perm;
 import me.acrispycookie.utility.Utils;
@@ -8,11 +9,17 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.apache.commons.io.FileUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MessageCommand extends BotCommand {

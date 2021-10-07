@@ -83,7 +83,8 @@
           "`%prefixsetcolor` - Sets the color of your user card.",
           "`%prefixnotify` - Notify a user while they are deafened.",
           "`%prefixclear` - Clears the chat.",
-          "`%prefixmessage` - Makes KoukBot post messages."
+          "`%prefixmessage` - Makes KoukBot post messages.",
+          "`%prefixsay` - Makes KoukBot say whatever you want."
         ],
         "play": {
           "now-playing": "%1 [%2]",
