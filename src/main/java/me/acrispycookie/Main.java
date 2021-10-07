@@ -171,11 +171,10 @@ public class Main {
         Console.println("Starting discord bot...");
         try {
             JDABuilder builder = JDABuilder.createDefault(configManager.get("bot.botToken"));
+            builder.enableIntents(GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES);
             builder.setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")));
             builder.addEventListeners(new BotCommand() { @Override  public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) { } });
             builder.addEventListeners(new MessageSentEvent());
-            builder.enableIntents(GatewayIntent.GUILD_PRESENCES);
-            builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
             bot = builder.build();
             bot.awaitReady();
         } catch (LoginException | InterruptedException e) {

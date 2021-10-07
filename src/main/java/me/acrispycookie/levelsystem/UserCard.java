@@ -1,5 +1,6 @@
 package me.acrispycookie.levelsystem;
 
+import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.OnlineStatus;
