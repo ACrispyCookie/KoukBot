@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
 import java.awt.*;
@@ -170,12 +172,15 @@ public class Main {
         long startTime = System.currentTimeMillis();
         Console.println("Starting discord bot...");
         try {
-            JDABuilder builder = JDABuilder.createDefault(configManager.get("bot.botToken"));
-            builder.enableIntents(GatewayIntent.GUILD_EMOJIS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES);
-            builder.setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")));
-            builder.addEventListeners(new BotCommand() { @Override  public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) { } });
-            builder.addEventListeners(new MessageSentEvent());
-            bot = builder.build();
+            bot = JDABuilder.createDefault(configManager.get("bot.botToken"))
+                    .setChunkingFilter(ChunkingFilter.ALL)
+                    .addEventListeners(new BotCommand() { @Override  public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) { } })
+                    .addEventListeners(new MessageSentEvent())
+                    .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")))
+                    .build();
             bot.awaitReady();
         } catch (LoginException | InterruptedException e) {
             e.printStackTrace();
