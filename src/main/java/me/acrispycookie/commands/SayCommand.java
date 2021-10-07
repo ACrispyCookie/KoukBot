@@ -43,7 +43,7 @@ public class SayCommand extends BotCommand {
         final int X_TEXT = 244;
         final int Y_TEXT = 42;
         try {
-            Font font = new Font("Sarine-Regular", Font.PLAIN, 70);
+            Font font = new Font("Cera Pro", Font.PLAIN, 70);
             BufferedImage image = ImageIO.read(new File("./images/kouk.png"));
             Graphics2D graphics = (Graphics2D) image.getGraphics();
             graphics.setFont(font);
@@ -55,7 +55,7 @@ public class SayCommand extends BotCommand {
 
             //DRAW TEXT
             HashMap<TextAttribute, Object> map = new HashMap<TextAttribute, Object>() {{
-                put(TextAttribute.FAMILY, "Sarine-Regular");
+                put(TextAttribute.FAMILY, "Cera Pro");
                 put(TextAttribute.SIZE, 70f);
             }};
             AttributedCharacterIterator paragraph = new AttributedString(msg, map).getIterator();
