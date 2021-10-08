@@ -62,11 +62,11 @@ public class LanguageManager {
     public String getRandomLevelUp(ArrayList<String> special){
         Random random = new Random();
         JsonArray array = language.getAsJsonArray("level-up");
-        if(random.nextBoolean()){
+        if(random.nextBoolean() && special.size() > 0){
             return special.get(random.nextInt(special.size()));
         }
         else{
-            return array.get(random.nextInt(special.size())).getAsString();
+            return array.get(random.nextInt(array.size())).getAsString();
         }
     }
 
