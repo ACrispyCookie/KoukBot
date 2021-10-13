@@ -20,7 +20,7 @@ public abstract class BotCommand extends ListenerAdapter {
         Member m = e.getMember();
         if(!m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
             if(e.getMessage().getContentRaw().startsWith(Main.getInstance().getPrefix()) && e.getMessage().getAttachments().size() == 0){
-                String msg = e.getMessage().getContentRaw();
+                String msg = e.getMessage().getContentDisplay();
                 String noPrefixMsg = msg.substring(Main.getInstance().getPrefix().length());
                 String commandBody = noPrefixMsg.contains(" ") ? noPrefixMsg.substring(0, noPrefixMsg.indexOf(' ')) : noPrefixMsg;
                 String[] args = noPrefixMsg.contains(" ") ? findArguments(noPrefixMsg.substring(noPrefixMsg.indexOf(' '))) : new String[] {};
