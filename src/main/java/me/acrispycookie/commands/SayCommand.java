@@ -26,6 +26,12 @@ import java.util.stream.Collectors;
 
 public class SayCommand extends BotCommand {
 
+    boolean evil;
+
+    public SayCommand(boolean evil){
+        this.evil = evil;
+    }
+
     @Override
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
         if(args.length > 0){
@@ -73,6 +79,19 @@ public class SayCommand extends BotCommand {
                 drawPosY += layout.getAscent();
                 layout.draw(graphics, drawPosX, drawPosY);
                 drawPosY += layout.getDescent() + layout.getLeading();
+            }
+
+            if(evil){
+                for(int x = 0; x < image.getWidth(); x++){
+                    for(int y = 0; y < image.getHeight(); y++){
+                        int color = image.getRGB(x, y);
+                        Color inverted = new Color(color, true);
+                        inverted = new Color(255 - inverted.getRed(),
+                                255 - inverted.getGreen(),
+                                255 - inverted.getBlue());
+                        image.setRGB(x, y, inverted.getRGB());
+                    }
+                }
             }
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();

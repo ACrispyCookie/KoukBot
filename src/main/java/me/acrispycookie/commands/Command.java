@@ -17,7 +17,8 @@ public enum Command {
     TODO(new ToDoCommand(), new String[]{"todo", "task"}),
     NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
     MESSAGE(new MessageCommand(), new String[]{"message", "msg"}),
-    SAY(new SayCommand(), new String[]{"say"}),
+    SAY(new SayCommand(false), new String[]{"say"}),
+    EVILSAY(new SayCommand(true), new String[]{"evilsay", "esay"}),
     CLEAR(new ClearCommand(), new String[]{"clear"}),
     PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ", "panell"}),
     PLAY(new PlayCommand(), new String[]{"play", "queue", "q"}),
@@ -26,6 +27,7 @@ public enum Command {
     NEXT(new NextCommand(), new String[]{"next", "skip"}),
     PREVIOUS(new PreviousCommand(), new String[]{"previous", "prev"}),
     STOP(new StopCommand(), new String[]{"stop"});
+    //RECORD(new RecordCommand(), new String[]{"rec"});
     BotCommand botCommand;
     String[] aliases;
 
