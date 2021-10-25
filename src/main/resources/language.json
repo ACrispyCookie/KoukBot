@@ -84,7 +84,8 @@
           "`%prefixnotify` - Notify a user while they are deafened.",
           "`%prefixclear` - Clears the chat.",
           "`%prefixmessage` - Makes KoukBot post messages.",
-          "`%prefixsay` - Makes KoukBot say whatever you want."
+          "`%prefixsay` - Control Kouk.",
+          "`%prefixevilsay` - Control evil Kouk."
         ],
         "play": {
           "now-playing": "%1 [%2]",
