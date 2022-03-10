@@ -24,11 +24,17 @@ public class NLesson extends Lesson {
 
     @Override
     public void startAnnouncements() {
-        Announcement g1 = new Announcement(id1, timeToAnnouce, Main.getInstance().getGuild().getRoleById(890980670569074739L));
-        g1.start();
-        Announcement g2 = new Announcement(id2, timeToAnnouce, Main.getInstance().getGuild().getRoleById(890980375910809630L));
-        g2.start();
-        Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
-        dialeima.start();
+        if(id1[0] != 15){
+            Announcement g1 = new Announcement(id1, timeToAnnouce, Main.getInstance().getGuild().getRoleById(890980670569074739L));
+            g1.start();
+        }
+        if(id2[0] != 15){
+            Announcement g2 = new Announcement(id2, timeToAnnouce, Main.getInstance().getGuild().getRoleById(890980375910809630L));
+            g2.start();
+        }
+        if(id1[0] != 15 || id2[0] != 15){
+            Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
+            dialeima.start();
+        }
     }
 }
