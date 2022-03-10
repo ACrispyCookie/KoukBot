@@ -32,7 +32,7 @@ public class ProgramManager {
             else {
                 JsonArray array1 = dayObject.getAsJsonObject().get("0").getAsJsonArray();
                 JsonArray array2 = dayObject.getAsJsonObject().get("1").getAsJsonArray();
-                lesson.add(new NLesson(new int[]{array1.get(0).getAsInt(), array2.get(1).getAsInt()}, new int[]{array2.get(0).getAsInt(), array2.get(1).getAsInt()}, timeToAnnounce));
+                lesson.add(new NLesson(new int[]{array1.get(0).getAsInt(), array1.get(1).getAsInt()}, new int[]{array2.get(0).getAsInt(), array2.get(1).getAsInt()}, timeToAnnounce));
                 break;
             }
         }
