@@ -18,25 +18,25 @@ public class Time {
 		diff = diff - minutes * 60;
 		long seconds = diff;
 		if(years >= 1) {
-			formatted = formatted + years + " χρόνια ";
+			formatted = formatted + years + " χρόν" + (years == 1 ? "ο" : "ια") + " ";
 		}
 		if(months >= 1) {
-			formatted = formatted + months + " μήνες ";
+			formatted = formatted + months + " μήν" + (months == 1 ? "α" : "ες") + " ";
 		}
 		if(weeks >= 1) {
-			formatted = formatted + weeks + " εβδομάδες ";
+			formatted = formatted + weeks + " εβδομάδ" + (weeks == 1 ? "α" : "ες") + " ";
 		}
 		if(days >= 1) {
-			formatted = formatted + days + " ημέρες ";
+			formatted = formatted + days + " ημέρ" + (days == 1 ? "α" : "ες") + " ";
 		}
 		if(hours >= 1) {
-			formatted = formatted + hours + " ώρες ";
+			formatted = formatted + hours + " ώρ" + (hours == 1 ? "α" : "ες") + " ";
 		}
 		if(minutes >= 1) {
-			formatted = formatted + minutes + " λεπτά ";
+			formatted = formatted + minutes + " λεπτ" + (minutes == 1 ? "ό" : "ά") + " ";
 		}
 		if(seconds >= 1) {
-			formatted = formatted + seconds + " δευτερόλεπτα ";
+			formatted = formatted + seconds + " δευτερόλεπτ" + (seconds == 1 ? "ο" : "α") + " ";
 		}
 		if(formatted.isEmpty()) {
 			formatted = "0 δευτερόλεπτα";

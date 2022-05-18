@@ -21,6 +21,7 @@ public enum Command {
     EVILSAY(new SayCommand(true), new String[]{"evilsay", "esay"}),
     CLEAR(new ClearCommand(), new String[]{"clear"}),
     PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ", "panell"}),
+    ITALY(new ItalyCommand(), new String[]{"italy", "italia"}),
     PLAY(new PlayCommand(), new String[]{"play", "queue", "q"}),
     PAUSE(new PauseCommand(), new String[]{"pause"}),
     RESUME(new ResumeCommand(), new String[]{"resume", "res"}),
