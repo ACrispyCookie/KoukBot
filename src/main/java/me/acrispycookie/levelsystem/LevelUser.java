@@ -93,7 +93,7 @@ public class LevelUser {
         joinedVoiceOn = System.currentTimeMillis();
         voiceExpTimer = new Timer();
         TimerTask expTask = getScheduledTask();
-        voiceExpTimer.schedule(expTask, 0, 60 * 1000L);
+        voiceExpTimer.schedule(expTask, 0, 2 * 1000L);
     }
 
     public void leaveChannel(){
@@ -131,7 +131,7 @@ public class LevelUser {
         xp = newExp;
         xpRequired = getRequired(level);
         Main.getInstance().getGuild().getTextChannelById(channelId)
-                .sendMessage(Main.getInstance().getLanguageManager().getRandomLevelUp(getSpecialLevelUp()) + " Μπράβο " + discordUser.getAsMention() + ", έφτασες level " + level + ", επειδή ήσουν στο κανάλι **" + channel + "**!")
+                .sendMessage(Main.getInstance().getLanguageManager().getRandomLevelUp(getSpecialLevelUp()) + " Μπράβο " + discordUser.getAsMention() + ", έφτασες level " + level + ", επειδή ήσουν στο κανάλι **" + channel.getAsMention() + "**!")
                 .queue();
     }
 

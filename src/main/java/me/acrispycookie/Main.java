@@ -2,7 +2,9 @@ package me.acrispycookie;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.acrispycookie.commands.BotCommand;
+import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.levelsystem.XPGainEvent;
 import me.acrispycookie.managers.*;
 import me.acrispycookie.managers.MoviePollManager;
@@ -55,6 +57,7 @@ public class Main {
         main.loadLanguage();
         main.loadUserData();
         main.startBot();
+        main.loadLevelManager();
         main.loadAnnouncerManager();
         main.loadPanellhniesManager();
         main.loadProgramCreatorManager();
@@ -191,6 +194,19 @@ public class Main {
             System.exit(-1);
         }
         Console.println("Bot has been started successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+    }
+
+    private void loadLevelManager(){
+        if(Boolean.parseBoolean(configManager.get("features.levels.enabled"))){
+            long startTime = System.currentTimeMillis();
+            Console.println("Loading level manager...");
+            for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
+                for(Member m : v.getMembers()){
+                    LevelUser.getByDiscordId(m.getIdLong());
+                }
+            }
+            Console.println("Level manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+        }
     }
 
     private void loadMusicManager(){
