@@ -93,7 +93,7 @@ public class LevelUser {
         joinedVoiceOn = System.currentTimeMillis();
         voiceExpTimer = new Timer();
         TimerTask expTask = getScheduledTask();
-        voiceExpTimer.schedule(expTask, 0, 2 * 1000L);
+        voiceExpTimer.schedule(expTask, 0, 60 * 1000L);
     }
 
     public void leaveChannel(){
