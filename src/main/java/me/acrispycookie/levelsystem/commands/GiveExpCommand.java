@@ -27,7 +27,7 @@ public class GiveExpCommand extends BotCommand {
                 t.sendMessage(new EmbedMessage(m.getUser(),
                         Main.getInstance().getLanguageManager().get("commands.success.title.give-xp"),
                         Main.getInstance().getLanguageManager().get("commands.success.description.give-xp", String.valueOf(expToAdd), levelUser.getDiscordUser().getAsMention())).build()).queue();
-                levelUser.addExp(expToAdd, t.getIdLong(), false);
+                levelUser.addExp(expToAdd, t.getIdLong());
             }
             else if(args.length == 2 && mentions.size() > 0 && Utils.isInt(args[1]) && Integer.parseInt(args[1]) > 0 && Integer.parseInt(args[1]) < 1000000) {
                 levelUser = LevelUser.getByDiscordId(mentions.get(0).getIdLong());
@@ -35,7 +35,7 @@ public class GiveExpCommand extends BotCommand {
                 t.sendMessage(new EmbedMessage(m.getUser(),
                         Main.getInstance().getLanguageManager().get("commands.success.title.give-xp"),
                         Main.getInstance().getLanguageManager().get("commands.success.description.give-xp", String.valueOf(expToAdd), levelUser.getDiscordUser().getAsMention())).build()).queue();
-                levelUser.addExp(expToAdd, t.getIdLong(), false);
+                levelUser.addExp(expToAdd, t.getIdLong());
             }
             else{
                 t.sendMessage(new EmbedMessage(m.getUser(),

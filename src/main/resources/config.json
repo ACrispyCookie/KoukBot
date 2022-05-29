@@ -13,6 +13,10 @@
     "errorColor": "#c43333"
   },
   "features": {
+    "levels": {
+      "enabled": true,
+      "generalChannel": 783655696423714816
+    },
     "announcer": {
       "enabled": false,
       "schoolCategory": 785791668213121024,

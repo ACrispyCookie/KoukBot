@@ -3,9 +3,10 @@ package me.acrispycookie;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.acrispycookie.commands.BotCommand;
-import me.acrispycookie.levelsystem.MessageSentEvent;
+import me.acrispycookie.levelsystem.XPGainEvent;
 import me.acrispycookie.managers.*;
 import me.acrispycookie.managers.MoviePollManager;
+import me.acrispycookie.managers.music.AudioRecorder;
 import me.acrispycookie.school.managers.PanellhniesManager;
 import me.acrispycookie.school.managers.ProgramCreatorManager;
 import me.acrispycookie.school.managers.ProgramManager;
@@ -38,6 +39,7 @@ public class Main {
     private ProgramManager programManager;
     private PanellhniesManager panellhniesManager;
     private ProgramCreatorManager programCreator;
+    private AudioRecorder audioRecorder;
     private static Main instance;
 
     public Main(){
@@ -59,6 +61,7 @@ public class Main {
         main.loadToDoManager();
         main.loadMusicManager();
         main.loadMoviePollManager();
+        main.audioRecorder = new AudioRecorder(main);
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
     }
@@ -175,7 +178,7 @@ public class Main {
             bot = JDABuilder.createDefault(configManager.get("bot.botToken"))
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .addEventListeners(new BotCommand() { @Override  public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) { } })
-                    .addEventListeners(new MessageSentEvent())
+                    .addEventListeners(new XPGainEvent())
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_PRESENCES)
@@ -354,6 +357,10 @@ public class Main {
 
     public MusicManager getMusicManager() {
         return musicManager;
+    }
+
+    public AudioRecorder getAudioRecorder() {
+        return audioRecorder;
     }
 
     public User getDiscordUser(long discordId){

@@ -3,12 +3,15 @@ package me.acrispycookie.levelsystem;
 import me.acrispycookie.Main;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class MessageSentEvent extends ListenerAdapter {
+public class XPGainEvent extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent e){
@@ -19,10 +22,28 @@ public class MessageSentEvent extends ListenerAdapter {
                 if(levelUser.getNextValidMessage() <= System.currentTimeMillis()){
                     Random random = new Random();
                     int exp = random.nextInt(11);
-                    levelUser.addExp(15 + exp, e.getChannel().getIdLong(), true);
+                    levelUser.addExp(15 + exp, e.getChannel());
                     levelUser.save();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onGuildVoiceJoin(@NotNull GuildVoiceJoinEvent e) {
+        Member m = e.getMember();
+        if(!m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
+            LevelUser levelUser = LevelUser.getByDiscordId(m.getIdLong());
+            levelUser.joinChannel();
+        }
+    }
+
+    @Override
+    public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent e) {
+        Member m = e.getMember();
+        if(!m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
+            LevelUser levelUser = LevelUser.getByDiscordId(m.getIdLong());
+            levelUser.leaveChannel();
         }
     }
 }

@@ -6,7 +6,9 @@ import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import javax.imageio.ImageIO;
 import javax.swing.text.NumberFormatter;
@@ -19,8 +21,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Locale;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 
 public class LevelUser {
 
@@ -30,6 +34,8 @@ public class LevelUser {
     int totalXp;
     int xpRequired;
     long nextValidMessage;
+    long joinedVoiceOn;
+    Timer voiceExpTimer;
     String cardColor;
     ArrayList<String> specialLevelUp;
     static ArrayList<LevelUser> loadedUsers = new ArrayList<>();
@@ -42,6 +48,7 @@ public class LevelUser {
         this.totalXp = findTotalXP(level) + xp;
         this.xpRequired = getRequired(level);
         this.nextValidMessage = nextValidMessage;
+        if(Main.getInstance().getDiscordMember(discordUser).getVoiceState().inVoiceChannel()) joinChannel(); else joinedVoiceOn = 0;
         this.specialLevelUp = specialLevelUp;
         loadedUsers.add(this);
         if(!isSaved){
@@ -49,15 +56,29 @@ public class LevelUser {
         }
     }
 
-    public void addExp(int exp, long channelId, boolean updateMinute){
+    public void addExp(int exp, long channelId){
         totalXp = totalXp + exp;
         xp = xp + exp;
         while(xp >= xpRequired){
             levelUp(channelId);
         }
-        if(updateMinute){
-            nextValidMessage = System.currentTimeMillis() + 60 * 1000;
+    }
+
+    public void addExp(int exp, long channelId, VoiceChannel channel){
+        totalXp = totalXp + exp;
+        xp = xp + exp;
+        while(xp >= xpRequired){
+            levelUp(channelId, channel);
         }
+    }
+
+    public void addExp(int exp, TextChannel channelId){
+        totalXp = totalXp + exp;
+        xp = xp + exp;
+        while(xp >= xpRequired){
+            levelUp(channelId.getIdLong());
+        }
+        nextValidMessage = System.currentTimeMillis() + 60 * 1000;
     }
 
     public void removeExp(int exp){
@@ -66,6 +87,30 @@ public class LevelUser {
         xpRequired = getRequired(level);
         int previousLevelXp = findTotalXP(level);
         xp = totalXp - previousLevelXp;
+    }
+
+    public void joinChannel(){
+        joinedVoiceOn = System.currentTimeMillis();
+        voiceExpTimer = new Timer();
+        TimerTask expTask = getScheduledTask();
+        voiceExpTimer.schedule(expTask, 0, 60 * 1000L);
+    }
+
+    public void leaveChannel(){
+        joinedVoiceOn = 0;
+        voiceExpTimer.cancel();
+    }
+
+    private TimerTask getScheduledTask(){
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Random random = new Random();
+                int exp = random.nextInt(6);
+                addExp(5 + exp, Long.parseLong(Main.getInstance().getConfigManager().get("features.levels.generalChannel")), Main.getInstance().getDiscordMember(discordUser).getVoiceState().getChannel());
+            }
+        };
+        return task;
     }
 
     public void setCardColor(String color){
@@ -78,6 +123,16 @@ public class LevelUser {
         xp = newExp;
         xpRequired = getRequired(level);
         Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage(Main.getInstance().getLanguageManager().getRandomLevelUp(getSpecialLevelUp()) + " Μπράβο " + discordUser.getAsMention() + ", έφτασες level " + level + "!").queue();
+    }
+
+    public void levelUp(long channelId, VoiceChannel channel){
+        int newExp = xp - xpRequired;
+        level++;
+        xp = newExp;
+        xpRequired = getRequired(level);
+        Main.getInstance().getGuild().getTextChannelById(channelId)
+                .sendMessage(Main.getInstance().getLanguageManager().getRandomLevelUp(getSpecialLevelUp()) + " Μπράβο " + discordUser.getAsMention() + ", έφτασες level " + level + ", επειδή ήσουν στο κανάλι **" + channel + "**!")
+                .queue();
     }
 
     public void sendCard(long channelId){
