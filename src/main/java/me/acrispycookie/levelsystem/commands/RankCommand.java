@@ -19,7 +19,7 @@ public class RankCommand extends BotCommand {
         if(args.length == 0){
             levelUser = LevelUser.getByDiscordId(m.getIdLong());
         }
-        else if(args.length == 1 && mentions.size() > 0){
+        else if(mentions.size() == 1){
             levelUser = LevelUser.getByDiscordId(mentions.get(0).getIdLong());
         }
         else{
