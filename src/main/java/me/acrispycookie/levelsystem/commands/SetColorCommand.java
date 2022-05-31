@@ -35,7 +35,7 @@ public class SetColorCommand extends BotCommand {
             else{
                 t.sendMessage(new EmbedMessage(m.getUser(),
                         Main.getInstance().getLanguageManager().get("commands.noperm.title"),
-                        Main.getInstance().getLanguageManager().get("commands.noperm.description"),
+                        Main.getInstance().getLanguageManager().get("commands.noperm.description", Perm.SET_COLOR_OTHER.name()),
                         Main.getInstance().getBotColor()).build()).queue();
             }
         }

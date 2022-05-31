@@ -51,7 +51,7 @@ public class ClearCommand extends BotCommand {
         else{
             t.sendMessage(new EmbedMessage(m.getUser(),
                     Main.getInstance().getLanguageManager().get("no-perm.title"),
-                    Main.getInstance().getLanguageManager().get("no-perm.description"),
+                    Main.getInstance().getLanguageManager().get("no-perm.description", Perm.CLEAR.name()),
                     Main.getInstance().getErrorColor()).build()).queue();
         }
     }

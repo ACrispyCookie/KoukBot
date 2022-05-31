@@ -1,10 +1,11 @@
 {
   "permissions": {
-    "GIVE_XP": [
-      0
-    ],
-    "REMOVE_XP": [
-      0
-    ]
+    "GIVE_XP": [],
+    "REMOVE_XP": [],
+    "SET_PERMISSION": [],
+    "MESSAGE": [],
+    "SET_COLOR_OTHER": [],
+    "SET_PREFIX": [],
+    "CLEAR": []
   }
 }

@@ -27,8 +27,8 @@ public enum Command {
     RESUME(new ResumeCommand(), new String[]{"resume", "res"}),
     NEXT(new NextCommand(), new String[]{"next", "skip"}),
     PREVIOUS(new PreviousCommand(), new String[]{"previous", "prev"}),
-    STOP(new StopCommand(), new String[]{"stop"});
-    //RECORD(new RecordCommand(), new String[]{"rec"});
+    STOP(new StopCommand(), new String[]{"stop"}),
+    RECORD(new RecordCommand(), new String[]{"rec"});
     BotCommand botCommand;
     String[] aliases;
 
