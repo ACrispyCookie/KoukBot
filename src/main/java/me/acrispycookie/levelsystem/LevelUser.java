@@ -107,7 +107,7 @@ public class LevelUser {
             public void run() {
                 Random random = new Random();
                 int exp = random.nextInt(6);
-                addExp(15 + exp, Long.parseLong(Main.getInstance().getConfigManager().get("features.levels.generalChannel")), Main.getInstance().getDiscordMember(discordUser).getVoiceState().getChannel());
+                addExp(10 + exp, Long.parseLong(Main.getInstance().getConfigManager().get("features.levels.generalChannel")), Main.getInstance().getDiscordMember(discordUser).getVoiceState().getChannel());
                 save();
             }
         };
