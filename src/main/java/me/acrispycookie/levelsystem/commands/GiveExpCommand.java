@@ -18,7 +18,7 @@ public class GiveExpCommand extends BotCommand {
 
     @Override
     public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
-        int expToAdd = 0;
+        int expToAdd;
         if(Perm.hasPermission(m, Perm.GIVE_XP)){
             LevelUser levelUser;
             if(args.length == 1  && Utils.isInt(args[0]) && Integer.parseInt(args[0]) > 0 && Integer.parseInt(args[0]) < 1000000) {

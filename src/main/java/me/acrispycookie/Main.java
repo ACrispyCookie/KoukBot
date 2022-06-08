@@ -2,7 +2,6 @@ package me.acrispycookie;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.acrispycookie.commands.BotCommand;
 import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.levelsystem.XPGainEvent;
@@ -34,6 +33,7 @@ public class Main {
     private PermissionManager permissionManager;
     private ConfigManager configManager;
     private UserDataManager userDataManager;
+    private LeaderboardManager leaderboardManager;
     private ToDoManager toDoManager;
     private MoviePollManager moviePollManager;
     private MusicManager musicManager;
@@ -71,6 +71,7 @@ public class Main {
 
     public void disable(){
         Main.getInstance().getUserDataManager().save();
+        Main.getInstance().getLeaderboardManager().save();
         Main.getInstance().getMusicManager().stop();
         bot.shutdown();
         Console.println("Άντε παιδιά.. Καλη όρεξη");
@@ -200,10 +201,24 @@ public class Main {
         if(Boolean.parseBoolean(configManager.get("features.levels.enabled"))){
             long startTime = System.currentTimeMillis();
             Console.println("Loading level manager...");
-            for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
-                for(Member m : v.getMembers()){
-                    LevelUser.getByDiscordId(m.getIdLong());
+            try {
+                for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
+                    for(Member m : v.getMembers()){
+                        LevelUser.getByDiscordId(m.getIdLong());
+                    }
                 }
+                File dataFile = new File("./data/leaderboard.json");
+                if(!dataFile.exists()){
+                    dataFile = getResource("leaderboard.json");
+                    dataFile.createNewFile();
+                }
+                leaderboardManager = new LeaderboardManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Console.println("Error occured while trying to read the leaderboard data file!");
+                System.exit(-1);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             Console.println("Level manager has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
         }
@@ -379,12 +394,17 @@ public class Main {
         return audioRecorder;
     }
 
+    public LeaderboardManager getLeaderboardManager() { return leaderboardManager; }
+
     public User getDiscordUser(long discordId){
         return bot.retrieveUserById(discordId).complete();
     }
 
     public Member getDiscordMember(User user){
-        return getGuild().retrieveMember(user).complete();
+        if(getGuild().isMember(user)){
+            return getGuild().retrieveMember(user).complete();
+        }
+        return null;
     }
 
     public Color getBotColor(){

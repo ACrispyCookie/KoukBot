@@ -1,30 +1,17 @@
 package me.acrispycookie.levelsystem;
 
 import com.google.gson.*;
-import com.sun.javafx.binding.StringFormatter;
-import me.acrispycookie.Console;
 import me.acrispycookie.Main;
-import me.acrispycookie.utility.Utils;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
 import javax.imageio.ImageIO;
-import javax.swing.text.NumberFormatter;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 
 public class LevelUser {
 
@@ -48,7 +35,7 @@ public class LevelUser {
         this.totalXp = findTotalXP(level) + xp;
         this.xpRequired = getRequired(level);
         this.nextValidMessage = nextValidMessage;
-        if(Main.getInstance().getDiscordMember(discordUser).getVoiceState().inVoiceChannel()) joinChannel(); else joinedVoiceOn = 0;
+        if(Main.getInstance().getDiscordMember(discordUser) != null && Main.getInstance().getDiscordMember(discordUser).getVoiceState().inVoiceChannel()) joinChannel(); else joinedVoiceOn = 0;
         this.specialLevelUp = specialLevelUp;
         loadedUsers.add(this);
         if(!isSaved){
@@ -156,6 +143,10 @@ public class LevelUser {
             }
         }
         return load(discordId);
+    }
+
+    public static void unload(long discordId){
+        loadedUsers.remove(getByDiscordId(discordId));
     }
 
     private static LevelUser load(long discordId){

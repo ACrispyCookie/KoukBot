@@ -1,9 +1,6 @@
 package me.acrispycookie.commands;
 
-import me.acrispycookie.levelsystem.commands.GiveExpCommand;
-import me.acrispycookie.levelsystem.commands.RankCommand;
-import me.acrispycookie.levelsystem.commands.RemoveExpCommand;
-import me.acrispycookie.levelsystem.commands.SetColorCommand;
+import me.acrispycookie.levelsystem.commands.*;
 
 public enum Command {
     SET_PREFIX(new SetPrefixCommand(), new String[]{"setprefix", "set-prefix"}),
@@ -12,7 +9,7 @@ public enum Command {
     GIVE_XP(new GiveExpCommand(), new String[] {"give-xp"}),
     REMOVE_XP(new RemoveExpCommand(), new String[] {"remove-xp"}),
     RANK(new RankCommand(), new String[] {"rank"}),
-    LEVELS(new RankCommand(), new String[] {"levels", "leaderboard"}),
+    LEADERBOARD(new LeaderboardCommand(), new String[] {"top", "leaderboard"}),
     HELP(new HelpCommand(), new String[]{"help", "?"}),
     TODO(new ToDoCommand(), new String[]{"todo", "task"}),
     NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"}),
