@@ -27,4 +27,8 @@ public enum EnumColor {
     public Color getColor() {
         return color;
     }
+
+    public String getName() {
+        return name().charAt(1) + name().substring(2).toLowerCase();
+    }
 }

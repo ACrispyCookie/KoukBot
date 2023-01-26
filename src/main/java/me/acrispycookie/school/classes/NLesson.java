@@ -35,7 +35,8 @@ public class NLesson extends Lesson {
             g2.start();
         }
         if(id1[0] != 15 || id2[0] != 15){
-            Announcement dialeima = new Announcement(timeToAnnouce + 2400000L,
+            Announcement dialeima = new Announcement(timeToAnnouce +
+                    (1000L * 60L * Integer.parseInt(Main.getInstance().getConfigManager().get("features.announcer.classDuration"))),
                     Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.global.0")),
                     Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.global.1")));
             dialeima.start();

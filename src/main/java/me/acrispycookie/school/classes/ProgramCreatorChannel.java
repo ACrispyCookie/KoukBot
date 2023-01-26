@@ -2,6 +2,7 @@ package me.acrispycookie.school.classes;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.school.enums.EnumColor;
 import me.acrispycookie.school.enums.EnumLesson;
@@ -11,8 +12,13 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.ItemComponent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.FileUpload;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -50,14 +56,14 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     final int MORNING_PIXELS_Y = (70 * 8) + (STROKE + 1) * (7 + 2);
     final int AFTERNOON_PIXELS_Y = (70 * 13) + (STROKE + 1) * (12 + 2);
 
-    public ProgramCreatorChannel(Main main, User user){
+    public ProgramCreatorChannel(Main main, User user, InteractionHook hook){
         this.main = main;
         this.user = user;
         this.stage = 0;
         this.maxStage = 0;
         this.data = new JsonObject();
         channels.add(this);
-        create();
+        create(hook);
         main.getGuild().getJDA().addEventListener(this);
     }
 
@@ -73,7 +79,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         main.getGuild().getJDA().addEventListener(this);
     }
 
-    private void create(){
+    private void create(InteractionHook hook){
         Collection<Permission> allowed = new ArrayList<>();
         allowed.add(Permission.VIEW_CHANNEL);
         Collection<Permission> denied = new ArrayList<>();
@@ -83,92 +89,113 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                 .addMemberPermissionOverride(user.getIdLong(), allowed, null)
                 .addPermissionOverride(Main.getInstance().getGuild().getPublicRole(), null, denied).queue((q) -> {
             q.sendMessage(user.getAsMention()).queue();
-            EmbedMessage msg = new EmbedMessage(user, "Καλώς ήρθες στην δημιουργία του προγράμματος σου!",
-                    "Απάντησε σε κάθε ερώτηση κάνοντας react σε αυτό το μήνυμα κάθε φορά!\n\n**Τί είδους πρόγραμμα δημιουργείς?**\n1️⃣ - Πρωινό πρόγραμμα\n2️⃣ - Απογευματινό πρόγραμμα");
-            q.sendMessageEmbeds(msg.build()).queue((m) -> {
-                for(String s : getReactions()){
-                    m.addReaction(Emoji.fromUnicode(s)).queue();
-                }
+            EmbedMessage msg = new EmbedMessage(user, Main.getInstance().getLanguageManager().get("program-creator.stages.first.title"),
+                    Main.getInstance().getLanguageManager().get("program-creator.stages.first.description"));
+            q.sendMessageEmbeds(msg.build())
+                    .addActionRow(getChoices())
+                    .addActionRow(getNavigation())
+                    .queue((m) -> {
                 ProgramCreatorChannel.this.message = m;
                 save();
-                m.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).sendMessage(user.getAsMention() + " πήγαινε στο κανάλι " + message.getChannel().getAsMention() + " για να ξεκινήσεις!").queue((s) -> {
-                    s.delete().queueAfter(10, TimeUnit.SECONDS);
-                });
+                hook.sendMessage(Main.getInstance().getLanguageManager().get("program-creator.started",
+                                user.getAsMention(), m.getChannel().getAsMention()))
+                        .setEphemeral(true).queue();
             });
         });
     }
 
-    private void nextStage(){
+    private void nextStage(ButtonInteractionEvent e){
+        e.deferReply().queue();
         stage++;
         setVars();
         if(stage == totalStages){
-            complete();
+            complete(e);
         }
         else{
-            message.editMessageEmbeds(getNextMessage()).queue((m) -> {
-                if(stage == 1 || stage + 1 == totalStages){
-                    m.clearReactions().queue();
-                    for(String s : getReactions()){
-                        m.addReaction(Emoji.fromUnicode(s)).queue();
-                    }
-                }
-                checkArrowReactions();
-                ProgramCreatorChannel.this.message = m;
-            });
+            e.editMessageEmbeds(getNextMessage())
+                    .setActionRow(getChoices()).setActionRow(getNavigation())
+                    .queue();
         }
     }
 
-    public void previousStage(){
+    private void nextStage(StringSelectInteractionEvent e){
+        e.deferReply().queue();
+        stage++;
+        setVars();
+        if(stage == totalStages) {
+            complete(e);
+        }
+        else{
+            e.editMessageEmbeds(getNextMessage())
+                    .setActionRow(getChoices()).setActionRow(getNavigation())
+                    .queue();
+        }
+    }
+
+    public void previousStage(ButtonInteractionEvent e){
+        e.deferReply().queue();
         stage--;
         setVars();
-        message.editMessageEmbeds(getNextMessage()).queue((m) -> {
-            if(stage + 2 == totalStages){
-                m.clearReactions().queue();
-                for(String s : getReactions()){
-                    m.addReaction(Emoji.fromUnicode(s)).queue();
-                }
-            }
-            checkArrowReactions();
-            ProgramCreatorChannel.this.message = m;
-        });
+        e.editMessageEmbeds(getNextMessage())
+                .setActionRow(getChoices()).setActionRow(getNavigation())
+                .queue();
     }
 
-    private void complete(){
-        message.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(), "Το πρόγραμμα σου ολοκληρώθηκε!", "Θα λάβεις το πρόγραμμα σου εδώ σε μορφή φωτογραφίας σε περίπου 5-10 δευτερόλεπτα. Έχεις 5 λεπτά να το αποθηκεύσεις πριν διαγραφεί").build())
+    private void complete(ButtonInteractionEvent e){
+        e.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.completed.title"),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.completed.description"))
+                        .build()).setActionRow(getChoices()).setActionRow(getNavigation())
                 .queue((m) -> {
-                    m.clearReactions().queue();
                     delete(340);
                     sendFinished();
-                    m.getChannel().asGuildMessageChannel().getGuild().getTextChannelById(783655696423714816L).sendMessage("Ο/Η " + user.getAsMention() + " έφτιαξε το δικό του ψηφιακό πρόγραμμα στο "
-                            + main.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).getAsMention() + "!").queue();
                 });
     }
 
-    private void cancel(){
-        message.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(), "Το πρόγραμμα ακυρώθηκε", "Έχεις ακυρώσει την δημιουργία αυτόυ του προγράμματος!\nΑυτο το κανάλι θα διαγραφεί σε 10 δευτερόλεπτα!").build())
+    private void complete(StringSelectInteractionEvent e){
+        e.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.completed.title"),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.completed.description"))
+                        .build()).setActionRow(getChoices()).setActionRow(getNavigation())
                 .queue((m) -> {
-                    m.clearReactions().queue();
-                    delete(10);
+                    delete(340);
+                    sendFinished();
                 });
+    }
+
+    private void cancel(ButtonInteractionEvent e){
+        e.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.canceled.title"),
+                        Main.getInstance().getLanguageManager().get("program-creator.stages.canceled.description"))
+                        .build()).setActionRow(getChoices()).setActionRow(getNavigation())
+                .queue((m) -> delete(10));
     }
 
     @Override
-    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent e) {
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
         if(e.getMessageIdLong() == message.getIdLong() && e.getUser().equals(user)){
-            String reaction = e.getReaction().getEmoji().getName();
-            ArrayList<String> reactions = getReactions();
-            e.getReaction().removeReaction(e.getUser()).queue();
-            if(reaction.equals("❌")){ //cancel emote
-                cancel();
+            Console.println(e.getComponentId());
+            if(e.getComponentId().equals("cancel")){
+                cancel(e);
             }
-            else if(reaction.equals("◀") && stage > 1){
-                previousStage();
+            else if(e.getComponentId().equals("prev")){
+                previousStage(e);
             }
-            else if(reaction.equals("▶") && stage < maxStage){
-                nextStage();
+            else if(e.getComponentId().equals("next")){
+                nextStage(e);
             }
-            else if(reactions.contains(reaction)){
-                int lesson = reactions.indexOf(reaction);
+            save();
+        }
+    }
+
+    @Override
+    public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent e) {
+        if(e.getMessageIdLong() == message.getIdLong() && e.getUser().equals(user)){
+            ArrayList<String> options = getOptions();
+            Console.println(e.getValues().get(0));
+            Console.println(options.contains(e.getValues().get(0)));
+            if(options.contains(e.getValues().get(0))){
+                int lesson = options.indexOf(e.getValues().get(0));
                 if(stage == maxStage){
                     maxStage++;
                 }
@@ -181,7 +208,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                 else{
                     data.add(String.valueOf(stage), new JsonPrimitive(String.valueOf(lesson)));
                 }
-                nextStage();
+                nextStage(e);
             }
             save();
         }
@@ -229,71 +256,80 @@ public class ProgramCreatorChannel extends ListenerAdapter {
 
     private MessageEmbed getNextMessage(){
         if(stage + 1 == totalStages){
-            return new EmbedMessage(this.message.getJDA().getSelfUser(), "Χρώμα περιγράμματος",
-                    "Τι χρώμα επιθυμείς να έχει το περίγραμμα το προγράμματος σου?" +
-                            "\n(Κάνε react με το αντίστοιχο emoji)").build();
+            return new EmbedMessage(this.message.getJDA().getSelfUser(),
+                    Main.getInstance().getLanguageManager().get("program-creator.stages.color.title"),
+                    Main.getInstance().getLanguageManager().get("program-creator.stages.color.description")).build();
         }
         else{
-            String[] days = new String[] {"Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή"};
-            return new EmbedMessage(this.message.getJDA().getSelfUser(), "Μάθημα " + getTime() + " την " + days[getDay()],
-                    "Τι μάθημα έχεις " + getTime() + " την " + days[getDay()] + "?" +
-                            "\n(Κάνε react με το αντίστοιχο emoji)" +
-                            "\n\n" + getLessons()).build();
+            String[] days = Main.getInstance().getLanguageManager().get("program-creator.days").split("\n");
+            return new EmbedMessage(this.message.getJDA().getSelfUser(), 
+                    Main.getInstance().getLanguageManager().get("program-creator.stages.lesson.title", getTime(), days[getDay()]),
+                    Main.getInstance().getLanguageManager().get("program-creator.stages.lesson.description", getTime(), days[getDay()]))
+                    .build();
         }
     }
 
-    private ArrayList<String> getReactions(){
+    private ArrayList<String> getOptions(){
         ArrayList<String> list = new ArrayList<>();
-        if(stage == 0){
-            list.add("1️⃣"); //1 button
-            list.add("2️⃣"); //2 button
-            list.add("❌"); //cancel button
+        if(stage + 1 == totalStages){
+            for(EnumColor l : EnumColor.values()){
+                list.add(l.name());
+            }
         }
-        else if(stage + 1 == totalStages){
-            list.add("🟥");
-            list.add("🟧");
-            list.add("🟨");
-            list.add("🟩");
-            list.add("🟦");
-            list.add("🟪");
-            list.add("🟫");
-            list.add("⬛");
+        else if(stage == 0) {
+            list.add("morning");
+            list.add("afternoon");
         }
         else {
             for(EnumLesson l : EnumLesson.values()){
-                list.add(l.getEmoji());
+                list.add(l.name());
             }
-            list.add("❌"); //cancel button
         }
         return list;
     }
 
-    private void checkArrowReactions(){
-        if(stage > 1){
-            message.addReaction(Emoji.fromUnicode("◀")).queue();
+    private ArrayList<Button> getNavigation(){
+        Button prev = Button.primary("prev", Main.getInstance().getLanguageManager().get("program-creator.buttons.previous"));
+        Button next = Button.primary("next", Main.getInstance().getLanguageManager().get("program-creator.buttons.next"));
+        Button cancel = Button.danger("cancel", Main.getInstance().getLanguageManager().get("program-creator.buttons.cancel"));
+
+        ArrayList<Button> buttons = new ArrayList<>();
+        if(stage + 2 >= totalStages && stage != 0){
+            prev = prev.asDisabled();
+            next = next.asDisabled();
+            cancel = cancel.asDisabled();
+        } else if(stage == 0) {
+            prev = prev.asDisabled();
+            if(maxStage == 0){
+                next = next.asDisabled();
+            }
         }
-        else{
-            message.removeReaction(Emoji.fromUnicode("◀")).queue();
-        }
-        if(stage < maxStage){
-            message.addReaction(Emoji.fromUnicode("▶")).queue();
-        }
-        else{
-            message.removeReaction(Emoji.fromUnicode("▶")).queue();
-        }
+        buttons.add(cancel);
+        buttons.add(prev);
+        buttons.add(next);
+        return buttons;
     }
 
-    private String getLessons(){
-        StringBuilder s = new StringBuilder();
-        EnumLesson[] values = EnumLesson.values();
-        for(int i = 0; i < values.length; i++){
-            if(i + 1 <= values.length){
-                s.append("\n");
+    public StringSelectMenu getChoices() {
+        StringSelectMenu.Builder builder = StringSelectMenu.create("choices");
+        if(stage == 0) {
+            builder.addOption(Main.getInstance().getLanguageManager().get("program-creator.buttons.morning.text"),
+                    "morning", Main.getInstance().getLanguageManager().get("program-creator.buttons.morning.emoji"));
+            builder.addOption(Main.getInstance().getLanguageManager().get("program-creator.buttons.afternoon.text"),
+                    "afternoon", Main.getInstance().getLanguageManager().get("program-creator.buttons.afternoon.emoji"));
+        } else if(stage + 1 == totalStages) {
+            for(EnumColor c : EnumColor.values()) {
+                builder.addOption(c.getName(), c.name(), Emoji.fromUnicode(c.getEmote()));
             }
-            EnumLesson l = values[i];
-            s.append(l.getEmoji()).append(" - ").append(l.getName());
+        } else {
+            for(EnumLesson c : EnumLesson.values()) {
+                builder.addOption(c.getName(), c.name(), Emoji.fromUnicode(c.getEmoji()));
+            }
         }
-        return s.toString();
+        if(stage + 2 >= totalStages && stage != 0){
+            builder.setDisabled(true);
+        }
+        return builder.build();
     }
 
     private int getDay(){
@@ -307,12 +343,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         dayIndex = getDay();
         int timeIndex = stage- 1 - dayIndex * stagesPerDay;
         this.time = startingTime + (timeIndex * 45L * 60L * 1000L);
-        if(stagesPerDay == 7){
-            return "την " + (timeIndex + 1) + "η ωρα";
-        }
-        else{
-            return "στις " + new SimpleDateFormat("HH:mm").format(new Date(time));
-        }
+        return new SimpleDateFormat("HH:mm").format(new Date(time));
     }
 
     private void setVars(){
@@ -362,7 +393,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         graphics.setColor(Color.BLACK);
 
         //write days
-        String[] days = new String[] {"Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή"};
+        String[] days = Main.getInstance().getLanguageManager().get("program-creator.days").split("\n");
         for(int i = 1; i < 6; i++){
             int x = (int) ((STROKE + 1 + ((finalImage.getWidth() - 7 * (STROKE + 1))/6)) * (i + 0.5));
             int y = STROKE + 1 + ((finalImage.getHeight() - (countOfLines + 1) * (STROKE + 1))/countOfLines)/2;
@@ -375,7 +406,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         }
 
         //write timestamps
-        String[] times = (stagesPerDay == 7) ? new String[] {"1η ώρα", "2η ώρα", "3η ώρα", "4η ώρα", "5η ώρα", "6η ώρα", "7η ώρα"}
+        String[] times = (stagesPerDay == 7) ? new String[] {"8:15", "9:00", "9:55", "10:55", "11:50", "12:45", "13:30"}
         : new String[] {"15:00", "15:45", "16:30", "17:15", "18:00", "18:45", "19:30", "20:15", "21:00", "21:45", "22:30", "23:15"};
         for(int i = 1; i < countOfLines; i++){
             int x = STROKE + 1 + ((finalImage.getWidth() - 7 * (STROKE + 1))/6)/2;

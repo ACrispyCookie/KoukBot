@@ -19,6 +19,7 @@
     "announcer": {
       "enabled": false,
       "announcementChannel": 785805196168527912,
+      "classDuration": 40,
       "hours": {
         "0": "8:25",
         "1": "9:15",
@@ -55,6 +56,7 @@
     "program-creator": {
       "enabled": true,
       "schoolCategory": 785791668213121024,
+      "channelName": "get-your-program",
       "channel": 1234567890,
       "messageId": 1234567890,
       "startingTimeMorning": 29700000,

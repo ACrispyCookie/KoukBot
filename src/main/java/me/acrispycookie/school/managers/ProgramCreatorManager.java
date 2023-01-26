@@ -8,15 +8,14 @@ import me.acrispycookie.school.classes.ProgramCreatorChannel;
 import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.emoji.Emoji;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class ProgramCreatorManager extends ListenerAdapter {
 
@@ -35,17 +34,17 @@ public class ProgramCreatorManager extends ListenerAdapter {
         TextChannel channel = main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("features.program-creator.channel")));
         long messageId = Long.parseLong(main.getConfigManager().get("features.program-creator.messageId"));
         if(channel != null){
-            channel.retrieveMessageById(messageId).queue((m) -> {
-                m.clearReactions().queue((mm) -> {
-                    m.addReaction(Emoji.fromUnicode("📆")).queue();
-                });
-                ProgramCreatorManager.this.message = m;
+            channel.retrieveMessageById(messageId).queue((success) -> {
+                ProgramCreatorManager.this.message = success;
             }, (failure) -> {
                 if (failure instanceof ErrorResponseException) {
-                    EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(764939013777784843L), "Δημιούργησε το ψηφιακό σου πρόγραμμα!", main.getGuild().getRoleById(867487114508501022L).getAsMention() +
-                            "! Αυτό είναι ειδικά για εσένα!\nΒάλε το εβδομαδιαίο σου πρόγραμμα και πάρε\nένα ψηφιακό αντίγραφο του!");
-                    channel.sendMessageEmbeds(msg.build()).queue((m) -> {
-                        m.addReaction(Emoji.fromUnicode("📆")).queue();
+                    EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
+                            Main.getInstance().getLanguageManager().get("program-creator.start-message.title"),
+                            Main.getInstance().getLanguageManager().get("program-creator.start-message.description"));
+                    channel.sendMessageEmbeds(msg.build())
+                            .addActionRow(Button.primary("start",
+                                            Main.getInstance().getLanguageManager().get("program-creator.start-message.button.text")))
+                            .queue((m) -> {
                         ProgramCreatorManager.this.message = m;
                         main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     });
@@ -53,11 +52,14 @@ public class ProgramCreatorManager extends ListenerAdapter {
             });
         }
         else {
-            main.getGuild().createTextChannel("get-your-program", main.getGuild().getCategoryById(main.getConfigManager().get("features.announcer.schoolCategory"))).queue((q) -> {
-                EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(764939013777784843L), "Δημιούργησε το ψηφιακό σου πρόγραμμα!", main.getGuild().getRoleById(867487114508501022L).getAsMention() +
-                        "! Αυτό είναι ειδικά για εσένα!\nΒάλε το εβδομαδιαίο σου πρόγραμμα και πάρε\nένα ψηφιακό αντίγραφο του!");
-                q.sendMessageEmbeds(msg.build()).queue((m) -> {
-                    m.addReaction(Emoji.fromUnicode("📆")).queue();
+            main.getGuild().createTextChannel(Main.getInstance().getConfigManager().get("features.program-creator.channelName"), main.getGuild().getCategoryById(main.getConfigManager().get("features.announcer.schoolCategory"))).queue((q) -> {
+                EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
+                        Main.getInstance().getLanguageManager().get("program-creator.start-message.title"),
+                        Main.getInstance().getLanguageManager().get("program-creator.start-message.description"));
+                q.sendMessageEmbeds(msg.build())
+                        .addActionRow(Button.primary("start",
+                                        Main.getInstance().getLanguageManager().get("program-creator.start-message.button.text")))
+                        .queue((m) -> {
                     main.getConfigManager().set("features.program-creator.channel", new JsonPrimitive(q.getIdLong()));
                     main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     ProgramCreatorManager.this.message = m;
@@ -106,17 +108,18 @@ public class ProgramCreatorManager extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent e) {
-        if(e.getMessageIdLong() == message.getIdLong() && !e.getUser().equals(e.getJDA().getSelfUser())){
-            e.getReaction().removeReaction(e.getUser()).queue();
-            ProgramCreatorChannel channel = ProgramCreatorChannel.getChannelByUser(e.getUserIdLong());
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
+        if(e.getMessageIdLong() == message.getIdLong() && e.getComponentId().equalsIgnoreCase("start")){
+            ProgramCreatorChannel channel = ProgramCreatorChannel.getChannelByUser(e.getUser().getIdLong());
             if(channel == null){
-                new ProgramCreatorChannel(main, e.getUser());
+                e.deferReply().setEphemeral(true).queue();
+                new ProgramCreatorChannel(main, e.getUser(), e.getHook());
             }
             else {
-                channel.getMessage().getChannel().sendMessage(e.getUser().getAsMention() + "! Δημιουργείς ήδη αυτό το πρόγραμμα!").queue((s) -> {
-                    s.delete().queueAfter(15, TimeUnit.SECONDS);
-                });
+                EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
+                        Main.getInstance().getLanguageManager().get("program-creator.already-creating.title"),
+                        Main.getInstance().getLanguageManager().get("program-creator.already-creating.description"), Main.getInstance().getErrorColor());
+                e.replyEmbeds(msg.build()).setEphemeral(true).queue();
             }
         }
     }

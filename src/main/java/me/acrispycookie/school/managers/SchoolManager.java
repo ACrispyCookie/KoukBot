@@ -31,7 +31,7 @@ public class SchoolManager {
         int minute = calendar.get(Calendar.MINUTE);
         String hourString = Main.getInstance().getConfigManager().get("features.announcer.hours.5");
         if(day != Calendar.SUNDAY && day != Calendar.SATURDAY){
-            if(hour < getHour(hourString) || (hour == getHour(hourString) && getMinute(hourString) < 25)){
+            if(hour < getHour(hourString) || (hour == getHour(hourString) && minute < getMinute(hourString))){
                 ArrayList<Lesson[]> announcements = getAll(day - 2, hour, minute);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 Console.println("The next lesson is at " + simpleDateFormat.format(new Date(getTimeToAnnounce(getNextSchoolHour(hour, minute)))));
