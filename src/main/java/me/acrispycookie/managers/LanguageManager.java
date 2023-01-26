@@ -3,12 +3,7 @@ package me.acrispycookie.managers;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import me.acrispycookie.Main;
-import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.utility.Perm;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Role;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -23,8 +18,7 @@ public class LanguageManager {
 
     public String get(String key, String... replace) {
         String string = get(key)
-                .replaceAll("%perms", getAvailablePerms())
-                .replaceAll("%prefix", Main.getInstance().getPrefix());
+                .replaceAll("%perms", getAvailablePerms());
         for(int i = 0; i < replace.length; i++){
             string = string.replaceAll("%" + (i + 1), replace[i]);
         }
@@ -44,16 +38,14 @@ public class LanguageManager {
         }
         if(!element.isJsonArray()){
             return element.getAsString()
-                    .replaceAll("%perms", getAvailablePerms())
-                    .replaceAll("%prefix", Main.getInstance().getPrefix());
+                    .replaceAll("%perms", getAvailablePerms());
         }
         else{
             StringBuilder content = new StringBuilder();
             for(int i = 0; i < element.getAsJsonArray().size(); i++){
                 content.append(element.getAsJsonArray().get(i)
                         .getAsString()
-                        .replaceAll("%perms", getAvailablePerms())
-                        .replaceAll("%prefix", Main.getInstance().getPrefix())).append("\n");
+                        .replaceAll("%perms", getAvailablePerms())).append("\n");
             }
             return content.toString();
         }

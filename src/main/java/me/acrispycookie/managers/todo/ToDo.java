@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.EmbedMessage;
-import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,7 +24,7 @@ public class ToDo {
         this.channelId = channelId;
         this.messageId = messageId;
         if(Main.getInstance().getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete() != null){
-            Main.getInstance().getGuild().getTextChannelById(channelId).addReactionById(messageId, Main.getInstance().getGuild().getEmoteById(801012687806529556L)).queue();
+            Main.getInstance().getGuild().getTextChannelById(channelId).addReactionById(messageId, Main.getInstance().getGuild().getEmojiById(801012687806529556L)).queue();
         }
         else{
             delete();
@@ -39,10 +39,10 @@ public class ToDo {
 
     public void send(){
         EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId), "**NEW TO-DO FOR:** __" + Main.getInstance().getDiscordUser(userId).getAsTag() + "__", "Task: " + content +
-                "\n\nReact with " + Main.getInstance().getGuild().getEmoteById(801012687806529556L).getAsMention() + " to complete this task!");
-        Emote emote = Main.getInstance().getGuild().retrieveEmoteById(801012687806529556L).complete();
+                "\n\nReact with " + Main.getInstance().getGuild().retrieveEmojiById(801012687806529556L).complete().getAsMention() + " to complete this task!");
+        Emoji emoji = Main.getInstance().getGuild().retrieveEmojiById(801012687806529556L).complete();
         Main.getInstance().getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build()).queue((q) -> {
-            q.addReaction(emote).queue();
+            q.addReaction(emoji).queue();
             this.messageId = q.getIdLong();
             save();
         });

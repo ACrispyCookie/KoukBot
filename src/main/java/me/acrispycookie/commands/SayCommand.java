@@ -1,12 +1,10 @@
 package me.acrispycookie.commands;
 
-import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.levelsystem.LevelUser;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -21,8 +19,6 @@ import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class SayCommand extends BotCommand {
 
@@ -33,13 +29,15 @@ public class SayCommand extends BotCommand {
     }
 
     @Override
-    public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
-        if(args.length > 0){
-            String msg = Arrays.stream(args).map(Objects::toString).collect(Collectors.joining(" "));
-            t.sendFile(getImage(msg), "kouk.png").queue();
+    public void execute(SlashCommandInteractionEvent e, String label, Member m) {
+        if(e.getOption("message") != null){
+            String message = e.getOption("message").getAsString();
+            e.deferReply().queue();
+            e.getHook().sendFiles(FileUpload.fromData(getImage(message), "kouk.png")).queue();
         }
         else{
-            t.sendFile(getImage(Main.getInstance().getLanguageManager().getRandomLevelUp(LevelUser.getByDiscordId(m.getIdLong()).getSpecialLevelUp())), "kouk.png").queue();
+            e.deferReply().queue();
+            e.getHook().sendFiles(FileUpload.fromData(getImage(Main.getInstance().getLanguageManager().getRandomLevelUp(LevelUser.getByDiscordId(m.getIdLong()).getSpecialLevelUp())), "kouk.png")).queue();
         }
     }
 

@@ -4,6 +4,10 @@ import me.acrispycookie.Main;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.commands.Command;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum Perm {
     GIVE_XP,
@@ -33,5 +37,13 @@ public enum Perm {
             }
         }
         return null;
+    }
+
+    public static List<Command.Choice> getPermChoices(){
+        List<Command.Choice> choices = new ArrayList<>();
+        for(Perm perm : Perm.values()){
+            choices.add(new Command.Choice(perm.name(), perm.name()));
+        }
+        return choices;
     }
 }

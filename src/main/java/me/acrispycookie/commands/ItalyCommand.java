@@ -3,29 +3,26 @@ package me.acrispycookie.commands;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.Time;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class ItalyCommand extends BotCommand{
 
     @Override
-    public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
+    public void execute(SlashCommandInteractionEvent e, String label, Member m) {
         if(Boolean.parseBoolean(Main.getInstance().getConfigManager().get("features.italy.enabled"))) {
-            sendMessage(m, t);
-            message.delete().queue();
+            sendMessage(m, e);
         }
     }
 
-    private void sendMessage(Member m, TextChannel t){
+    private void sendMessage(Member m, SlashCommandInteractionEvent e){
         Role role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.italy.role"));
-        t.sendMessage(role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι πετάτε για Ιταλία σε **" + getCountdown() + "**").queue();
+        e.reply(role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι πετάτε για Ιταλία σε **" + getCountdown() + "**").queue();
 
     }
 

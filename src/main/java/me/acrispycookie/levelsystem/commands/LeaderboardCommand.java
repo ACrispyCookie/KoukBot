@@ -5,18 +5,15 @@ import me.acrispycookie.commands.BotCommand;
 import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LeaderboardCommand extends BotCommand {
 
     @Override
-    public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
-        t.sendMessage(new EmbedMessage(m.getUser(),
+    public void execute(SlashCommandInteractionEvent e, String label, Member m) {
+        e.replyEmbeds(new EmbedMessage(m.getUser(),
                 "Leaderboard - Top 10", getDescription()).build()).queue();
     }
 

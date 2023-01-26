@@ -7,7 +7,8 @@ import me.acrispycookie.Main;
 import me.acrispycookie.school.classes.ProgramCreatorChannel;
 import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -36,7 +37,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
         if(channel != null){
             channel.retrieveMessageById(messageId).queue((m) -> {
                 m.clearReactions().queue((mm) -> {
-                    m.addReaction("📆").queue();
+                    m.addReaction(Emoji.fromUnicode("📆")).queue();
                 });
                 ProgramCreatorManager.this.message = m;
             }, (failure) -> {
@@ -44,7 +45,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
                     EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(764939013777784843L), "Δημιούργησε το ψηφιακό σου πρόγραμμα!", main.getGuild().getRoleById(867487114508501022L).getAsMention() +
                             "! Αυτό είναι ειδικά για εσένα!\nΒάλε το εβδομαδιαίο σου πρόγραμμα και πάρε\nένα ψηφιακό αντίγραφο του!");
                     channel.sendMessageEmbeds(msg.build()).queue((m) -> {
-                        m.addReaction("📆").queue();
+                        m.addReaction(Emoji.fromUnicode("📆")).queue();
                         ProgramCreatorManager.this.message = m;
                         main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     });
@@ -56,7 +57,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
                 EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(764939013777784843L), "Δημιούργησε το ψηφιακό σου πρόγραμμα!", main.getGuild().getRoleById(867487114508501022L).getAsMention() +
                         "! Αυτό είναι ειδικά για εσένα!\nΒάλε το εβδομαδιαίο σου πρόγραμμα και πάρε\nένα ψηφιακό αντίγραφο του!");
                 q.sendMessageEmbeds(msg.build()).queue((m) -> {
-                    m.addReaction("📆").queue();
+                    m.addReaction(Emoji.fromUnicode("📆")).queue();
                     main.getConfigManager().set("features.program-creator.channel", new JsonPrimitive(q.getIdLong()));
                     main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     ProgramCreatorManager.this.message = m;
@@ -79,7 +80,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
     public void saveChannel(ProgramCreatorChannel channel){
         JsonObject data = channel.getData();
         JsonObject finished = new JsonObject();
-        finished.add("channel", new JsonPrimitive(channel.getMessage().getTextChannel().getIdLong()));
+        finished.add("channel", new JsonPrimitive(channel.getMessage().getChannel().getIdLong()));
         finished.add("message", new JsonPrimitive(channel.getMessage().getIdLong()));
         finished.add("maxStageReached", new JsonPrimitive(channel.getMaxStage()));
         finished.add("stage", new JsonPrimitive(channel.getStage()));
@@ -113,7 +114,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
                 new ProgramCreatorChannel(main, e.getUser());
             }
             else {
-                channel.getMessage().getTextChannel().sendMessage(e.getUser().getAsMention() + "! Δημιουργείς ήδη αυτό το πρόγραμμα!").queue((s) -> {
+                channel.getMessage().getChannel().sendMessage(e.getUser().getAsMention() + "! Δημιουργείς ήδη αυτό το πρόγραμμα!").queue((s) -> {
                     s.delete().queueAfter(15, TimeUnit.SECONDS);
                 });
             }

@@ -9,10 +9,11 @@ import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,7 +77,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         Collection<Permission> allowed = new ArrayList<>();
         allowed.add(Permission.VIEW_CHANNEL);
         Collection<Permission> denied = new ArrayList<>();
-        denied.add(Permission.MESSAGE_WRITE);
+        denied.add(Permission.MESSAGE_SEND);
         denied.add(Permission.VIEW_CHANNEL);
         main.getGuild().createTextChannel(user.getName().toLowerCase(), main.getGuild().getCategoryById(886033717733244979L))
                 .addMemberPermissionOverride(user.getIdLong(), allowed, null)
@@ -86,11 +87,11 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                     "Απάντησε σε κάθε ερώτηση κάνοντας react σε αυτό το μήνυμα κάθε φορά!\n\n**Τί είδους πρόγραμμα δημιουργείς?**\n1️⃣ - Πρωινό πρόγραμμα\n2️⃣ - Απογευματινό πρόγραμμα");
             q.sendMessageEmbeds(msg.build()).queue((m) -> {
                 for(String s : getReactions()){
-                    m.addReaction(s).queue();
+                    m.addReaction(Emoji.fromUnicode(s)).queue();
                 }
                 ProgramCreatorChannel.this.message = m;
                 save();
-                m.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).sendMessage(user.getAsMention() + " πήγαινε στο κανάλι " + message.getTextChannel().getAsMention() + " για να ξεκινήσεις!").queue((s) -> {
+                m.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).sendMessage(user.getAsMention() + " πήγαινε στο κανάλι " + message.getChannel().getAsMention() + " για να ξεκινήσεις!").queue((s) -> {
                     s.delete().queueAfter(10, TimeUnit.SECONDS);
                 });
             });
@@ -108,7 +109,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                 if(stage == 1 || stage + 1 == totalStages){
                     m.clearReactions().queue();
                     for(String s : getReactions()){
-                        m.addReaction(s).queue();
+                        m.addReaction(Emoji.fromUnicode(s)).queue();
                     }
                 }
                 checkArrowReactions();
@@ -124,7 +125,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             if(stage + 2 == totalStages){
                 m.clearReactions().queue();
                 for(String s : getReactions()){
-                    m.addReaction(s).queue();
+                    m.addReaction(Emoji.fromUnicode(s)).queue();
                 }
             }
             checkArrowReactions();
@@ -138,7 +139,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
                     m.clearReactions().queue();
                     delete(340);
                     sendFinished();
-                    m.getTextChannel().getGuild().getTextChannelById(783655696423714816L).sendMessage("Ο/Η " + user.getAsMention() + " έφτιαξε το δικό του ψηφιακό πρόγραμμα στο "
+                    m.getChannel().asGuildMessageChannel().getGuild().getTextChannelById(783655696423714816L).sendMessage("Ο/Η " + user.getAsMention() + " έφτιαξε το δικό του ψηφιακό πρόγραμμα στο "
                             + main.getGuild().getTextChannelById(main.getConfigManager().get("features.program-creator.channel")).getAsMention() + "!").queue();
                 });
     }
@@ -154,7 +155,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent e) {
         if(e.getMessageIdLong() == message.getIdLong() && e.getUser().equals(user)){
-            String reaction = e.getReaction().getReactionEmote().getName();
+            String reaction = e.getReaction().getEmoji().getName();
             ArrayList<String> reactions = getReactions();
             e.getReaction().removeReaction(e.getUser()).queue();
             if(reaction.equals("❌")){ //cancel emote
@@ -191,7 +192,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     }
 
     private void delete(int after){
-        message.getTextChannel().delete().queueAfter(after, TimeUnit.SECONDS);
+        message.getChannel().delete().queueAfter(after, TimeUnit.SECONDS);
         main.getGuild().getJDA().removeEventListener(this);
         channels.remove(this);
         main.getProgramCreator().deleteChannel(this);
@@ -269,16 +270,16 @@ public class ProgramCreatorChannel extends ListenerAdapter {
 
     private void checkArrowReactions(){
         if(stage > 1){
-            message.addReaction("◀").queue();
+            message.addReaction(Emoji.fromUnicode("◀")).queue();
         }
         else{
-            message.removeReaction("◀").queue();
+            message.removeReaction(Emoji.fromUnicode("◀")).queue();
         }
         if(stage < maxStage){
-            message.addReaction("▶").queue();
+            message.addReaction(Emoji.fromUnicode("▶")).queue();
         }
         else{
-            message.removeReaction("▶").queue();
+            message.removeReaction(Emoji.fromUnicode("▶")).queue();
         }
     }
 
@@ -412,7 +413,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             ImageIO.write(finalImage, "png", bytes);
             bytes.flush();
             FileUtils.writeByteArrayToFile(new File("./saved-programs/" + user.getName() + "-" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date(System.currentTimeMillis()))), bytes.toByteArray());
-            message.getTextChannel().sendFile(bytes.toByteArray(), "program.png").queue();
+            message.getChannel().sendFiles(FileUpload.fromData(bytes.toByteArray(), "program.png")).queue();
         } catch (IOException e) {
             e.printStackTrace();
         }

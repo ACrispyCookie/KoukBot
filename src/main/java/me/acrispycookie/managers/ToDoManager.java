@@ -39,12 +39,12 @@ public class ToDoManager extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        ToDoChannel channel = ToDoChannel.getByChannelId(e.getTextChannel().getIdLong());
+        ToDoChannel channel = ToDoChannel.getByChannelId(e.getChannel().getIdLong());
         if(channel != null) {
             ToDo todo = channel.getByMessageId(e.getMessageIdLong());
             if(todo != null){
                 if(e.getUserIdLong() == todo.getUserId()){
-                    if(e.getReactionEmote().getIdLong() == 801012687806529556L){
+                    if(e.getEmoji().asCustom().getIdLong() == 801012687806529556L){
                         todo.remove();
                     }
                 }
@@ -57,10 +57,10 @@ public class ToDoManager extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent e) {
-        if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()) != null) {
-            if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
-                if(e.getReactionEmote().getIdLong() == 801012687806529556L){
-                    e.getTextChannel().addReactionById(e.getMessageIdLong(), e.getGuild().getEmoteById(801012687806529556L)).queue();
+        if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()) != null) {
+            if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
+                if(e.getEmoji().asCustom().getIdLong() == 801012687806529556L){
+                    e.getChannel().addReactionById(e.getMessageIdLong(), e.getGuild().getEmojiById(801012687806529556L)).queue();
                 }
             }
         }
@@ -68,18 +68,18 @@ public class ToDoManager extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(MessageReactionRemoveAllEvent e) {
-        if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()) != null) {
-            if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
-                e.getTextChannel().addReactionById(e.getMessageIdLong(), e.getGuild().getEmoteById(801012687806529556L)).queue();
+        if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()) != null) {
+            if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
+                e.getChannel().addReactionById(e.getMessageIdLong(), e.getGuild().getEmojiById(801012687806529556L)).queue();
             }
         }
     }
 
     @Override
     public void onMessageDelete(MessageDeleteEvent e) {
-        if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()) != null) {
-            if(ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
-                ToDo todo = ToDoChannel.getByChannelId(e.getTextChannel().getIdLong()).getByMessageId(e.getMessageIdLong());
+        if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()) != null) {
+            if(ToDoChannel.getByChannelId(e.getChannel().getIdLong()).getByMessageId(e.getMessageIdLong()) != null){
+                ToDo todo = ToDoChannel.getByChannelId(e.getChannel().getIdLong()).getByMessageId(e.getMessageIdLong());
                 todo.delete();
             }
         }

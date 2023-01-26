@@ -4,7 +4,8 @@ import me.acrispycookie.Main;
 import me.acrispycookie.utility.Time;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Calendar;
 import java.util.concurrent.Executors;
@@ -30,12 +31,12 @@ public class PanellhniesManager {
         }
     }
 
-    public void sendMessage(Member m, TextChannel channel){
+    public void sendMessage(Member m, SlashCommandInteractionEvent e){
         if(m == null){
             this.channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ήρθε η ώρα να σας υπνεθυμίσω οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
         else{
-            channel.sendMessage("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
+            e.reply("Λοιπόν παιδιά, " + role.getAsMention() + ", ο " + m.getAsMention() + " ήθελε να υπενθυμίσει σε όλους οτι γράφετε σε **" + getCountdown() + "**").queue();
         }
     }
 

@@ -2,9 +2,11 @@ package me.acrispycookie.levelsystem;
 
 import com.google.gson.*;
 import me.acrispycookie.Main;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,7 +37,7 @@ public class LevelUser {
         this.totalXp = findTotalXP(level) + xp;
         this.xpRequired = getRequired(level);
         this.nextValidMessage = nextValidMessage;
-        if(Main.getInstance().getDiscordMember(discordUser) != null && Main.getInstance().getDiscordMember(discordUser).getVoiceState().inVoiceChannel()) joinChannel(); else joinedVoiceOn = 0;
+        if(Main.getInstance().getDiscordMember(discordUser) != null && Main.getInstance().getDiscordMember(discordUser).getVoiceState().inAudioChannel()) joinChannel(); else joinedVoiceOn = 0;
         this.specialLevelUp = specialLevelUp;
         loadedUsers.add(this);
         if(!isSaved){
@@ -94,7 +96,7 @@ public class LevelUser {
             public void run() {
                 Random random = new Random();
                 int exp = random.nextInt(6);
-                addExp(10 + exp, Long.parseLong(Main.getInstance().getConfigManager().get("features.levels.generalChannel")), Main.getInstance().getDiscordMember(discordUser).getVoiceState().getChannel());
+                addExp(10 + exp, Long.parseLong(Main.getInstance().getConfigManager().get("features.levels.generalChannel")), Main.getInstance().getDiscordMember(discordUser).getVoiceState().getChannel().asVoiceChannel());
                 save();
             }
         };
@@ -123,16 +125,16 @@ public class LevelUser {
                 .queue();
     }
 
-    public void sendCard(long channelId){
+    public void sendCard(SlashCommandInteractionEvent e){
         try {
             BufferedImage image = new UserCard(this).build();
             ImageIO.write(image, "png", new File("./images/" + discordUser.getId() + ".png"));
-            Main.getInstance().getGuild().getTextChannelById(channelId).sendFile(new File("./images/" + discordUser.getId() + ".png")).queue((a) -> {
+            e.getHook().sendFiles(FileUpload.fromData(new File("./images/" + discordUser.getId() + ".png"))).queue((a) -> {
                 new File("./images/" + discordUser.getId() + ".png").delete();
             });
-        } catch (IOException e) {
-            e.printStackTrace();
-            Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("There was a problem obtaining the card template! Please contact ACrispyCookie#7780").queue();
+        } catch (IOException exc) {
+            exc.printStackTrace();
+            e.getHook().sendMessage("There was a problem obtaining the card template! Please contact ACrispyCookie#7780").queue();
         }
     }
 

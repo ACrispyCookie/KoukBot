@@ -4,26 +4,90 @@
     "description": "You must have the `%1` permission to run this command!"
   },
   "commands": {
-    "invalid": {
-      "title": "Invalid command usage",
-      "description": {
-        "notify": "Please use the command like this:\n`%prefixnotify <user>`\n\nArguments:\n`user` - A mentioned user",
-        "setprefix": "Please use the command like this:\n`%prefixsetprefix <prefix>`\n\nArguments:\n`prefix` - A string or a single character",
-        "todo": "Please use the command like this:\n`%prefixtodo <text>`\n\nArguments:\n`text` - A string",
-        "setperm": "Please use the command like this:\n`%prefixsetperm <permission> <role> <allow/deny/clear>`\n\nArguments:\n`permission` - A permission from the list below\n`role` - Mention a role\n`allow/deny/clear` - Allow/Deny/Clear the permission\n\nAvailable permissions:\n`%perms`",
-        "setcolor": "Please use the command like this:\n`%prefixsetcolor [member] <hex color>`\n\nArguments:\n`member` - Mention a member\n`hex color` - A color represented in hexadecimal (#ffffff - White)",
-        "rank": "Please use the command like this:\n`%prefixrank [optional member]`\n\nArguments:\n`member` - Mention a member",
-        "give-xp": "Please use the command like this:\n`%prefixgive-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number (smaller than 1 million)",
-        "remove-xp": "Please use the command like this:\n`%prefixremove-xp <member> <amount>`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
-        "moviepoll": "Please use the command like this:\n`%prefixmoviepoll <start/stop> [duration]`\n`%prefixmoviepoll <search/id> [movie id/ movie title]`\n\nArguments:\n`member` - Mention a member\n`amount` - A positive whole number",
-        "message": "Please use the command like this:\n`%prefixmessage [channel ID] <message>`\n\nArguments:\n`channel ID` - A channel ID\n`message` - Your message",
-        "clear": "Please use the command like this:\n`%prefixclear <amount>`\n\nArguments:\n`amount` - A positive whole number ∈ [2, 100]",
-        "play": "Please use the command like this:\n`%prefixplay <video>`\n\nArguments:\n`video` - A search term or a link for a video"
+    "descriptions": {
+      "setperm": {
+        "main": "Set the permissions of roles.",
+        "permission": "Permission to set",
+        "action": "Action to perform",
+        "role": "Role to set the permission"
+      },
+      "setcolor": {
+        "main": "Set the color of your card.",
+        "color": "New color in HEX",
+        "user": "User to perform action on"
+      },
+      "give-xp": {
+        "main": "Give XP to a user (or yourself).",
+        "xp": "The amount of XP to give",
+        "user": "User to give XP to"
+      },
+      "remove-xp": {
+        "main": "Remove XP from a user (or yourself).",
+        "xp": "The amount of XP to remove",
+        "user": "User to remove XP from"
+      },
+      "rank": {
+        "main": "Display the rank card of a user.",
+        "user": "User to display their card"
+      },
+      "top": {
+        "main": "Display a leaderboard with the top active users."
+      },
+      "todo": {
+        "main": "Start a new todo task.",
+        "task": "Your todo task"
+      },
+      "notify": {
+        "main": "Notify a user who has deafen enabled.",
+        "user": "A user in your channel with deafen"
+      },
+      "message": {
+        "main": "Make KoukBot say whatever you want!",
+        "message": "Whatever!",
+        "channel": "A specific text channel to send the message"
+      },
+      "say": {
+        "main": "Make Kouk say whatever you want!",
+        "message": "Be creative!"
+      },
+      "evilsay": {
+        "main": "Make evil Kouk say whatever you want!",
+        "message": "Be creative!"
+      },
+      "clear": {
+        "main": "Delete messages from a channel.",
+        "count": "The number of messages to delete"
+      },
+      "panellhnies": {
+        "main": "A countdown to death."
+      },
+      "italy": {
+        "main": "A countdown to resurrection"
+      },
+      "play": {
+        "main": "Play music with KoukBot!",
+        "search": "A search term/URL for KoukBot to play"
+      },
+      "pause": {
+        "main": "Pause the player if it's playing."
+      },
+      "resume": {
+        "main": "Resume the player if it's paused."
+      },
+      "next": {
+        "main": "Go to the next song of the queue."
+      },
+      "previous": {
+        "main": "Go to the previous song of the queue."
+      },
+      "stop": {
+        "main": "Stop the music."
       }
     },
     "success": {
       "title": {
         "notify": "User notified",
+        "message": "Message sent",
         "setperm": "Permission set",
         "give-xp": "XP Added",
         "remove-xp": "XP Removed",
@@ -38,10 +102,12 @@
         "resume": "▶ Resumed player",
         "stop": "⏹ Stopped player",
         "next": "⏭ Jumped to the next song",
-        "previous": "⏮ Jumped to the previous song"
+        "previous": "⏮ Jumped to the previous song",
+        "todo": "To-do created!"
       },
       "description": {
         "notify": "The mentioned user has been notified",
+        "message": "The message has been sent to the specified channel.",
         "setcolor": {
           "own": "You have changed your color to %1",
           "other": "You have changed %1's color to %2"
@@ -58,34 +124,34 @@
           "Here is a list of all the available commands:",
           "",
           "**__Ranks:__**",
-          "`%prefixrank` - Shows your server card.",
-          "`%prefixgive-xp` - Gives you or another user xp.",
-          "`%prefixremove-xp` - Removes xp from you or from another user.",
+          "`/rank` - Shows your server card.",
+          "`/give-xp` - Gives you or another user xp.",
+          "`/remove-xp` - Removes xp from you or from another user.",
           "",
           "**__School:__**",
-          "`%prefixtodo` - Creates a todo for you until you declare it as done.",
-          "`%prefixpanellhnies` - Remind yourself (and everyone else).",
+          "`/todo` - Creates a todo for you until you declare it as done.",
+          "`/panellhnies` - Remind yourself (and everyone else).",
           "",
           "**__Music:__**",
-          "`%prefixplay` - Play a video from YouTube.",
-          "`%prefixpause` - Pause the playlist.",
-          "`%prefixresume` - Resume the playlist.",
-          "`%prefixnext` - Skip to the next song on the playlist.",
-          "`%prefixprevious` - Go back to the previous song on the playlist.",
-          "`%prefixstop` - Stop the playlist.",
+          "`/play` - Play a video from YouTube.",
+          "`/pause` - Pause the playlist.",
+          "`/resume` - Resume the playlist.",
+          "`/next` - Skip to the next song on the playlist.",
+          "`/previous` - Go back to the previous song on the playlist.",
+          "`/stop` - Stop the playlist.",
           "",
           "**__Movies:__**",
-          "`%prefixmoviepoll` - Creates a movie poll.",
+          "`/moviepoll` - Creates a movie poll.",
           "",
           "**__Utility:__**",
-          "`%prefixsetperm` - Allow/Deny a permission from a role.",
-          "`%prefixsetprefix` - Sets this bot's prefix.",
-          "`%prefixsetcolor` - Sets the color of your user card.",
-          "`%prefixnotify` - Notify a user while they are deafened.",
-          "`%prefixclear` - Clears the chat.",
-          "`%prefixmessage` - Makes KoukBot post messages.",
-          "`%prefixsay` - Control Kouk.",
-          "`%prefixevilsay` - Control evil Kouk."
+          "`/setperm` - Allow/Deny a permission from a role.",
+          "`/setprefix` - Sets this bot's prefix.",
+          "`/setcolor` - Sets the color of your user card.",
+          "`/notify` - Notify a user while they are deafened.",
+          "`/clear` - Clears the chat.",
+          "`/message` - Makes KoukBot post messages.",
+          "`/say` - Control Kouk.",
+          "`/evilsay` - Control evil Kouk."
         ],
         "play": {
           "now-playing": "%1 [%2]",
@@ -93,15 +159,18 @@
         },
         "pause": "The player has been paused. [%1]",
         "resume": "The player has been resumed. [%1]",
-        "stop": "The player has been stopped. [%1]",
+        "stop": "The player has been stopped.",
         "next": "The player has jumped one song forward. %1 [%2]",
-        "previous": "The player has jumped one song backwards. %1 [%2]"
+        "previous": "The player has jumped one song backwards. %1 [%2]",
+        "todo": "Check out your todo channel to find your new task!"
       }
     },
     "failed": {
       "title": {
         "setperm": {
-          "alreadyHas": "Already allowed"
+          "already-has": "Already allowed",
+          "invalid-permission": "Invalid permission",
+          "invalid-action": "Invalid action"
         },
         "notify": {
           "not-deafened": "User not defeaned",
@@ -137,7 +206,9 @@
           "error-playing": "There was an error adding your video to the queue. Please try again later!"
         },
         "setperm": {
-          "alreadyHas": "This role already has this permission!"
+          "already-has": "This role already has this permission!",
+          "invalid-permission": "Valid permissions: %perms",
+          "invalid-action": "Valid actions: `allow, deny, clear`"
         },
         "notify": {
           "not-deafened": "This user is not defeaned!",
@@ -146,8 +217,8 @@
           "user-not-in-channel": "You are not currently in a channel!"
         },
         "moviepoll": {
-          "not-active": "Movie poll is not currently active. \nTo start it please run the command `%prefixmoviepoll start <duration>`",
-          "already-active": "Movie poll is already active. \nTo stop it please run the command `%prefixmoviepoll stop`"
+          "not-active": "Movie poll is not currently active. \nTo start it please run the command `/moviepoll start <duration>`",
+          "already-active": "Movie poll is already active. \nTo stop it please run the command `/moviepoll stop`"
         },
         "next": {
           "end-of-queue": "You have reached the end of queue!"

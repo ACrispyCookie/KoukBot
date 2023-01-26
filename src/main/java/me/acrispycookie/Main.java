@@ -3,11 +3,11 @@ package me.acrispycookie;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.acrispycookie.commands.BotCommand;
+import me.acrispycookie.commands.Command;
 import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.levelsystem.XPGainEvent;
 import me.acrispycookie.managers.*;
 import me.acrispycookie.managers.MoviePollManager;
-import me.acrispycookie.managers.music.AudioRecorder;
 import me.acrispycookie.school.managers.PanellhniesManager;
 import me.acrispycookie.school.managers.ProgramCreatorManager;
 import me.acrispycookie.school.managers.ProgramManager;
@@ -16,15 +16,17 @@ import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
-import javax.security.auth.login.LoginException;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -41,7 +43,6 @@ public class Main {
     private ProgramManager programManager;
     private PanellhniesManager panellhniesManager;
     private ProgramCreatorManager programCreator;
-    private AudioRecorder audioRecorder;
     private static Main instance;
 
     public Main(){
@@ -64,7 +65,6 @@ public class Main {
         main.loadToDoManager();
         main.loadMusicManager();
         main.loadMoviePollManager();
-        main.audioRecorder = new AudioRecorder(main);
         Console.println("Total loading time: " + (System.currentTimeMillis() - startingLoadingTime) + "ms");
         Console.start();
     }
@@ -181,7 +181,7 @@ public class Main {
         try {
             bot = JDABuilder.createDefault(configManager.get("bot.botToken"))
                     .setChunkingFilter(ChunkingFilter.ALL)
-                    .addEventListeners(new BotCommand() { @Override  public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) { } })
+                    .addEventListeners(new BotCommand() { @Override public void execute(SlashCommandInteractionEvent e, String label, Member m) { } })
                     .addEventListeners(new XPGainEvent())
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
@@ -189,7 +189,7 @@ public class Main {
                     .setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")))
                     .build();
             bot.awaitReady();
-        } catch (LoginException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
             Console.println("Error occured while trying to start the discord bot!");
             System.exit(-1);
@@ -390,10 +390,6 @@ public class Main {
         return musicManager;
     }
 
-    public AudioRecorder getAudioRecorder() {
-        return audioRecorder;
-    }
-
     public LeaderboardManager getLeaderboardManager() { return leaderboardManager; }
 
     public User getDiscordUser(long discordId){
@@ -413,10 +409,6 @@ public class Main {
 
     public Color getErrorColor(){
         return Utils.hex2Rgb(configManager.get("settings.errorColor"));
-    }
-
-    public String getPrefix(){
-        return getConfigManager().get("settings.prefix");
     }
 
     public Guild getGuild(){

@@ -2,36 +2,36 @@ package me.acrispycookie.commands;
 
 import me.acrispycookie.Main;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class BotCommand extends ListenerAdapter {
 
-    public abstract void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message);
+    public abstract void execute(SlashCommandInteractionEvent e, String label, Member m);
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent e){
+    public void onSlashCommandInteraction(SlashCommandInteractionEvent e){
         Member m = e.getMember();
         if(!m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
-            if(e.getMessage().getContentRaw().startsWith(Main.getInstance().getPrefix()) && e.getMessage().getAttachments().size() == 0){
-                String msg = e.getMessage().getContentDisplay();
-                String noPrefixMsg = msg.substring(Main.getInstance().getPrefix().length());
-                String commandBody = noPrefixMsg.contains(" ") ? noPrefixMsg.substring(0, noPrefixMsg.indexOf(' ')) : noPrefixMsg;
-                String[] args = noPrefixMsg.contains(" ") ? findArguments(noPrefixMsg.substring(noPrefixMsg.indexOf(' '))) : new String[] {};
-                Command command = Command.getByAlias(commandBody);
-                if(command != null){
-                    command.getBotCommand().execute(args, commandBody, e.getMember(), e.getChannel(), e.getMessage().getMentionedMembers(), e.getMessage().getMentionedRoles(), e.getMessage().getAttachments(), e.getMessage());
-                }
-            }
+            Command command = Command.getByAlias(e.getName());
+            command.getBotCommand().execute(e, e.getName(), e.getMember());
         }
     }
 
+    @Override
+    public void onGuildReady(GuildReadyEvent e) {
+        ArrayList<CommandData> data = new ArrayList<>();
+        for(Command command : Command.values()) {
+            data.add(command.data);
+        }
+        e.getGuild().updateCommands().addCommands(data).queue();
+    }
+
+    /*
     private static String[] findArguments(String msg){
         ArrayList<String> stringArrayList = new ArrayList<>();
         for(int i = 0; i < msg.length(); i++){
@@ -55,5 +55,6 @@ public abstract class BotCommand extends ListenerAdapter {
         }
         return stringArrayList.toArray(new String[] {});
     }
+    */
 
 }

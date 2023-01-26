@@ -3,32 +3,21 @@ package me.acrispycookie.levelsystem.commands;
 import me.acrispycookie.Main;
 import me.acrispycookie.commands.BotCommand;
 import me.acrispycookie.levelsystem.LevelUser;
-import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-
-import java.util.List;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class RankCommand extends BotCommand {
 
     @Override
-    public void execute(String[] args, String label, Member m, TextChannel t, List<Member> mentions, List<Role> mentionedRoles, List<Message.Attachment> attachments, Message message) {
+    public void execute(SlashCommandInteractionEvent e, String label, Member m) {
+        e.deferReply().queue();
         LevelUser levelUser;
-        if(args.length == 0){
+        if(e.getOption("user") == null){
             levelUser = LevelUser.getByDiscordId(m.getIdLong());
         }
-        else if(mentions.size() == 1){
-            levelUser = LevelUser.getByDiscordId(mentions.get(0).getIdLong());
+        else {
+            levelUser = LevelUser.getByDiscordId(e.getOption("user").getAsUser().getIdLong());
         }
-        else{
-            t.sendMessage(new EmbedMessage(m.getUser(),
-                    Main.getInstance().getLanguageManager().get("commands.invalid.title"),
-                    Main.getInstance().getLanguageManager().get("commands.invalid.description.rank"),
-                    Main.getInstance().getErrorColor()).build()).queue();
-            return;
-        }
-        levelUser.sendCard(t.getIdLong());
+        levelUser.sendCard(e);
     }
 }

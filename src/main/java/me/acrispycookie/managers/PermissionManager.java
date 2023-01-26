@@ -4,6 +4,7 @@ import com.google.gson.*;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.Perm;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.io.FileWriter;
 import java.io.IOException;
