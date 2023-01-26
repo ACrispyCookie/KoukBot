@@ -162,7 +162,7 @@
         "stop": "The player has been stopped.",
         "next": "The player has jumped one song forward. %1 [%2]",
         "previous": "The player has jumped one song backwards. %1 [%2]",
-        "todo": "Check out your todo channel to find your new task!"
+        "todo": "Check out your new task on your todo channel!"
       }
     },
     "failed": {
@@ -227,6 +227,24 @@
           "top-of-queue": "You are already at the top of the queue!"
         }
       }
+    }
+  },
+  "todo": {
+    "new": {
+      "title": "**NEW TO-DO FOR:** __%1__",
+      "description": "Task: %1\n\nClick the button below to complete this task!",
+      "button": {
+        "text": "Complete task!",
+        "emoji": "✅"
+      }
+    },
+    "completed": {
+      "title": "Task completed",
+      "description": "\uD83C\uDF89 Congratulations on completing your task! \uD83C\uDF89"
+    },
+    "not-your-task": {
+      "title": "Not your task",
+      "description": "This task belongs to another user!"
     }
   },
   "level-up": [

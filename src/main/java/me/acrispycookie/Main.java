@@ -394,7 +394,11 @@ public class Main {
     public LeaderboardManager getLeaderboardManager() { return leaderboardManager; }
 
     public User getDiscordUser(long discordId){
-        return bot.retrieveUserById(discordId).complete();
+        try {
+            return bot.retrieveUserById(discordId).complete();
+        } catch(Exception e) {
+            return null;
+        }
     }
 
     public Member getDiscordMember(User user){

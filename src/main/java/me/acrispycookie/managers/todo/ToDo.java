@@ -7,10 +7,11 @@ import com.google.gson.JsonPrimitive;
 import me.acrispycookie.Main;
 import me.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class ToDo {
 
@@ -23,10 +24,7 @@ public class ToDo {
         this.userId = userId;
         this.channelId = channelId;
         this.messageId = messageId;
-        if(Main.getInstance().getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete() != null){
-            Main.getInstance().getGuild().getTextChannelById(channelId).addReactionById(messageId, Main.getInstance().getGuild().getEmojiById(801012687806529556L)).queue();
-        }
-        else{
+        if(Main.getInstance().getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete() == null){
             delete();
         }
     }
@@ -37,24 +35,29 @@ public class ToDo {
         this.channelId = channelId;
     }
 
-    public void send(){
-        EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId), "**NEW TO-DO FOR:** __" + Main.getInstance().getDiscordUser(userId).getAsTag() + "__", "Task: " + content +
-                "\n\nReact with " + Main.getInstance().getGuild().retrieveEmojiById(801012687806529556L).complete().getAsMention() + " to complete this task!");
-        Emoji emoji = Main.getInstance().getGuild().retrieveEmojiById(801012687806529556L).complete();
-        Main.getInstance().getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build()).queue((q) -> {
-            q.addReaction(emoji).queue();
-            this.messageId = q.getIdLong();
-            save();
-        });
-    }
-
-    public void remove(){
-        EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId), "**TO-DO TASK COMPLETED FOR:** __" + Main.getInstance().getDiscordUser(userId).getAsTag() + "__",
-                Main.getInstance().getDiscordUser(userId).getAsMention() + " you have completed your task! Deleting...");
-        Main.getInstance().getGuild().getTextChannelById(channelId).editMessageEmbedsById(messageId, msg.build()).queue((q) -> {
-            q.delete().queueAfter(10, TimeUnit.SECONDS);
-        });
-        removeFromConfig();
+    public void send(SlashCommandInteractionEvent e, boolean reply){
+        EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId),
+                Main.getInstance().getLanguageManager().get("todo.new.title", Main.getInstance().getDiscordUser(userId).getAsTag()),
+                Main.getInstance().getLanguageManager().get("todo.new.description", content), Main.getInstance().getBotColor());
+        if(reply) {
+            e.getHook().sendMessageEmbeds(msg.build())
+                    .addActionRow(Button.success("success",
+                                    Main.getInstance().getLanguageManager().get("todo.new.button.text"))
+                            .withEmoji(Emoji.fromUnicode(Main.getInstance().getLanguageManager().get("todo.new.button.emoji"))))
+                    .queue((q) -> {
+                        this.messageId = q.getIdLong();
+                        save();
+                    });
+        } else {
+            Main.getInstance().getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build())
+                    .addActionRow(Button.success("success",
+                                    Main.getInstance().getLanguageManager().get("todo.new.button.text"))
+                            .withEmoji(Emoji.fromUnicode(Main.getInstance().getLanguageManager().get("todo.new.button.emoji"))))
+                    .queue((q) -> {
+                        this.messageId = q.getIdLong();
+                        save();
+                    });
+        }
     }
 
     public void delete(){
