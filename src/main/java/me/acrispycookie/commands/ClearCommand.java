@@ -5,6 +5,8 @@ import me.acrispycookie.utility.EmbedMessage;
 import me.acrispycookie.utility.Perm;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 
 public class ClearCommand extends BotCommand {
 
@@ -19,9 +21,9 @@ public class ClearCommand extends BotCommand {
                     Main.getInstance().getBotColor()).build()).setEphemeral(true).queue();
 
             e.getChannel().asTextChannel().getHistory().retrievePast(count).queue((l) -> {
-                if(l.size() > 1){
-                    e.getChannel().asTextChannel().deleteMessages(l).queue();
-                }
+                e.getChannel().asTextChannel().deleteMessages(l).queue(null,
+                        new ErrorHandler().ignore(ErrorResponse.INVALID_BULK_DELETE_MESSAGE_AGE)
+                                .ignore(ErrorResponse.INVALID_BULK_DELETE));
             });
         }
         else{

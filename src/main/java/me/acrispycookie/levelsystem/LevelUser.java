@@ -185,7 +185,7 @@ public class LevelUser {
     }
 
     public int getRank(){
-        return Main.getInstance().getLeaderboardManager().getPlace(this.getDiscordUser().getIdLong());
+        return Main.getInstance().getLeaderboardManager().getPlace(this.getDiscordUser().getIdLong()) + 1;
     }
 
     private int findTotalXP(int level){

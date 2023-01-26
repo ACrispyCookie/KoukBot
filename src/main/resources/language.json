@@ -5,13 +5,13 @@
   },
   "commands": {
     "descriptions": {
-      "setperm": {
+      "set-perm": {
         "main": "Set the permissions of roles.",
         "permission": "Permission to set",
         "action": "Action to perform",
         "role": "Role to set the permission"
       },
-      "setcolor": {
+      "set-color": {
         "main": "Set the color of your card.",
         "color": "New color in HEX",
         "user": "User to perform action on"
@@ -50,7 +50,7 @@
         "main": "Make Kouk say whatever you want!",
         "message": "Be creative!"
       },
-      "evilsay": {
+      "evil-say": {
         "main": "Make evil Kouk say whatever you want!",
         "message": "Be creative!"
       },
@@ -88,11 +88,11 @@
       "title": {
         "notify": "User notified",
         "message": "Message sent",
-        "setperm": "Permission set",
+        "set-perm": "Permission set",
         "give-xp": "XP Added",
         "remove-xp": "XP Removed",
         "help": "List of Commands",
-        "setcolor": "Card color has changed",
+        "set-color": "Card color updated",
         "clear": "Chat cleared",
         "play": {
           "now-playing": "▶ Now Playing",
@@ -108,11 +108,11 @@
       "description": {
         "notify": "The mentioned user has been notified",
         "message": "The message has been sent to the specified channel.",
-        "setcolor": {
-          "own": "You have changed your color to %1",
-          "other": "You have changed %1's color to %2"
+        "set-color": {
+          "own": "You have updated your color to %1",
+          "other": "You have updated %1's color to %2"
         },
-        "setperm": {
+        "set-perm": {
           "allow": "You have given the permission %1 to the role %2",
           "deny": "You have taken the permission %1 from the role %2",
           "clear": "You have cleared the permission %1 from the role %2"
@@ -167,7 +167,10 @@
     },
     "failed": {
       "title": {
-        "setperm": {
+        "set-color": {
+          "not-a-color": "Invalid color code"
+        },
+        "set-perm": {
           "already-has": "Already allowed",
           "invalid-permission": "Invalid permission",
           "invalid-action": "Invalid action"
@@ -205,10 +208,13 @@
           "no-matches": "We couldn't find any videos matching your search query!",
           "error-playing": "There was an error adding your video to the queue. Please try again later!"
         },
-        "setperm": {
+        "set-perm": {
           "already-has": "This role already has this permission!",
           "invalid-permission": "Valid permissions: %perms",
           "invalid-action": "Valid actions: `allow, deny, clear`"
+        },
+        "set-color": {
+          "not-a-color": "Please provide a valid hex color code."
         },
         "notify": {
           "not-deafened": "This user is not defeaned!",
@@ -228,6 +234,10 @@
         }
       }
     }
+  },
+  "announcer": {
+    "lesson": "Ει %1, έχεις μάθημα σε 5'\nΤο μάθημα σας είναι: %2\nΆντε πάρε και το link: %3",
+    "break": "Αντε παιδιά, τελειώνετε σε 5'\n%1 %2 %3 %4"
   },
   "todo": {
     "new": {

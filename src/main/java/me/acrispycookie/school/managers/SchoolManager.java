@@ -29,8 +29,9 @@ public class SchoolManager {
         int day = calendar.get(Calendar.DAY_OF_WEEK);
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
+        String hourString = Main.getInstance().getConfigManager().get("features.announcer.hours.5");
         if(day != Calendar.SUNDAY && day != Calendar.SATURDAY){
-            if(hour < 13 || (hour == 13 && minute < 25)){
+            if(hour < getHour(hourString) || (hour == getHour(hourString) && getMinute(hourString) < 25)){
                 ArrayList<Lesson[]> announcements = getAll(day - 2, hour, minute);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                 Console.println("The next lesson is at " + simpleDateFormat.format(new Date(getTimeToAnnounce(getNextSchoolHour(hour, minute)))));
@@ -82,93 +83,35 @@ public class SchoolManager {
 
     private long getTimeToAnnounce(int schoolHour) {
         Calendar calendar = Calendar.getInstance();
-        switch (schoolHour){
-            case 0:
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 25);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 1:
-                calendar.set(Calendar.HOUR_OF_DAY, 9);
-                calendar.set(Calendar.MINUTE, 15);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 2:
-                calendar.set(Calendar.HOUR_OF_DAY, 10);
-                calendar.set(Calendar.MINUTE, 5);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 3:
-                calendar.set(Calendar.HOUR_OF_DAY, 10);
-                calendar.set(Calendar.MINUTE, 55);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 4:
-                calendar.set(Calendar.HOUR_OF_DAY, 11);
-                calendar.set(Calendar.MINUTE, 45);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 5:
-                calendar.set(Calendar.HOUR_OF_DAY, 12);
-                calendar.set(Calendar.MINUTE, 35);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
-            case 6:
-                calendar.set(Calendar.HOUR_OF_DAY, 13);
-                calendar.set(Calendar.MINUTE, 25);
-                calendar.set(Calendar.SECOND, 0);
-                return calendar.getTimeInMillis();
+        String hourString = Main.getInstance().getConfigManager().get("features.announcer.hours."
+                + (schoolHour - 1));
+        calendar.set(Calendar.HOUR_OF_DAY, getHour(hourString));
+        calendar.set(Calendar.MINUTE, getMinute(hourString));
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTimeInMillis();
+    }
+
+    private int getNextSchoolHour(int hour, int minute){
+        for(int i = 1; i < 7; i++) {
+            String hourString = Main.getInstance().getConfigManager().get("features.announcer.hours." + (i - 1));
+            if(hour < getHour(hourString)){
+                return i;
+            } else if(hour == getHour(hourString)) {
+                if(minute < getMinute(hourString)) {
+                    return i;
+                } else {
+                    return i + 1;
+                }
+            }
         }
         return -1;
     }
 
-    private int getNextSchoolHour(int hour, int minute){
-        if(hour < 8){
-            return 0;
-        }
-        else if(hour == 8){
-            if(minute < 25){
-                return 0;
-            }
-            else{
-                return 1;
-            }
-        }
-        else if(hour == 9){
-            if(minute < 15){
-                return 1;
-            }
-            else{
-                return 2;
-            }
-        }
-        else if(hour == 10){
-            if(minute < 5){
-                return 2;
-            }
-            else{
-                return 3;
-            }
-        }
-        else if(hour == 11){
-            if(minute < 45){
-                return 4;
-            }
-            else {
-                return 5;
-            }
-        }
-        else if(hour == 12) {
-            if(minute < 35){
-                return 5;
-            }
-            else {
-                return 6;
-            }
-        }
-        else if(hour == 13 && minute < 25) {
-            return 6;
-        }
-        return -1;
+    private int getHour(String s) {
+        return Integer.parseInt(s.substring(0, s.indexOf(':')));
+    }
+
+    private int getMinute(String s) {
+        return Integer.parseInt(s.substring(s.indexOf(':') + 1));
     }
 }

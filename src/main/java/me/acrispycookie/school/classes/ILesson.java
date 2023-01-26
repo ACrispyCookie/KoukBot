@@ -27,7 +27,9 @@ public class ILesson extends Lesson {
             Announcement ann = new Announcement(id, timeToAnnouce, role);
             ann.start();
             if(announceBreak){
-                Announcement dialeima = new Announcement(timeToAnnouce + 2400000L, Main.getInstance().getGuild().getRoleById(890980670569074739L), Main.getInstance().getGuild().getRoleById(890980375910809630L));
+                Announcement dialeima = new Announcement(timeToAnnouce + 2400000L,
+                        Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.global.0")),
+                        Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.global.1")));
                 dialeima.start();
             }
         }

@@ -1,12 +1,9 @@
 package me.acrispycookie.school.classes;
 
-import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import me.acrispycookie.school.enums.EnumLesson;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,22 +33,20 @@ public class Announcement {
             EnumLesson l = EnumLesson.values()[id[0]];
             ses.schedule(() -> {
                 long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("features.announcer.announcementChannel"));
-                Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage("Ει " + toMention.getAsMention() + ", έχεις μάθημα σε 5'\nΤο μάθημα σας είναι: " + l.getName() + "\nΆντε πάρε και το link: " + l.getUrl(id[1])).queue();
+                Main.getInstance().getGuild().getTextChannelById(channelId)
+                        .sendMessage(Main.getInstance().getLanguageManager().get("announcer.lesson",
+                                toMention.getAsMention(), l.getName(), l.getUrl(id[1]))).queue();
             }, delay, TimeUnit.MILLISECONDS);
         }
         else{
             ses.schedule(() -> {
                 long channelId = Long.parseLong(Main.getInstance().getConfigManager().get("features.announcer.announcementChannel"));
-                StringBuilder msg = null;
-                for(Role mention : mentions){
-                    if(msg == null){
-                        msg = new StringBuilder("Έλα " + mention.getAsMention());
-                    }
-                    else{
-                        msg.append(", ").append(mention.getAsMention());
-                    }
-                }
-                msg.append(", άντε παιδιά τελειώνετε σε 5'");
+
+                String msg = Main.getInstance().getLanguageManager().get("announcer.break",
+                        mentions[0].getAsMention(),
+                        mentions.length > 1 ? mentions[1].getAsMention() : "",
+                        mentions.length > 2 ? mentions[2].getAsMention() : "",
+                        mentions.length > 3 ? mentions[3].getAsMention() : "");
                 Main.getInstance().getGuild().getTextChannelById(channelId).sendMessage(msg).queue();
             }, delay, TimeUnit.MILLISECONDS);
         }

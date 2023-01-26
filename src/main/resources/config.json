@@ -18,8 +18,27 @@
     },
     "announcer": {
       "enabled": false,
-      "schoolCategory": 785791668213121024,
-      "announcementChannel": 785805196168527912
+      "announcementChannel": 785805196168527912,
+      "hours": {
+        "0": "8:25",
+        "1": "9:15",
+        "2": "10:05",
+        "3": "11:45",
+        "4": "12:35",
+        "5": "13:25"
+      },
+      "roles": {
+        "global": {
+          "0": 890980670569074739,
+          "1": 890980375910809630
+        },
+        "perRole": {
+          "0": 885614146777911327,
+          "1": 885614089399861329,
+          "2": 885614089399861329,
+          "3": 885909387665874964
+        }
+      }
     },
     "panellhnies": {
       "enabled": true,
@@ -35,6 +54,7 @@
     },
     "program-creator": {
       "enabled": true,
+      "schoolCategory": 785791668213121024,
       "channel": 1234567890,
       "messageId": 1234567890,
       "startingTimeMorning": 29700000,

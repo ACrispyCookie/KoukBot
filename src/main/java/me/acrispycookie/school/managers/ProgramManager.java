@@ -46,16 +46,16 @@ public class ProgramManager {
     private Role getRole(int i){
         Role role = null;
         if(i == 0){
-            role = Main.getInstance().getGuild().getRoleById(885614146777911327L);
+            role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.perRole.0"));
         }
         else if(i == 1){
-            role = Main.getInstance().getGuild().getRoleById(885614089399861329L);
+            role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.perRole.1"));
         }
         else if(i == 2){
-            role = Main.getInstance().getGuild().getRoleById(885614210963361882L);
+            role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.perRole.2"));
         }
         else if(i == 3){
-            role = Main.getInstance().getGuild().getRoleById(885909387665874964L);
+            role = Main.getInstance().getGuild().getRoleById(Main.getInstance().getConfigManager().get("features.announcer.roles.perRole.3"));
         }
         return role;
     }

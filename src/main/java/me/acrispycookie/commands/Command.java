@@ -10,21 +10,21 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public enum Command {
-    SET_PERM(new SetPermCommand(), new String[] {"setperm", "set-perm"},
-            Commands.slash("setperm", Main.getInstance().getLanguageManager().get("commands.descriptions.setperm.main"))
+    SET_PERM(new SetPermCommand(), new String[] {"set-perm"},
+            Commands.slash("set-perm", Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.main"))
                     .addOptions(new OptionData(OptionType.STRING, "permission",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.setperm.permission"), true)
+                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.permission"), true)
                             .addChoices(Perm.getPermChoices()))
                     .addOption(OptionType.ROLE, "role",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.setperm.role"), true)
+                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.role"), true)
                     .addOptions(new OptionData(OptionType.STRING, "action",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.setperm.action"), false)
+                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.action"), false)
                             .addChoice("allow", "allow").addChoice("deny", "deny")
                             .addChoice("clear", "clear"))),
-    SET_COLOR(new SetColorCommand(), new String[] {"setcolor", "set-color"},
-            Commands.slash("setcolor", Main.getInstance().getLanguageManager().get("commands.descriptions.setcolor.main"))
-                    .addOption(OptionType.STRING, "color", Main.getInstance().getLanguageManager().get("commands.descriptions.setcolor.main"), true)
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.setcolor.user"), false)),
+    SET_COLOR(new SetColorCommand(), new String[] {"set-color"},
+            Commands.slash("set-color", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.main"))
+                    .addOption(OptionType.STRING, "color", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.main"), false)
+                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.user"), false)),
     GIVE_XP(new GiveExpCommand(), new String[] {"give-xp"},
             Commands.slash("give-xp", Main.getInstance().getLanguageManager().get("commands.descriptions.give-xp.main"))
                     .addOptions(
@@ -60,9 +60,9 @@ public enum Command {
     SAY(new SayCommand(false), new String[]{"say"},
             Commands.slash("say", Main.getInstance().getLanguageManager().get("commands.descriptions.say.main"))
                     .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.say.message"), false)),
-    EVILSAY(new SayCommand(true), new String[]{"evilsay", "esay"},
-            Commands.slash("evilsay", Main.getInstance().getLanguageManager().get("commands.descriptions.evilsay.main"))
-                    .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.evilsay.message"), false)),
+    EVILSAY(new SayCommand(true), new String[]{"evil-say", "e-say"},
+            Commands.slash("evil-say", Main.getInstance().getLanguageManager().get("commands.descriptions.evil-say.main"))
+                    .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.evil-say.message"), false)),
     CLEAR(new ClearCommand(), new String[]{"clear"},
             Commands.slash("clear", Main.getInstance().getLanguageManager().get("commands.descriptions.clear.main"))
                     .addOptions(
