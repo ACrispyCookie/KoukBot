@@ -1,7 +1,10 @@
 package me.acrispycookie.managers;
 
 import com.google.gson.JsonObject;
+import me.acrispycookie.Main;
 import me.acrispycookie.levelsystem.LevelUser;
+
+import java.util.ArrayList;
 
 public class UserDataManager {
 
@@ -9,6 +12,19 @@ public class UserDataManager {
 
     public UserDataManager(JsonObject userData){
         this.userData = userData;
+    }
+
+    public void checkData() {
+        ArrayList<String> toRemove = new ArrayList<>();
+        for(String id : userData.keySet()) {
+            if(!Main.getInstance().getGuild().isMember(Main.getInstance().getDiscordUser(Long.parseLong(id)))) {
+                toRemove.add(id);
+            }
+        }
+        for(String id : toRemove){
+            userData.remove(id);
+        }
+        save();
     }
 
     public JsonObject getUserData(){

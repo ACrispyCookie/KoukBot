@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import me.acrispycookie.Main;
 import me.acrispycookie.levelsystem.LevelUser;
+import net.dv8tion.jda.api.entities.Member;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,23 +21,73 @@ public class LeaderboardManager {
     public LeaderboardManager(JsonObject object){
         this.data = object;
         this.leaderboard = new ArrayList<>();
+        Main.getInstance().getUserDataManager().checkData();
         setup();
     }
 
     private void setup(){
-        if(data.getAsJsonArray("board").size() == 0){
-            ArrayList<LevelUser> loaded = LevelUser.getLoadedUsers();
-            for(String key : Main.getInstance().getUserDataManager().getUserData().keySet()){
-                LevelUser user = LevelUser.getByDiscordId(Long.parseLong(key));
-                leaderboard.add(user.getDiscordUser().getIdLong());
+        ArrayList<LevelUser> loaded = LevelUser.getLoadedUsers();
+        for(String key : Main.getInstance().getUserDataManager().getUserData().keySet()){
+            LevelUser user = LevelUser.getByDiscordId(Long.parseLong(key));
+            leaderboard.add(user.getDiscordUser().getIdLong());
+        }
+        leaderboard.sort(Comparator.comparingInt(o -> -LevelUser.getByDiscordId(o).getTotalXp()));
+        for(String key : Main.getInstance().getUserDataManager().getUserData().keySet()){
+            LevelUser user = LevelUser.getByDiscordId(Long.parseLong(key));
+            if(!loaded.contains(user)){
+                LevelUser.unload(user.getDiscordUser().getIdLong());
             }
-            leaderboard.sort(Comparator.comparingInt(o -> -LevelUser.getByDiscordId(o).getTotalXp()));
-            for(String key : Main.getInstance().getUserDataManager().getUserData().keySet()){
-                LevelUser user = LevelUser.getByDiscordId(Long.parseLong(key));
-                if(!loaded.contains(user)){
-                    LevelUser.unload(user.getDiscordUser().getIdLong());
-                }
+        }
+        save();
+    }
+
+    public void xpChanged(LevelUser currentUser, boolean added) {
+        int currentPlace = getPlace(currentUser.getDiscordUser().getIdLong());
+        if(added) {
+            if(currentPlace > 0) {
+                moveUp(currentUser, currentPlace);
             }
+        } else {
+            if(currentPlace < leaderboard.size() - 1) {
+                moveDown(currentUser, currentPlace);
+            }
+        }
+    }
+
+    private void moveUp(LevelUser currentUser, int currentPlace) {
+        if(currentPlace > 0) {
+            boolean isLoaded = LevelUser.isLoaded(leaderboard.get(currentPlace - 1));
+            LevelUser user = LevelUser.getByDiscordId(leaderboard.get(currentPlace - 1));
+            if(currentUser.getTotalXp() > user.getTotalXp()) {
+                moveUp(currentUser, currentPlace - 1);
+            } else {
+                leaderboard.remove(currentUser.getDiscordUser().getIdLong());
+                leaderboard.add(currentPlace, currentUser.getDiscordUser().getIdLong());
+                save();
+            }
+            if(!isLoaded) LevelUser.unload(user.getDiscordUser().getIdLong());
+        } else {
+            leaderboard.remove(currentUser.getDiscordUser().getIdLong());
+            leaderboard.add(currentPlace, currentUser.getDiscordUser().getIdLong());
+            save();
+        }
+    }
+
+    private void moveDown(LevelUser currentUser, int currentPlace) {
+        if(currentPlace < leaderboard.size() - 1) {
+            boolean isLoaded = LevelUser.isLoaded(leaderboard.get(currentPlace + 1));
+            LevelUser user = LevelUser.getByDiscordId(leaderboard.get(currentPlace - 1));
+            if(currentUser.getTotalXp() < user.getTotalXp()) {
+                moveDown(currentUser, currentPlace + 1);
+            } else {
+                leaderboard.remove(currentUser.getDiscordUser().getIdLong());
+                leaderboard.add(currentPlace, currentUser.getDiscordUser().getIdLong());
+                save();
+            }
+            if(!isLoaded) LevelUser.unload(user.getDiscordUser().getIdLong());
+        } else {
+            leaderboard.remove(currentUser.getDiscordUser().getIdLong());
+            leaderboard.add(currentPlace, currentUser.getDiscordUser().getIdLong());
             save();
         }
     }
@@ -45,7 +96,7 @@ public class LeaderboardManager {
         data.add("board", jsonArray());
         try {
             FileWriter file = new FileWriter("./data/leaderboard.json");
-            file.write(new GsonBuilder().setPrettyPrinting().create().toJson(Main.getInstance().getUserDataManager().getUserData()));
+            file.write(new GsonBuilder().setPrettyPrinting().create().toJson(data));
             file.flush();
             file.close();
         } catch (IOException e) {
@@ -59,6 +110,19 @@ public class LeaderboardManager {
             array.add(new JsonPrimitive(l));
         }
         return array;
+    }
+
+    public long getUser(int place) {
+        return leaderboard.get(place);
+    }
+
+    public int getPlace(long discordId) {
+        for(int i = 0; i < leaderboard.size(); i++) {
+            if(discordId == leaderboard.get(i)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     public ArrayList<Long> getLeaderboard(){

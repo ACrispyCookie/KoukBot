@@ -212,7 +212,8 @@ public class Main {
                     dataFile = getResource("leaderboard.json");
                     dataFile.createNewFile();
                 }
-                leaderboardManager = new LeaderboardManager(new Gson().fromJson(new FileReader(dataFile), JsonObject.class));
+                JsonObject object = new Gson().fromJson(new FileReader(dataFile), JsonObject.class);
+                leaderboardManager = new LeaderboardManager(object);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Console.println("Error occured while trying to read the leaderboard data file!");

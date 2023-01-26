@@ -51,6 +51,7 @@ public class LevelUser {
         while(xp >= xpRequired){
             levelUp(channelId);
         }
+        Main.getInstance().getLeaderboardManager().xpChanged(this, true);
     }
 
     public void addExp(int exp, long channelId, VoiceChannel channel){
@@ -59,6 +60,7 @@ public class LevelUser {
         while(xp >= xpRequired){
             levelUp(channelId, channel);
         }
+        Main.getInstance().getLeaderboardManager().xpChanged(this, true);
     }
 
     public void addExp(int exp, TextChannel channelId){
@@ -68,6 +70,7 @@ public class LevelUser {
             levelUp(channelId.getIdLong());
         }
         nextValidMessage = System.currentTimeMillis() + 60 * 1000;
+        Main.getInstance().getLeaderboardManager().xpChanged(this, true);
     }
 
     public void removeExp(int exp){
@@ -76,6 +79,7 @@ public class LevelUser {
         xpRequired = getRequired(level);
         int previousLevelXp = findTotalXP(level);
         xp = totalXp - previousLevelXp;
+        Main.getInstance().getLeaderboardManager().xpChanged(this, false);
     }
 
     public void joinChannel(){
@@ -138,6 +142,15 @@ public class LevelUser {
         }
     }
 
+    public static boolean isLoaded(long discordId) {
+        for(LevelUser u : loadedUsers) {
+            if(u.getDiscordUser().getIdLong() == discordId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static LevelUser getByDiscordId(long discordId){
         for(LevelUser u : loadedUsers){
             if(u.getDiscordUser().getIdLong() == discordId){
@@ -172,17 +185,7 @@ public class LevelUser {
     }
 
     public int getRank(){
-        int place = 1;
-        int totalExp = findTotalXP(level) + xp;
-        JsonObject object = Main.getInstance().getUserDataManager().getUserData();
-        for(String s : object.keySet()){
-            JsonObject userObject = object.getAsJsonObject(s);
-            int theirTotalExp = findTotalXP(userObject.get("level").getAsInt()) + userObject.get("xp").getAsInt();
-            if(theirTotalExp > totalExp){
-                place++;
-            }
-        }
-        return place;
+        return Main.getInstance().getLeaderboardManager().getPlace(this.getDiscordUser().getIdLong());
     }
 
     private int findTotalXP(int level){
