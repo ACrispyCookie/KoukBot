@@ -93,11 +93,11 @@ The message you react to, to give input to the bot:
 Music player is used to play music inside of voice channels using KoukBot. Users can add videos from YouTube to the queue, pause the player, stop the player or move around the queue of videos. As a joke a voiceline from a professor has been added every time the bot joins a voice channel.
 
 ### Commands
-* **!play <search term OR URL>** - Adds a video to the queue and starts the player is the queue was empty. (Aliases: q)
-* **!pause** - Pauses the player on the current video.
-* **!stop** - Stops the player and resets the queue to its first index.
-* **!previous** - Moves the queue one index backwards. (Aliases: prev)
-* **!next** - Moves the queue one index forwards. (Aliases: skip)
+* **/play <search term OR URL>** - Adds a video to the queue and starts the player is the queue was empty. (Aliases: q)
+* **/pause** - Pauses the player on the current video.
+* **/stop** - Stops the player and resets the queue to its first index.
+* **/previous** - Moves the queue one index backwards. (Aliases: prev)
+* **/next** - Moves the queue one index forwards. (Aliases: skip)
 
 ### Examples
 Adding a song to the queue and starting the player:
@@ -109,8 +109,8 @@ Adding a song to the queue and starting the player:
 Chat levelling is a ranking system which ranks players based on chat activity. It adds a random amount of EXP (between 15 and 25) per message sent. There is a cooldown of one minute to every user so the maximum amount of exp that a user can get (assuming they have maximum luck) is 25. The maximum amount of EXP needed to level up increases as your level increases.
 
 ### Commands
-* **!rank [user]** - Renders and posts a user card which contains information about the user's level, rank and EXP.
-* **!setcolor [hex color code]** - Sets the main color for your user card.
+* **/rank [user]** - Renders and posts a user card which contains information about the user's level, rank and EXP.
+* **/setcolor <hex color code>** - Sets the main color for your user card.
  
 ### Structure of `data.json`
 `data.json` contains the information about the chat levelling for every user on the discord server. Every user is represented by an object with the key being their discord ID. Every `user` object contain the following elements:
@@ -139,7 +139,7 @@ A card of an offline user using the color `#7289DA` as the main color:
 
 
 ## To-do task manager
-To-do task manager is a system that saves your to-dos on a discord channel and give you the option to complete them. The main command of this system is `!todo <task>` which is used to add a new task to your task list. If you haven't created a to-do list before the bot will create a channel with your username in which it will then post the task. When you finish the task you can react to the corresponding message to complete it.
+To-do task manager is a system that saves your to-dos on a discord channel and give you the option to complete them. The main command of this system is `/todo <task>` which is used to add a new task to your task list. If you haven't created a to-do list before the bot will create a channel with your username in which it will then post the task. When you finish the task you can react to the corresponding message to complete it.
 
 ### Structure of `todo.json`
 The `todo.json` stores the data for every user's task. It contains one object per user with the key of it being the channel ID of their to-do channel. Every `channel` object contains 2 elements:
@@ -165,6 +165,6 @@ A to-do task on a user's channel:
 
 ## Utility commands
 KoukBot also has some commands which are very basic and are used very frequently by a lot of users. These commands are:
-* **!clear <amount>** - Clears the amount of messages specified in the channel the command was sent to. (2 <= amount <= 99)
-* **!notify <user>** - Notifies a defeaned user by moving them in a random voice channel and moving them back.
-* **!message <message>** - Makes KoukBot post a message in the chat. (Aliases: msg)
+* **/clear <amount>** - Clears the amount of messages specified in the channel the command was sent to. (2 <= amount <= 99)
+* **/notify <user>** - Notifies a defeaned user by moving them in a random voice channel and moving them back.
+* **/message <message>** - Makes KoukBot post a message in the chat. (Alias: msg)
