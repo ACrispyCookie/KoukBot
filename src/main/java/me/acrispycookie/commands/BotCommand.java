@@ -1,5 +1,7 @@
 package me.acrispycookie.commands;
 
+import com.google.gson.JsonPrimitive;
+import me.acrispycookie.Console;
 import me.acrispycookie.Main;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -24,11 +26,14 @@ public abstract class BotCommand extends ListenerAdapter {
 
     @Override
     public void onGuildReady(GuildReadyEvent e) {
-        ArrayList<CommandData> data = new ArrayList<>();
-        for(Command command : Command.values()) {
-            data.add(command.data);
+        if(!Boolean.parseBoolean(Main.getInstance().getConfigManager().get("settings.commandsRegistered"))) {
+            ArrayList<CommandData> data = new ArrayList<>();
+            for(Command command : Command.values()) {
+                data.add(command.data);
+            }
+            e.getJDA().updateCommands().addCommands(data).queue();
+            Main.getInstance().getConfigManager().set("settings.commandsRegistered", new JsonPrimitive(true));
         }
-        e.getGuild().updateCommands().addCommands(data).queue();
     }
 
     /*

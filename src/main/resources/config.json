@@ -8,6 +8,7 @@
   },
   "settings": {
     "guildId": 764909800890826823,
+    "commandsRegistered": false,
     "OMDbKey": "",
     "errorColor": "#c43333"
   },
