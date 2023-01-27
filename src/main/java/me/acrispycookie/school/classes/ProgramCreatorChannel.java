@@ -112,7 +112,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             complete(e);
         }
         else{
-            e.editMessageEmbeds(getNextMessage())
+            e.getHook().editOriginalEmbeds(getNextMessage())
                     .setActionRow(getChoices()).setActionRow(getNavigation())
                     .queue();
         }
@@ -126,8 +126,9 @@ public class ProgramCreatorChannel extends ListenerAdapter {
             complete(e);
         }
         else{
-            e.editMessageEmbeds(getNextMessage())
-                    .setActionRow(getChoices()).setActionRow(getNavigation())
+            e.editSelectMenu(getChoices()).queue();
+            e.getHook().editOriginalEmbeds(getNextMessage())
+                    .setActionRow(getNavigation())
                     .queue();
         }
     }
@@ -136,7 +137,7 @@ public class ProgramCreatorChannel extends ListenerAdapter {
         e.deferReply().queue();
         stage--;
         setVars();
-        e.editMessageEmbeds(getNextMessage())
+        e.getHook().editOriginalEmbeds(getNextMessage())
                 .setActionRow(getChoices()).setActionRow(getNavigation())
                 .queue();
     }
@@ -153,17 +154,18 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     }
 
     private void complete(StringSelectInteractionEvent e){
+        e.editSelectMenu(getChoices()).queue();
         e.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(),
                         Main.getInstance().getLanguageManager().get("program-creator.stages.completed.title"),
                         Main.getInstance().getLanguageManager().get("program-creator.stages.completed.description"))
-                        .build()).setActionRow(getChoices()).setActionRow(getNavigation())
+                        .build()).setActionRow(getNavigation())
                 .queue((m) -> {
                     delete(340);
                     sendFinished();
                 });
     }
 
-    private void cancel(ButtonInteractionEvent e){
+    private void cancel(ButtonInteractionEvent e) {
         e.editMessageEmbeds(new EmbedMessage(message.getJDA().getSelfUser(),
                         Main.getInstance().getLanguageManager().get("program-creator.stages.canceled.title"),
                         Main.getInstance().getLanguageManager().get("program-creator.stages.canceled.description"))
@@ -174,7 +176,6 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
         if(e.getMessageIdLong() == message.getIdLong() && e.getUser().equals(user)){
-            Console.println(e.getComponentId());
             if(e.getComponentId().equals("cancel")){
                 cancel(e);
             }
@@ -192,8 +193,6 @@ public class ProgramCreatorChannel extends ListenerAdapter {
     public void onStringSelectInteraction(@NotNull StringSelectInteractionEvent e) {
         if(e.getMessageIdLong() == message.getIdLong() && e.getUser().equals(user)){
             ArrayList<String> options = getOptions();
-            Console.println(e.getValues().get(0));
-            Console.println(options.contains(e.getValues().get(0)));
             if(options.contains(e.getValues().get(0))){
                 int lesson = options.indexOf(e.getValues().get(0));
                 if(stage == maxStage){
