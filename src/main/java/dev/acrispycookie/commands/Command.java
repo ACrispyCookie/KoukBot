@@ -2,7 +2,6 @@ package dev.acrispycookie.commands;
 
 import dev.acrispycookie.levelsystem.commands.*;
 import dev.acrispycookie.Main;
-import me.acrispycookie.levelsystem.commands.*;
 import dev.acrispycookie.utility.Perm;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
