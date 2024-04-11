@@ -18,7 +18,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>me.acrispycookie.Main</mainClass>
+                            <mainClass>dev.acrispycookie.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
