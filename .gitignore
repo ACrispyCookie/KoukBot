@@ -1,6 +1,7 @@
 # User-specific stuff
 .idea/
 
+
 *.iml
 *.ipr
 *.iws
@@ -111,3 +112,4 @@ buildNumber.properties
 
 # Common working directory
 run/
+/src/main/java/me/acrispycookie/managers/tracking/
