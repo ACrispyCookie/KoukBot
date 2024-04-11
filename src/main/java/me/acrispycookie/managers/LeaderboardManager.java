@@ -22,10 +22,9 @@ public class LeaderboardManager {
         this.data = object;
         this.leaderboard = new ArrayList<>();
         Main.getInstance().getUserDataManager().checkData();
-        setup();
     }
 
-    private void setup(){
+    public void setup(){
         ArrayList<LevelUser> loaded = LevelUser.getLoadedUsers();
         for(String key : Main.getInstance().getUserDataManager().getUserData().keySet()){
             LevelUser user = LevelUser.getByDiscordId(Long.parseLong(key));

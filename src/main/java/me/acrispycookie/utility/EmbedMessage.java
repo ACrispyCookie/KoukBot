@@ -13,6 +13,7 @@ public class EmbedMessage {
     String title;
     String content;
     Color color;
+    String imageUrl;
 
     public EmbedMessage(User user, String title, String content, Color color) {
         this.user = user;
@@ -28,12 +29,19 @@ public class EmbedMessage {
         this.color = Main.getInstance().getBotColor();
     }
 
+    public void setImage(String url) {
+        this.imageUrl = url;
+    }
+
     public MessageEmbed build(){
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(title);
         builder.setDescription(content);
         builder.setColor(color);
         builder.setFooter("Command executed by " + user.getAsTag());
+        if(imageUrl != null) {
+            builder.setThumbnail(imageUrl);
+        }
         return builder.build();
     }
 

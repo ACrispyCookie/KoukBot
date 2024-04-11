@@ -3,11 +3,11 @@ package me.acrispycookie;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import me.acrispycookie.commands.BotCommand;
-import me.acrispycookie.commands.Command;
 import me.acrispycookie.levelsystem.LevelUser;
 import me.acrispycookie.levelsystem.XPGainEvent;
 import me.acrispycookie.managers.*;
 import me.acrispycookie.managers.MoviePollManager;
+import me.acrispycookie.managers.tracking.StatusListener;
 import me.acrispycookie.school.managers.PanellhniesManager;
 import me.acrispycookie.school.managers.ProgramCreatorManager;
 import me.acrispycookie.school.managers.ProgramManager;
@@ -15,6 +15,7 @@ import me.acrispycookie.school.managers.SchoolManager;
 import me.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
@@ -23,6 +24,7 @@ import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.awt.*;
 import java.io.*;
@@ -183,6 +185,7 @@ public class Main {
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .addEventListeners(new BotCommand() { @Override public void execute(SlashCommandInteractionEvent e, String label, Member m) { } })
                     .addEventListeners(new XPGainEvent())
+                    .addEventListeners(new StatusListener())
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_PRESENCES)
@@ -202,11 +205,6 @@ public class Main {
             long startTime = System.currentTimeMillis();
             Console.println("Loading level manager...");
             try {
-                for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
-                    for(Member m : v.getMembers()){
-                        LevelUser.getByDiscordId(m.getIdLong());
-                    }
-                }
                 File dataFile = new File("./data/leaderboard.json");
                 if(!dataFile.exists()){
                     dataFile = getResource("leaderboard.json");
@@ -214,6 +212,11 @@ public class Main {
                 }
                 JsonObject object = new Gson().fromJson(new FileReader(dataFile), JsonObject.class);
                 leaderboardManager = new LeaderboardManager(object);
+                for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
+                    for(Member m : v.getMembers()){
+                        LevelUser.getByDiscordId(m.getIdLong()).joinChannel();
+                    }
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Console.println("Error occured while trying to read the leaderboard data file!");

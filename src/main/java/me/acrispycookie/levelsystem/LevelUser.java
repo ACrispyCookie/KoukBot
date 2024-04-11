@@ -37,7 +37,6 @@ public class LevelUser {
         this.totalXp = findTotalXP(level) + xp;
         this.xpRequired = getRequired(level);
         this.nextValidMessage = nextValidMessage;
-        if(Main.getInstance().getDiscordMember(discordUser) != null && Main.getInstance().getDiscordMember(discordUser).getVoiceState().inAudioChannel()) joinChannel(); else joinedVoiceOn = 0;
         this.specialLevelUp = specialLevelUp;
         loadedUsers.add(this);
         if(!isSaved){

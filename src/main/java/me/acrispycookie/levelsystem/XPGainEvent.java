@@ -14,7 +14,7 @@ public class XPGainEvent extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
         Member m = e.getMember();
-        if(!m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
+        if(m != null && !m.getUser().isBot() && !m.getUser().equals(e.getJDA().getSelfUser())){
             LevelUser levelUser = LevelUser.getByDiscordId(m.getIdLong());
             if(levelUser.getNextValidMessage() <= System.currentTimeMillis()){
                 Random random = new Random();

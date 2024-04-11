@@ -1,2 +1,4 @@
 # Project exclude paths
 /target/
+/.idea/
+/src/main/java/me/acrispycookie/managers/tracking
