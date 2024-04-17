@@ -22,7 +22,7 @@ public class LeaderboardCommand extends BotCommand {
         ArrayList<Long> ids = Main.getInstance().getLeaderboardManager().getLeaderboard();
         for(int i = 0; i < 10; i++){
             LevelUser u = LevelUser.getByDiscordId(ids.get(i));
-            s.append("Rank #").append(i + 1).append(": ").append(u.getDiscordUser().getName()).append(" - ").append(u.getLevel()).append(" Level, ").append(u.getXp()).append(" XP");
+            s.append("Rank #").append(i + 1).append(": ").append(Main.getInstance().getDiscordMember(u.getDiscordUser()).getEffectiveName()).append(" - ").append(u.getLevel()).append(" Level, ").append(u.getXp()).append(" XP");
             s.append(i < 9 ? "\n" : "");
         }
         return s.toString();

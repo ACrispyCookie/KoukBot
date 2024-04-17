@@ -6,6 +6,7 @@ import dev.acrispycookie.commands.BotCommand;
 import dev.acrispycookie.levelsystem.LevelUser;
 import dev.acrispycookie.levelsystem.XPGainEvent;
 import dev.acrispycookie.managers.*;
+import dev.acrispycookie.managers.tracking.StatusListener;
 import dev.acrispycookie.school.managers.PanellhniesManager;
 import dev.acrispycookie.school.managers.ProgramCreatorManager;
 import dev.acrispycookie.school.managers.ProgramManager;
@@ -20,6 +21,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.awt.*;
 import java.io.*;
@@ -177,11 +179,12 @@ public class Main {
         Console.println("Starting discord bot...");
         try {
             bot = JDABuilder.createDefault(configManager.get("bot.botToken"))
-                    .setChunkingFilter(ChunkingFilter.ALL)
                     .addEventListeners(new BotCommand() { @Override public void execute(SlashCommandInteractionEvent e, String label, Member m) { } })
                     .addEventListeners(new XPGainEvent())
                     .addEventListeners(new StatusListener())
+                    .setChunkingFilter(ChunkingFilter.ALL)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
+                    .enableCache(CacheFlag.ACTIVITY)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .enableIntents(GatewayIntent.GUILD_PRESENCES)
                     .setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")))
@@ -207,6 +210,7 @@ public class Main {
                 }
                 JsonObject object = new Gson().fromJson(new FileReader(dataFile), JsonObject.class);
                 leaderboardManager = new LeaderboardManager(object);
+                leaderboardManager.setup();
                 for(VoiceChannel v : Main.getInstance().getGuild().getVoiceChannels()){
                     for(Member m : v.getMembers()){
                         LevelUser.getByDiscordId(m.getIdLong()).joinChannel();

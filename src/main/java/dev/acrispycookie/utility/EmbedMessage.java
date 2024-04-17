@@ -38,7 +38,7 @@ public class EmbedMessage {
         builder.setTitle(title);
         builder.setDescription(content);
         builder.setColor(color);
-        builder.setFooter("Command executed by " + user.getAsTag());
+        builder.setFooter("Command executed by " + Main.getInstance().getDiscordMember(user).getEffectiveName());
         if(imageUrl != null) {
             builder.setThumbnail(imageUrl);
         }

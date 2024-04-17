@@ -111,10 +111,10 @@ public class UserCard {
         int offsetX = width(getNameLine());
         graphics.setColor(WHITE);
         graphics.drawString(getNameLine(), 272, 165);
-        font = font.deriveFont(Font.PLAIN, SMALL_FONT_SIZE);
-        graphics.setFont(font);
-        graphics.setColor(GRAY);
-        graphics.drawString("#" + getTag(), 272 + offsetX + NAME_TAG_SPACE_PIXELS, 165);
+//        font = font.deriveFont(Font.PLAIN, SMALL_FONT_SIZE);
+//        graphics.setFont(font);
+//        graphics.setColor(GRAY);
+//        graphics.drawString("#" + getTag(), 272 + offsetX + NAME_TAG_SPACE_PIXELS, 165);
     }
 
     private void addExp(){
@@ -206,7 +206,9 @@ public class UserCard {
     }
 
     private String getNameLine(){
-        return user.getDiscordUser().getName().length() > 16 ? user.getDiscordUser().getName().substring(0,16) : user.getDiscordUser().getName();
+        return Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName().length() > 16 ?
+                Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName().substring(0,16) :
+                Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName();
     }
 
     private String getTag(){
