@@ -1,55 +1,59 @@
 package dev.acrispycookie.managers;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
+import dev.acrispycookie.KoukBot;
+import dev.acrispycookie.utility.ConfigurationFile;
 import dev.acrispycookie.utility.Perm;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class PermissionManager {
+public class PermissionManager extends FeatureManager {
 
-    private JsonObject permissions;
+    private final ConfigurationFile file = ConfigurationFile.PERMISSION;
 
-    public PermissionManager(JsonObject permissions){
-        this.permissions = permissions;
+    public PermissionManager(KoukBot bot, String name) {
+        super(bot, name);
+    }
+
+    @Override
+    public void loadInternal() {
+
+    }
+
+    @Override
+    public void unloadInternal() {
+
+    }
+
+    @Override
+    public void reloadInternal() {
+        file.reloadJson();
     }
 
     public ArrayList<Long> getAllowedRoleList(Perm permission) {
-        JsonArray array = permissions.get("permissions").getAsJsonObject().getAsJsonArray(permission.name());
+        JsonArray array = file.getElement("permissions").getAsJsonObject().getAsJsonArray(permission.name());
         ArrayList<Long> longs = new ArrayList<>();
-        for(int i = 0; i < array.size(); i++){
+        for (int i = 0; i < array.size(); i++)
             longs.add(array.get(i).getAsLong());
-        }
         return longs;
     }
 
-    public void addRoleToPermission(Role role, Perm permission){
+    public void addRoleToPermission(Role role, Perm permission) {
         JsonArray userArray = get(permission);
         userArray.add(role.getIdLong());
-        save();
+        file.setElement("permissions" + permission.name(), userArray);
     }
 
-    public void removeRoleFromPermission(Role role, Perm permission){
+    public void removeRoleFromPermission(Role role, Perm permission) {
         JsonArray userArray = get(permission);
         userArray.remove(new JsonPrimitive(role.getIdLong()));
-        save();
+        file.setElement("permissions" + permission.name(), userArray);
     }
 
     private JsonArray get(Perm perm) {
-        return permissions.getAsJsonObject("permissions").getAsJsonArray(perm.name());
-    }
-
-    private void save(){
-        try {
-            FileWriter file = new FileWriter("./data/permissions.json");
-            file.write(new GsonBuilder().setPrettyPrinting().create().toJson(permissions));
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return file.getElement("permissions").getAsJsonObject().getAsJsonArray(perm.name());
     }
 
 }

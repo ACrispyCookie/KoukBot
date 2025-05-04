@@ -67,21 +67,6 @@
       "play": {
         "main": "Play music with KoukBot!",
         "search": "A search term/URL for KoukBot to play"
-      },
-      "pause": {
-        "main": "Pause the player if it's playing."
-      },
-      "resume": {
-        "main": "Resume the player if it's paused."
-      },
-      "next": {
-        "main": "Go to the next song of the queue."
-      },
-      "previous": {
-        "main": "Go to the previous song of the queue."
-      },
-      "stop": {
-        "main": "Stop the music."
       }
     },
     "success": {
@@ -95,14 +80,12 @@
         "set-color": "Card color updated",
         "clear": "Chat cleared",
         "play": {
-          "now-playing": "▶ Now Playing",
+          "now-playing": "▶️  Now Playing",
+          "current-queue": "Current Queue",
           "queued": "Queued song"
         },
-        "pause": "⏸ Paused player",
-        "resume": "▶ Resumed player",
-        "stop": "⏹ Stopped player",
-        "next": "⏭ Jumped to the next song",
-        "previous": "⏮ Jumped to the previous song",
+        "pause": "⏸️  Paused player",
+        "stop": "⏹️  Stopped player",
         "todo": "To-do created!"
       },
       "description": {
@@ -134,11 +117,6 @@
           "",
           "**__Music:__**",
           "`/play` - Play a video from YouTube.",
-          "`/pause` - Pause the playlist.",
-          "`/resume` - Resume the playlist.",
-          "`/next` - Skip to the next song on the playlist.",
-          "`/previous` - Go back to the previous song on the playlist.",
-          "`/stop` - Stop the playlist.",
           "",
           "**__Movies:__**",
           "`/moviepoll` - Creates a movie poll.",
@@ -158,15 +136,13 @@
           "queued": "Queued %1 [%2]"
         },
         "pause": "The player has been paused. [%1]",
-        "resume": "The player has been resumed. [%1]",
         "stop": "The player has been stopped.",
-        "next": "The player has jumped one song forward. %1 [%2]",
-        "previous": "The player has jumped one song backwards. %1 [%2]",
         "todo": "Check out your new task on your todo channel!"
       }
     },
     "failed": {
       "title": {
+        "unknown-error": "Unknown error",
         "set-color": {
           "not-a-color": "Invalid color code"
         },
@@ -189,22 +165,19 @@
           "already-playing": "Already playing",
           "not-in-channel": "Not in a channel",
           "not-in-your-channel": "Not in your channel",
+          "song-not-found": "Song not found",
           "no-matches": "No matched found",
           "error-playing": "Player error"
-        },
-        "next": {
-          "end-of-queue": "End of queue"
-        },
-        "previous": {
-          "top-of-queue": "Top of queue"
         }
       },
       "description": {
+        "unknown-error": "An unknown error has occurred! Please contact the developer!",
         "play": {
-          "not-playing": "KoukBot is not currently playing any music!",
-          "already-playing": "KoukBot is already playing some music!",
+          "not-playing": "KatsarosBot is not currently playing any music!",
+          "already-playing": "KatsarosBot is already playing some music!",
           "not-in-channel": "You must be in a voice channel to play music!",
-          "not-in-your-channel": "Someone else is using KoukBot to play music in another voice channel!",
+          "not-in-your-channel": "Someone else is using KatsarosBot to play music in another voice channel!",
+          "song-not-found": "The song you requested could not be found!",
           "no-matches": "We couldn't find any videos matching your search query!",
           "error-playing": "There was an error adding your video to the queue. Please try again later!"
         },
@@ -225,12 +198,6 @@
         "moviepoll": {
           "not-active": "Movie poll is not currently active. \nTo start it please run the command `/moviepoll start <duration>`",
           "already-active": "Movie poll is already active. \nTo stop it please run the command `/moviepoll stop`"
-        },
-        "next": {
-          "end-of-queue": "You have reached the end of queue!"
-        },
-        "previous": {
-          "top-of-queue": "You are already at the top of the queue!"
         }
       }
     }

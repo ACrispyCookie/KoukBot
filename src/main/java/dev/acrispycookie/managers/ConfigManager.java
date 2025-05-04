@@ -1,63 +1,43 @@
 package dev.acrispycookie.managers;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import dev.acrispycookie.KoukBot;
+import dev.acrispycookie.utility.ConfigurationFile;
 
-import java.io.FileWriter;
-import java.io.IOException;
 
-public class ConfigManager {
+public class ConfigManager extends FeatureManager {
 
-    private JsonObject config;
+    private final ConfigurationFile file = ConfigurationFile.CONFIG;
 
-    public ConfigManager(JsonObject config){
-        this.config = config;
+    public ConfigManager(KoukBot bot, String name) {
+        super(bot, name);
     }
 
-    public String get(String key) {
-        JsonElement element = null;
-        String[] parents = key.split("\\.");
-        for(String s : parents){
-            if(element == null){
-                element = config.get(s);
-            }
-            else{
-                element = element.getAsJsonObject().get(s);
-            }
-        }
-        return element.getAsString();
+    @Override
+    public void loadInternal() {
+
     }
 
-    public void changePrefix(String prefix){
-        JsonObject object = config.getAsJsonObject("settings");
-        object.add("prefix", new JsonPrimitive(prefix));
-        save();
+    @Override
+    public void unloadInternal() {
+
     }
 
-    public void set(String key, JsonElement value){
-        String[] parents = key.split("\\.");
-        JsonObject finalParent = null;
-        for(int i = 0; i < parents.length - 1; i++){
-            if(finalParent == null){
-                finalParent = config.getAsJsonObject(parents[i]);
-                continue;
-            }
-            finalParent = finalParent.getAsJsonObject(parents[i]);
-        }
-        finalParent.add(parents[parents.length - 1], value);
-        save();
+    @Override
+    public void reloadInternal() {
+        file.reloadJson();
     }
 
-    private void save(){
-        try {
-            FileWriter file = new FileWriter("./data/config.json");
-            file.write(new GsonBuilder().setPrettyPrinting().create().toJson(config));
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void changePrefix(String prefix) {
+        file.setElement("settings.prefix", new JsonPrimitive(prefix));
+    }
+
+    public String get(String path) {
+        return file.getElement(path).getAsString();
+    }
+
+    public void set(String path, JsonElement value) {
+        file.setElement(path, value);
     }
 }

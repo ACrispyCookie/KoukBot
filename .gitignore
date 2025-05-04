@@ -112,4 +112,4 @@ buildNumber.properties
 
 # Common working directory
 run/
-/src/main/java/dev/acrispycookie/managers/tracking/
+/src/koukBot/java/dev/acrispycookie/managers/tracking/

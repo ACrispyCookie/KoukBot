@@ -1,4 +1,8 @@
 {
+  "lavalink-client": {
+    "uri": "",
+    "password": ""
+  },
   "bot": {
     "botToken": "",
     "activity": {

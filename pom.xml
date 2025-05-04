@@ -18,7 +18,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>dev.acrispycookie.Main</mainClass>
+                            <mainClass>dev.acrispycookie.KoukBot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -34,7 +34,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>dev.acrispycookie.Main</mainClass>
+                            <mainClass>dev.acrispycookie.KoukBot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -46,6 +46,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>14</source>
+                    <target>14</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -60,7 +68,11 @@
         <repository>
             <id>arbjergDev-snapshots</id>
             <name>Lavalink-Repository</name>
-            <url>https://maven.lavalink.dev/snapshots</url>
+            <url>https://maven.lavalink.dev/releases</url>
+        </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>dv8tion</id>
@@ -82,8 +94,13 @@
         </dependency>
         <dependency>
             <groupId>dev.arbjerg</groupId>
-            <artifactId>lavaplayer</artifactId>
-            <version>0eaeee195f0315b2617587aa3537fa202df07ddc-SNAPSHOT</version>
+            <artifactId>lavalink-client</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.lavalink.youtube</groupId>
+            <artifactId>v2</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -106,7 +123,6 @@
             <artifactId>unirest-java</artifactId>
             <version>1.4.9</version>
         </dependency>
-
     </dependencies>
 
 </project>

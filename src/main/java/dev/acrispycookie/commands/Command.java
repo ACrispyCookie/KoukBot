@@ -1,7 +1,7 @@
 package dev.acrispycookie.commands;
 
+import dev.acrispycookie.KoukBot;
 import dev.acrispycookie.levelsystem.commands.*;
-import dev.acrispycookie.Main;
 import dev.acrispycookie.utility.Perm;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -10,106 +10,101 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public enum Command {
-    SET_PERM(new SetPermCommand(), new String[] {"set-perm"},
-            Commands.slash("set-perm", Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.main"))
+    SET_PERM(new SetPermCommand(KoukBot.getCmdInstance()), new String[] {"set-perm"},
+            Commands.slash("set-perm", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-perm.main"))
                     .addOptions(new OptionData(OptionType.STRING, "permission",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.permission"), true)
+                            KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-perm.permission"), true)
                             .addChoices(Perm.getPermChoices()))
                     .addOption(OptionType.ROLE, "role",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.role"), true)
+                            KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-perm.role"), true)
                     .addOptions(new OptionData(OptionType.STRING, "action",
-                            Main.getInstance().getLanguageManager().get("commands.descriptions.set-perm.action"), false)
+                            KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-perm.action"), false)
                             .addChoice("allow", "allow").addChoice("deny", "deny")
                             .addChoice("clear", "clear"))),
-    SET_COLOR(new SetColorCommand(), new String[] {"set-color"},
-            Commands.slash("set-color", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.main"))
-                    .addOption(OptionType.STRING, "color", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.main"), false)
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.set-color.user"), false)),
-    GIVE_XP(new GiveExpCommand(), new String[] {"give-xp"},
-            Commands.slash("give-xp", Main.getInstance().getLanguageManager().get("commands.descriptions.give-xp.main"))
+    SET_COLOR(new SetColorCommand(KoukBot.getCmdInstance()), new String[] {"set-color"},
+            Commands.slash("set-color", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-color.main"))
+                    .addOption(OptionType.STRING, "color", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-color.main"), false)
+                    .addOption(OptionType.USER, "user", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.set-color.user"), false)),
+    GIVE_XP(new GiveExpCommand(KoukBot.getCmdInstance()), new String[] {"give-xp"},
+            Commands.slash("give-xp", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.give-xp.main"))
                     .addOptions(
-                            new OptionData(OptionType.INTEGER, "xp", Main.getInstance().getLanguageManager().get("commands.descriptions.give-xp.xp"), true)
+                            new OptionData(OptionType.INTEGER, "xp", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.give-xp.xp"), true)
                                     .setMinValue(0)
                                     .setMaxValue(1000000))
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.give-xp.user"), false)),
-    REMOVE_XP(new RemoveExpCommand(), new String[] {"remove-xp"},
-            Commands.slash("remove-xp", Main.getInstance().getLanguageManager().get("commands.descriptions.remove-xp.main"))
+                    .addOption(OptionType.USER, "user", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.give-xp.user"), false)),
+    REMOVE_XP(new RemoveExpCommand(KoukBot.getCmdInstance()), new String[] {"remove-xp"},
+            Commands.slash("remove-xp", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.remove-xp.main"))
                     .addOptions(
-                            new OptionData(OptionType.INTEGER, "xp", Main.getInstance().getLanguageManager().get("commands.descriptions.remove-xp.xp"), true)
+                            new OptionData(OptionType.INTEGER, "xp", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.remove-xp.xp"), true)
                                     .setMinValue(0)
                                     .setMaxValue(1000000))
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.remove-xp.xp"), false)),
-    RANK(new RankCommand(), new String[] {"rank"},
-            Commands.slash("rank", Main.getInstance().getLanguageManager().get("commands.descriptions.rank.main"))
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.rank.user"), false)),
-    LEADERBOARD(new LeaderboardCommand(), new String[] {"top", "leaderboard"},
-            Commands.slash("top", Main.getInstance().getLanguageManager().get("commands.descriptions.top.main"))),
+                    .addOption(OptionType.USER, "user", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.remove-xp.xp"), false)),
+    RANK(new RankCommand(KoukBot.getCmdInstance()), new String[] {"rank"},
+            Commands.slash("rank", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.rank.main"))
+                    .addOption(OptionType.USER, "user", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.rank.user"), false)),
+    LEADERBOARD(new LeaderboardCommand(KoukBot.getCmdInstance()), new String[] {"top", "leaderboard"},
+            Commands.slash("top", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.top.main"))),
     /*HELP(new HelpCommand(), new String[]{"help", "?"},
             Commands.slash("help", "a")),*/
-    TODO(new ToDoCommand(), new String[]{"todo", "task"},
-            Commands.slash("todo", Main.getInstance().getLanguageManager().get("commands.descriptions.todo.main"))
-                    .addOption(OptionType.STRING, "task", Main.getInstance().getLanguageManager().get("commands.descriptions.todo.task"), true)),
-    NOTIFY(new NotifyCommand(), new String[]{"notify", "noti"},
-            Commands.slash("notify", Main.getInstance().getLanguageManager().get("commands.descriptions.notify.main"))
-                    .addOption(OptionType.USER, "user", Main.getInstance().getLanguageManager().get("commands.descriptions.notify.user"), true)),
-    MESSAGE(new MessageCommand(), new String[]{"message", "msg"},
-            Commands.slash("message", Main.getInstance().getLanguageManager().get("commands.descriptions.message.main"))
-                    .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.message.message"), true)
-                    .addOptions(new OptionData(OptionType.CHANNEL, "channel", Main.getInstance().getLanguageManager().get("commands.descriptions.message.channel"), false)
+    TODO(new ToDoCommand(KoukBot.getCmdInstance()), new String[]{"todo", "task"},
+            Commands.slash("todo", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.todo.main"))
+                    .addOption(OptionType.STRING, "task", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.todo.task"), true)),
+    NOTIFY(new NotifyCommand(KoukBot.getCmdInstance()), new String[]{"notify", "noti"},
+            Commands.slash("notify", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.notify.main"))
+                    .addOption(OptionType.USER, "user", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.notify.user"), true)),
+    MESSAGE(new MessageCommand(KoukBot.getCmdInstance()), new String[]{"message", "msg"},
+            Commands.slash("message", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.message.main"))
+                    .addOption(OptionType.STRING, "message", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.message.message"), true)
+                    .addOptions(new OptionData(OptionType.CHANNEL, "channel", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.message.channel"), false)
                             .setChannelTypes(ChannelType.TEXT))),
-    SAY(new SayCommand(false), new String[]{"say"},
-            Commands.slash("say", Main.getInstance().getLanguageManager().get("commands.descriptions.say.main"))
-                    .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.say.message"), false)),
-    EVILSAY(new SayCommand(true), new String[]{"evil-say", "e-say"},
-            Commands.slash("evil-say", Main.getInstance().getLanguageManager().get("commands.descriptions.evil-say.main"))
-                    .addOption(OptionType.STRING, "message", Main.getInstance().getLanguageManager().get("commands.descriptions.evil-say.message"), false)),
-    CLEAR(new ClearCommand(), new String[]{"clear"},
-            Commands.slash("clear", Main.getInstance().getLanguageManager().get("commands.descriptions.clear.main"))
+    SAY(new SayCommand(KoukBot.getCmdInstance(), false), new String[]{"say"},
+            Commands.slash("say", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.say.main"))
+                    .addOption(OptionType.STRING, "message", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.say.message"), false)),
+    EVILSAY(new SayCommand(KoukBot.getCmdInstance(), true), new String[]{"evil-say", "e-say"},
+            Commands.slash("evil-say", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.evil-say.main"))
+                    .addOption(OptionType.STRING, "message", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.evil-say.message"), false)),
+    CLEAR(new ClearCommand(KoukBot.getCmdInstance()), new String[]{"clear"},
+            Commands.slash("clear", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.clear.main"))
                     .addOptions(
-                            new OptionData(OptionType.INTEGER, "count", Main.getInstance().getLanguageManager().get("commands.descriptions.clear.count"), true)
+                            new OptionData(OptionType.INTEGER, "count", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.clear.count"), true)
                                     .setMinValue(2)
                                     .setMaxValue(100)
                     )),
-    PANELLHNIES(new PanellhniesCommand(), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ", "panell"},
-            Commands.slash("panellhnies", Main.getInstance().getLanguageManager().get("commands.descriptions.panellhnies.main"))),
-    ITALY(new ItalyCommand(), new String[]{"italy", "italia"},
-            Commands.slash("italy", Main.getInstance().getLanguageManager().get("commands.descriptions.italy.main"))),
-    PLAY(new PlayCommand(), new String[]{"play", "queue", "q"},
-            Commands.slash("play", Main.getInstance().getLanguageManager().get("commands.descriptions.play.main"))
-                    .addOption(OptionType.STRING, "search", Main.getInstance().getLanguageManager().get("commands.descriptions.play.search"), true)),
-    PAUSE(new PauseCommand(), new String[]{"pause"},
-            Commands.slash("pause", Main.getInstance().getLanguageManager().get("commands.descriptions.pause.main"))),
-    RESUME(new ResumeCommand(), new String[]{"resume", "res"},
-            Commands.slash("resume", Main.getInstance().getLanguageManager().get("commands.descriptions.resume.main"))),
-    NEXT(new NextCommand(), new String[]{"next", "skip"},
-            Commands.slash("next", Main.getInstance().getLanguageManager().get("commands.descriptions.next.main"))),
-    PREVIOUS(new PreviousCommand(), new String[]{"previous", "prev"},
-            Commands.slash("previous", Main.getInstance().getLanguageManager().get("commands.descriptions.previous.main"))),
-    STOP(new StopCommand(), new String[]{"stop"},
-            Commands.slash("stop", Main.getInstance().getLanguageManager().get("commands.descriptions.stop.main")));
-    BotCommand botCommand;
-    String[] aliases;
-    CommandData data;
+    PANELLHNIES(new PanellhniesCommand(KoukBot.getCmdInstance()), new String[]{"panellhnies", "πανελλήνιες", "πανελλήνιεσ", "panell"},
+            Commands.slash("panellhnies", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.panellhnies.main"))),
+    ITALY(new ItalyCommand(KoukBot.getCmdInstance()), new String[]{"italy", "italia"},
+            Commands.slash("italy", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.italy.main"))),
+    PLAY(new PlayCommand(KoukBot.getCmdInstance()), new String[]{"play", "queue", "q"},
+            Commands.slash("play", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.play.main"))
+                    .addOption(OptionType.STRING, "search", KoukBot.getCmdInstance().getLanguageManager().get("commands.descriptions.play.search"), true));
 
-    Command(BotCommand command, String[] aliases, CommandData data){
+    private final BotCommand botCommand;
+    private final String[] aliases;
+    private final CommandData data;
+
+    Command(BotCommand command, String[] aliases, CommandData data) {
         this.botCommand = command;
         this.aliases = aliases;
         this.data = data;
     }
 
-    public String[] getAliases(){
+    public CommandData getData() {
+        return data;
+    }
+
+    public String[] getAliases() {
         return aliases;
     }
 
-    public BotCommand getBotCommand(){
+    public BotCommand getBotCommand() {
         return botCommand;
     }
 
-    public static Command getByAlias(String alias){
-        for(Command command : Command.values()){
+    public static Command getByAlias(String alias) {
+        for (Command command : Command.values()) {
             String[] args = command.getAliases();
-            for(String s : args){
-                if(s.equalsIgnoreCase(alias)){
+            for (String s : args) {
+                if (s.equalsIgnoreCase(alias)) {
                     return command;
                 }
             }

@@ -1,7 +1,7 @@
 package dev.acrispycookie.commands;
 
+import dev.acrispycookie.KoukBot;
 import dev.acrispycookie.levelsystem.LevelUser;
-import dev.acrispycookie.Main;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -18,26 +18,27 @@ import java.io.File;
 import java.io.IOException;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
-import java.util.*;
+import java.util.HashMap;
 
 public class SayCommand extends BotCommand {
 
     boolean evil;
 
-    public SayCommand(boolean evil){
+    public SayCommand(KoukBot bot, boolean evil) {
+        super(bot);
         this.evil = evil;
     }
 
     @Override
     public void execute(SlashCommandInteractionEvent e, String label, Member m) {
-        if(e.getOption("message") != null){
+        if (e.getOption("message") != null) {
             String message = e.getOption("message").getAsString();
             e.deferReply().queue();
             e.getHook().sendFiles(FileUpload.fromData(getImage(message), "kouk.png")).queue();
         }
-        else{
+        else {
             e.deferReply().queue();
-            e.getHook().sendFiles(FileUpload.fromData(getImage(Main.getInstance().getLanguageManager().getRandomLevelUp(LevelUser.getByDiscordId(m.getIdLong()).getSpecialLevelUp())), "kouk.png")).queue();
+            e.getHook().sendFiles(FileUpload.fromData(getImage(bot.getLanguageManager().getRandomLevelUp(LevelUser.getByDiscordId(m.getIdLong()).getSpecialLevelUp())), "kouk.png")).queue();
         }
     }
 
@@ -79,9 +80,9 @@ public class SayCommand extends BotCommand {
                 drawPosY += layout.getDescent() + layout.getLeading();
             }
 
-            if(evil){
-                for(int x = 0; x < image.getWidth(); x++){
-                    for(int y = 0; y < image.getHeight(); y++){
+            if (evil) {
+                for (int x = 0; x < image.getWidth(); x++) {
+                    for (int y = 0; y < image.getHeight(); y++) {
                         int color = image.getRGB(x, y);
                         Color inverted = new Color(color, true);
                         inverted = new Color(255 - inverted.getRed(),

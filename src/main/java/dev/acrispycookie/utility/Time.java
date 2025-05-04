@@ -17,35 +17,25 @@ public class Time {
 		long minutes = diff / 60;
 		diff = diff - minutes * 60;
 		long seconds = diff;
-		if(years >= 1) {
+
+		if (years >= 1)
 			formatted = formatted + years + " χρόν" + (years == 1 ? "ο" : "ια") + " ";
-		}
-		if(months >= 1) {
+		if (months >= 1)
 			formatted = formatted + months + " μήν" + (months == 1 ? "α" : "ες") + " ";
-		}
-		if(weeks >= 1) {
+		if (weeks >= 1)
 			formatted = formatted + weeks + " εβδομάδ" + (weeks == 1 ? "α" : "ες") + " ";
-		}
-		if(days >= 1) {
+		if (days >= 1)
 			formatted = formatted + days + " ημέρ" + (days == 1 ? "α" : "ες") + " ";
-		}
-		if(hours >= 1) {
+		if (hours >= 1)
 			formatted = formatted + hours + " ώρ" + (hours == 1 ? "α" : "ες") + " ";
-		}
-		if(minutes >= 1) {
+		if (minutes >= 1)
 			formatted = formatted + minutes + " λεπτ" + (minutes == 1 ? "ό" : "ά") + " ";
-		}
-		if(seconds >= 1) {
+		if (seconds >= 1)
 			formatted = formatted + seconds + " δευτερόλεπτ" + (seconds == 1 ? "ο" : "α") + " ";
-		}
-		if(formatted.isEmpty()) {
+		if (formatted.isEmpty())
 			formatted = "0 δευτερόλεπτα";
-		}
-		else {
-			if(formatted.endsWith(" ")) {
-				formatted = formatted.substring(0, formatted.length() - 1);
-			}
-		}
+		else if (formatted.endsWith(" "))
+			formatted = formatted.substring(0, formatted.length() - 1);
 		return formatted;
 	}
 

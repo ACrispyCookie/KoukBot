@@ -8,40 +8,48 @@ import java.util.Scanner;
 
 public class Console {
 
-    public static void println(Object s){
+    private static KoukBot bot;
+
+    public static void println(Object s) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String prefix = sdf.format(new Date(System.currentTimeMillis()));
         System.out.println("[" + prefix + "] " + s);
     }
 
-    public static void start(){
+    public static void error(Object msg, Exception e) {
+        println(msg + " : " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    public static void start(KoukBot bot) {
+        Console.bot = bot;
         Thread thread = new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
-            while(scanner.hasNext()){
+            while (scanner.hasNext()) {
                 try {
                     String s = scanner.next();
-                    if(s != null && ConsoleCommand.getByName(s) != null){
+                    if (s != null && ConsoleCommand.getByName(s) != null) {
                         Console.runCommand(ConsoleCommand.getByName(s));
                     }
-                    else{
+                    else {
                         println("Unknown command! Available commands: stop, restart, reload");
                     }
-                } catch (Exception e){
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    error("Error occurred while executing a command", e);
                 }
             }
         });
         thread.start();
     }
 
-    public static void runCommand(ConsoleCommand cmd){
-        if(cmd == ConsoleCommand.RELOAD){
-            Main.getInstance().reload();
+    public static void runCommand(ConsoleCommand cmd) {
+        if (cmd == ConsoleCommand.RELOAD) {
+            bot.reload();
         }
-        else if(cmd == ConsoleCommand.STOP){
-            Main.getInstance().disable();
+        else if (cmd == ConsoleCommand.STOP) {
+            bot.unload();
         }
-        else if(cmd == ConsoleCommand.RESTART){
+        else if (cmd == ConsoleCommand.RESTART) {
             try {
                 System.out.println("Restarting...");
                 String scriptPath = new File("start.sh").getAbsolutePath();
@@ -61,9 +69,9 @@ public class Console {
         STOP,
         RESTART;
 
-        public static ConsoleCommand getByName(String s){
-            for(ConsoleCommand cmd : ConsoleCommand.values()){
-                if(cmd.name().equalsIgnoreCase(s)){
+        public static ConsoleCommand getByName(String s) {
+            for (ConsoleCommand cmd : ConsoleCommand.values()) {
+                if (cmd.name().equalsIgnoreCase(s)) {
                     return cmd;
                 }
             }

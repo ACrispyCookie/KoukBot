@@ -1,6 +1,6 @@
 package dev.acrispycookie.utility;
 
-import dev.acrispycookie.Main;
+import dev.acrispycookie.KoukBot;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -18,32 +18,29 @@ public enum Perm {
     SET_PREFIX,
     CLEAR;
 
-    public static boolean hasPermission(Member user, Perm permission){
-        if(user.getPermissions().contains(Permission.ADMINISTRATOR)){
+    public static boolean hasPermission(KoukBot bot, Member user, Perm permission) {
+        if (user.getPermissions().contains(Permission.ADMINISTRATOR))
             return true;
-        }
-        for(Role role : user.getRoles()){
-            if(Main.getInstance().getPermissionManager().getAllowedRoleList(permission).contains(role.getIdLong())){
+
+        for (Role role : user.getRoles()) {
+            if (bot.getPermissionManager().getAllowedRoleList(permission).contains(role.getIdLong()))
                 return true;
-            }
         }
         return false;
     }
 
-    public static Perm getByName(String name){
-        for(Perm perm : Perm.values()){
-            if(perm.name().equalsIgnoreCase(name)){
+    public static Perm getByName(String name) {
+        for (Perm perm : Perm.values()) {
+            if (perm.name().equalsIgnoreCase(name))
                 return perm;
-            }
         }
         return null;
     }
 
-    public static List<Command.Choice> getPermChoices(){
+    public static List<Command.Choice> getPermChoices() {
         List<Command.Choice> choices = new ArrayList<>();
-        for(Perm perm : Perm.values()){
+        for (Perm perm : Perm.values())
             choices.add(new Command.Choice(perm.name(), perm.name()));
-        }
         return choices;
     }
 }

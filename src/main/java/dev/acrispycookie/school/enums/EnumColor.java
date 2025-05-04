@@ -15,7 +15,7 @@ public enum EnumColor {
     String emote;
     Color color;
 
-    EnumColor(String emote, Color color){
+    EnumColor(String emote, Color color) {
         this.emote = emote;
         this.color = color;
     }

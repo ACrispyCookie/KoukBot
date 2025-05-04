@@ -1,10 +1,10 @@
-package dev.acrispycookie.managers.todo;
+package dev.acrispycookie.todo;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import dev.acrispycookie.Main;
+import dev.acrispycookie.KoukBot;
 import dev.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,44 +15,47 @@ import java.io.IOException;
 
 public class ToDo {
 
-    String content;
-    long userId;
-    long channelId;
-    long messageId;
+    private final KoukBot bot;
+    private final long userId;
+    private final long channelId;
+    private String content;
+    private long messageId;
 
-    public ToDo(long userId, long channelId, long messageId){
+    public ToDo(KoukBot bot, long userId, long channelId, long messageId) {
+        this.bot = bot;
         this.userId = userId;
         this.channelId = channelId;
         this.messageId = messageId;
-        if(Main.getInstance().getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete() == null){
+        if (bot.getGuild().getTextChannelById(channelId).retrieveMessageById(messageId).complete() == null) {
             delete();
         }
     }
 
-    public ToDo(String content, long userId, long channelId){
+    public ToDo(KoukBot bot, String content, long userId, long channelId) {
+        this.bot = bot;
         this.content = content;
         this.userId = userId;
         this.channelId = channelId;
     }
 
-    public void send(SlashCommandInteractionEvent e, boolean reply){
-        EmbedMessage msg = new EmbedMessage(Main.getInstance().getDiscordUser(userId),
-                Main.getInstance().getLanguageManager().get("todo.new.title", Main.getInstance().getDiscordUser(userId).getAsTag()),
-                Main.getInstance().getLanguageManager().get("todo.new.description", content), Main.getInstance().getBotColor());
-        if(reply) {
+    public void send(SlashCommandInteractionEvent e, boolean reply) {
+        EmbedMessage msg = new EmbedMessage(bot, bot.getDiscordUser(userId),
+                bot.getLanguageManager().get("todo.new.title", bot.getDiscordUser(userId).getAsTag()),
+                bot.getLanguageManager().get("todo.new.description", content), bot.getBotColor());
+        if (reply) {
             e.getHook().sendMessageEmbeds(msg.build())
                     .addActionRow(Button.success("success",
-                                    Main.getInstance().getLanguageManager().get("todo.new.button.text"))
-                            .withEmoji(Emoji.fromUnicode(Main.getInstance().getLanguageManager().get("todo.new.button.emoji"))))
+                                    bot.getLanguageManager().get("todo.new.button.text"))
+                            .withEmoji(Emoji.fromUnicode(bot.getLanguageManager().get("todo.new.button.emoji"))))
                     .queue((q) -> {
                         this.messageId = q.getIdLong();
                         save();
                     });
         } else {
-            Main.getInstance().getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build())
+            bot.getGuild().getTextChannelById(channelId).sendMessageEmbeds(msg.build())
                     .addActionRow(Button.success("success",
-                                    Main.getInstance().getLanguageManager().get("todo.new.button.text"))
-                            .withEmoji(Emoji.fromUnicode(Main.getInstance().getLanguageManager().get("todo.new.button.emoji"))))
+                                    bot.getLanguageManager().get("todo.new.button.text"))
+                            .withEmoji(Emoji.fromUnicode(bot.getLanguageManager().get("todo.new.button.emoji"))))
                     .queue((q) -> {
                         this.messageId = q.getIdLong();
                         save();
@@ -60,12 +63,12 @@ public class ToDo {
         }
     }
 
-    public void delete(){
+    public void delete() {
         removeFromConfig();
     }
 
-    private void save(){
-        JsonObject userObject = Main.getInstance().getToDoManager().getJson();
+    private void save() {
+        JsonObject userObject = bot.getToDoManager().getJson();
         JsonArray toAdd = userObject.getAsJsonObject(String.valueOf(channelId)).getAsJsonArray("toDos");
         toAdd.add(messageId);
         try {
@@ -78,8 +81,8 @@ public class ToDo {
         }
     }
 
-    private void removeFromConfig(){
-        JsonObject object = Main.getInstance().getToDoManager().getJson();
+    private void removeFromConfig() {
+        JsonObject object = bot.getToDoManager().getJson();
         JsonArray list = object.getAsJsonObject(String.valueOf(channelId)).getAsJsonArray("toDos");
         list.remove(new JsonPrimitive(messageId));
         try {
@@ -92,15 +95,15 @@ public class ToDo {
         }
     }
 
-    public String getContent(){
+    public String getContent() {
         return content;
     }
 
-    public long getUserId(){
+    public long getUserId() {
         return userId;
     }
 
-    public long getMessageId(){
+    public long getMessageId() {
         return messageId;
     }
 }

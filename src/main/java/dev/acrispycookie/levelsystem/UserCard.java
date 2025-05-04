@@ -1,6 +1,6 @@
 package dev.acrispycookie.levelsystem;
 
-import dev.acrispycookie.Main;
+import dev.acrispycookie.KoukBot;
 import dev.acrispycookie.utility.Utils;
 import net.dv8tion.jda.api.OnlineStatus;
 
@@ -32,6 +32,7 @@ public class UserCard {
     private final Color ONLINE_GREEN = Utils.hex2Rgb("#43b581");
     private final Color BLACK = Utils.hex2Rgb("#000000");
 
+    private final KoukBot bot;
     private Color mainColor;
     private LevelUser user;
     private Font font;
@@ -39,7 +40,8 @@ public class UserCard {
     private BufferedImage finalImage;
     private Graphics2D graphics;
 
-    public UserCard(LevelUser user){
+    public UserCard(KoukBot bot, LevelUser user) {
+        this.bot = bot;
         this.user = user;
         try {
             this.mainColor = Utils.hex2Rgb(user.getCardColor());
@@ -56,7 +58,8 @@ public class UserCard {
         }
     }
 
-    public UserCard(LevelUser user, Font font, BufferedImage backround){
+    public UserCard(KoukBot bot, LevelUser user, Font font, BufferedImage backround) {
+        this.bot = bot;
         this.user = user;
         this.font = font;
         this.backround = backround;
@@ -91,21 +94,21 @@ public class UserCard {
         graphics.drawImage(profilePicture, 42, 62,160, 160, null);
     }
 
-    private void addBackground(){
+    private void addBackground() {
         graphics.drawImage(backround, 0, 0, null);
     }
 
-    private void addStatus(){
+    private void addStatus() {
         graphics.setColor(getColorByStatus());
         graphics.fillOval(162, 172,42,42);
     }
 
-    private void addBar(){
+    private void addBar() {
         graphics.setColor(mainColor);
         graphics.fillRoundRect(256, 185, (int) Math.round((((double) user.getXp() / (double) user.getXpRequired()) * 633)), 35, 35, 35);
     }
 
-    private void addTag(){
+    private void addTag() {
         font = new Font("Cera Pro", Font.PLAIN, LARGE_FONT_SIZE);
         graphics.setFont(font);
         int offsetX = width(getNameLine());
@@ -117,7 +120,7 @@ public class UserCard {
 //        graphics.drawString("#" + getTag(), 272 + offsetX + NAME_TAG_SPACE_PIXELS, 165);
     }
 
-    private void addExp(){
+    private void addExp() {
         font = new Font("Sarine-Regular", Font.PLAIN, SMALL_FONT_SIZE);
         graphics.setFont(font);
         graphics.setColor(GRAY);
@@ -126,7 +129,7 @@ public class UserCard {
         graphics.drawString(getXpLine(), finalImage.getWidth() - REQUIRED_XP_SPACE_PIXELS - SPACE_BETWEEN_REQUIRED_AND_CURRENT_EXP - width(getXpLine()) - width(getRequiredXp()), 165);
     }
 
-    private void addRankLevel(){
+    private void addRankLevel() {
         int levelWidth = width("LEVEL");
         int rankWidth = width("RANK");
         font = font.deriveFont(Font.PLAIN, EXTRA_LARGE_FONT_SIZE);
@@ -148,18 +151,18 @@ public class UserCard {
         graphics.drawString("RANK", finalImage.getWidth() - levelNumberWidth - LEVEL_SPACE_PIXELS - 6 - levelWidth - 15 - numberWidth - 6 - rankWidth, 95);
     }
 
-    private String getXpLine(){
+    private String getXpLine() {
         String s = "";
         DecimalFormat d = new DecimalFormat("#.##");
-        if(user.getXp() < 5000){
+        if (user.getXp() < 5000) {
             NumberFormat nf = NumberFormat.getInstance(Locale.US);
             s = nf.format(user.getXp());
         }
-        else{
-            if(user.getXp() >= 1000000000) {
+        else {
+            if (user.getXp() >= 1000000000) {
                 s = s + (d.format((double) user.getXp() / 1000000000)) + "B";
             }
-            else if(user.getXp() >= 1000000) {
+            else if (user.getXp() >= 1000000) {
                 s = s + (d.format((double) user.getXp() / 1000000)) + "M";
             }
             else {
@@ -169,16 +172,16 @@ public class UserCard {
         return s;
     }
 
-    private String getRequiredXp(){
+    private String getRequiredXp() {
         String s = "/ ";
         DecimalFormat d = new DecimalFormat("#.##");
-        if(user.getXpRequired() >= 1000000000) {
+        if (user.getXpRequired() >= 1000000000) {
             s = s + (d.format((double) user.getXpRequired() / 1000000000)) + "B";
         }
-        else if(user.getXpRequired() >= 1000000) {
+        else if (user.getXpRequired() >= 1000000) {
             s = s + (d.format((double) user.getXpRequired() / 1000000)) + "M";
         }
-        else if(user.getXpRequired() >= 1000) {
+        else if (user.getXpRequired() >= 1000) {
             s = s + (d.format((double) user.getXpRequired() / 1000)) + "K";
         }
         else {
@@ -188,34 +191,34 @@ public class UserCard {
         return s;
     }
 
-    private Color getColorByStatus(){
-        OnlineStatus status = Main.getInstance().getDiscordMember(user.getDiscordUser()).getOnlineStatus();
-        if(status == OnlineStatus.ONLINE){
+    private Color getColorByStatus() {
+        OnlineStatus status = bot.getDiscordMember(user.getDiscordUser()).getOnlineStatus();
+        if (status == OnlineStatus.ONLINE) {
             return mainColor;
         }
-        else if(status == OnlineStatus.OFFLINE || status == OnlineStatus.INVISIBLE || status == OnlineStatus.UNKNOWN){
+        else if (status == OnlineStatus.OFFLINE || status == OnlineStatus.INVISIBLE || status == OnlineStatus.UNKNOWN) {
             return Utils.hex2Rgb("#747f8d");
         }
-        else if(status == OnlineStatus.IDLE){
+        else if (status == OnlineStatus.IDLE) {
             return Utils.hex2Rgb("#faa61a");
         }
-        else if(status == OnlineStatus.DO_NOT_DISTURB){
+        else if (status == OnlineStatus.DO_NOT_DISTURB) {
             return Utils.hex2Rgb("#f04747");
         }
         return mainColor;
     }
 
-    private String getNameLine(){
-        return Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName().length() > 16 ?
-                Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName().substring(0,16) :
-                Main.getInstance().getDiscordMember(user.getDiscordUser()).getEffectiveName();
+    private String getNameLine() {
+        return bot.getDiscordMember(user.getDiscordUser()).getEffectiveName().length() > 16 ?
+                bot.getDiscordMember(user.getDiscordUser()).getEffectiveName().substring(0,16) :
+                bot.getDiscordMember(user.getDiscordUser()).getEffectiveName();
     }
 
-    private String getTag(){
+    private String getTag() {
         return user.getDiscordUser().getDiscriminator();
     }
 
-    private int width(String s){
+    private int width(String s) {
         FontMetrics metrics = graphics.getFontMetrics();
         return metrics.stringWidth(s);
     }

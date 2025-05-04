@@ -110,14 +110,14 @@ Chat levelling is a ranking system which ranks players based on chat activity. I
 
 ### Commands
 * **/rank [user]** - Renders and posts a user card which contains information about the user's level, rank and EXP.
-* **/setcolor <hex color code>** - Sets the main color for your user card.
+* **/setcolor <hex color code>** - Sets the koukBot color for your user card.
  
 ### Structure of `data.json`
 `data.json` contains the information about the chat levelling for every user on the discord server. Every user is represented by an object with the key being their discord ID. Every `user` object contain the following elements:
  * `nextMinute` - A timestamp which shows when the user's cooldown for receiving EXP ends.
  * `level` - The current level of the user
  * `xp` - The current EXP the user has. (Not total)
- * `card-color` - A hax color code for the main color of the user card.
+ * `card-color` - A hax color code for the koukBot color of the user card.
 The users total EXP and EXP needed to level up is calculated when a user gets loaded. There is an optional element inside a `user` object which is a list of extra level-up lines for some users.
 
 ### Examples
@@ -133,13 +133,13 @@ A `user` object inside `data.json`:
   "card-color": "#62D3F5" //Default color
 },
 ```
-A card of an offline user using the color `#7289DA` as the main color:
+A card of an offline user using the color `#7289DA` as the koukBot color:
 
 ![image](https://user-images.githubusercontent.com/30019341/136097121-e8d77627-9a20-481d-a5ce-91c6b9780529.png)
 
 
 ## To-do task manager
-To-do task manager is a system that saves your to-dos on a discord channel and give you the option to complete them. The main command of this system is `/todo <task>` which is used to add a new task to your task list. If you haven't created a to-do list before the bot will create a channel with your username in which it will then post the task. When you finish the task you can react to the corresponding message to complete it.
+To-do task manager is a system that saves your to-dos on a discord channel and give you the option to complete them. The koukBot command of this system is `/todo <task>` which is used to add a new task to your task list. If you haven't created a to-do list before the bot will create a channel with your username in which it will then post the task. When you finish the task you can react to the corresponding message to complete it.
 
 ### Structure of `todo.json`
 The `todo.json` stores the data for every user's task. It contains one object per user with the key of it being the channel ID of their to-do channel. Every `channel` object contains 2 elements:

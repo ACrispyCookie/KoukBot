@@ -1,11 +1,12 @@
 package dev.acrispycookie.school.managers;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import dev.acrispycookie.utility.EmbedMessage;
-import dev.acrispycookie.Main;
+import dev.acrispycookie.KoukBot;
+import dev.acrispycookie.managers.FeatureManager;
 import dev.acrispycookie.school.classes.ProgramCreatorChannel;
+import dev.acrispycookie.utility.ConfigurationFile;
+import dev.acrispycookie.utility.EmbedMessage;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -14,63 +15,74 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.FileWriter;
-import java.io.IOException;
+public class ProgramCreatorManager extends FeatureManager {
 
-public class ProgramCreatorManager extends ListenerAdapter {
+    private Message message;
+    private final ConfigurationFile file = ConfigurationFile.PROGRAM_CREATOR;
 
-    Main main;
-    Message message;
-    JsonObject object;
+    public ProgramCreatorManager(KoukBot bot, String name) {
+        super(bot, name);
+    }
 
-    public ProgramCreatorManager(Main main, JsonObject object){
-        this.main = main;
-        this.object = object;
+    @Override
+    public void loadInternal() {
+        bot.getBot().addEventListener(new ButtonListener());
         start();
         loadChannels();
     }
 
-    private void start(){
-        TextChannel channel = main.getGuild().getTextChannelById(Long.parseLong(main.getConfigManager().get("features.program-creator.channel")));
-        long messageId = Long.parseLong(main.getConfigManager().get("features.program-creator.messageId"));
-        if(channel != null){
+    @Override
+    public void unloadInternal() {
+
+    }
+
+    @Override
+    public void reloadInternal() {
+        file.reloadJson();
+    }
+
+    private void start() {
+        TextChannel channel = bot.getGuild().getTextChannelById(Long.parseLong(bot.getConfigManager().get("features.program-creator.channel")));
+        long messageId = Long.parseLong(bot.getConfigManager().get("features.program-creator.messageId"));
+        if (channel != null) {
             channel.retrieveMessageById(messageId).queue((success) -> {
                 ProgramCreatorManager.this.message = success;
             }, (failure) -> {
                 if (failure instanceof ErrorResponseException) {
-                    EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
-                            Main.getInstance().getLanguageManager().get("program-creator.start-message.title"),
-                            Main.getInstance().getLanguageManager().get("program-creator.start-message.description"));
+                    EmbedMessage msg = new EmbedMessage(bot, bot.getGuild().getJDA().getSelfUser(),
+                            bot.getLanguageManager().get("program-creator.start-message.title"),
+                            bot.getLanguageManager().get("program-creator.start-message.description"));
                     channel.sendMessageEmbeds(msg.build())
                             .addActionRow(Button.primary("start",
-                                            Main.getInstance().getLanguageManager().get("program-creator.start-message.button.text")))
+                                            bot.getLanguageManager().get("program-creator.start-message.button.text")))
                             .queue((m) -> {
                         ProgramCreatorManager.this.message = m;
-                        main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
+                        bot.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     });
                 }
             });
         }
         else {
-            main.getGuild().createTextChannel(Main.getInstance().getConfigManager().get("features.program-creator.channelName"), main.getGuild().getCategoryById(main.getConfigManager().get("features.announcer.schoolCategory"))).queue((q) -> {
-                EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
-                        Main.getInstance().getLanguageManager().get("program-creator.start-message.title"),
-                        Main.getInstance().getLanguageManager().get("program-creator.start-message.description"));
+            bot.getGuild().createTextChannel(bot.getConfigManager().get("features.program-creator.channelName"), bot.getGuild().getCategoryById(bot.getConfigManager().get("features.announcer.schoolCategory"))).queue((q) -> {
+                EmbedMessage msg = new EmbedMessage(bot, bot.getGuild().getJDA().getSelfUser(),
+                        bot.getLanguageManager().get("program-creator.start-message.title"),
+                        bot.getLanguageManager().get("program-creator.start-message.description"));
                 q.sendMessageEmbeds(msg.build())
                         .addActionRow(Button.primary("start",
-                                        Main.getInstance().getLanguageManager().get("program-creator.start-message.button.text")))
+                                        bot.getLanguageManager().get("program-creator.start-message.button.text")))
                         .queue((m) -> {
-                    main.getConfigManager().set("features.program-creator.channel", new JsonPrimitive(q.getIdLong()));
-                    main.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
+                    bot.getConfigManager().set("features.program-creator.channel", new JsonPrimitive(q.getIdLong()));
+                    bot.getConfigManager().set("features.program-creator.messageId", new JsonPrimitive(m.getIdLong()));
                     ProgramCreatorManager.this.message = m;
                 });
             });
         }
     }
 
-    private void loadChannels(){
-        for(String key : object.keySet()){
-            new ProgramCreatorChannel(main, Long.parseLong(key),
+    private void loadChannels() {
+        JsonObject object = file.getJson();
+        for (String key : file.getJson().keySet()) {
+            new ProgramCreatorChannel(bot, Long.parseLong(key),
                     object.getAsJsonObject(key).get("channel").getAsLong(),
                     object.getAsJsonObject(key).get("message").getAsLong(),
                     object.getAsJsonObject(key).get("stage").getAsInt(),
@@ -79,7 +91,7 @@ public class ProgramCreatorManager extends ListenerAdapter {
         }
     }
 
-    public void saveChannel(ProgramCreatorChannel channel){
+    public void saveChannel(ProgramCreatorChannel channel) {
         JsonObject data = channel.getData();
         JsonObject finished = new JsonObject();
         finished.add("channel", new JsonPrimitive(channel.getMessage().getChannel().getIdLong()));
@@ -87,39 +99,28 @@ public class ProgramCreatorManager extends ListenerAdapter {
         finished.add("maxStageReached", new JsonPrimitive(channel.getMaxStage()));
         finished.add("stage", new JsonPrimitive(channel.getStage()));
         finished.add("data", data);
-        object.add(String.valueOf(channel.getUser().getIdLong()), finished);
-        save();
+        file.setElement(String.valueOf(channel.getUser().getIdLong()), finished);
     }
 
-    public void deleteChannel(ProgramCreatorChannel channel){
-        object.remove(channel.getUser().getId());
-        save();
+    public void deleteChannel(ProgramCreatorChannel channel) {
+        file.removeElement(channel.getUser().getId());
     }
 
-    private void save(){
-        try {
-            FileWriter file = new FileWriter("./data/program_creator.json");
-            file.write(new GsonBuilder().setPrettyPrinting().create().toJson(object));
-            file.flush();
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
-        if(e.getMessageIdLong() == message.getIdLong() && e.getComponentId().equalsIgnoreCase("start")){
-            ProgramCreatorChannel channel = ProgramCreatorChannel.getChannelByUser(e.getUser().getIdLong());
-            if(channel == null){
-                e.deferReply().setEphemeral(true).queue();
-                new ProgramCreatorChannel(main, e.getUser(), e.getHook());
-            }
-            else {
-                EmbedMessage msg = new EmbedMessage(Main.getInstance().getGuild().getJDA().getSelfUser(),
-                        Main.getInstance().getLanguageManager().get("program-creator.already-creating.title"),
-                        Main.getInstance().getLanguageManager().get("program-creator.already-creating.description"), Main.getInstance().getErrorColor());
-                e.replyEmbeds(msg.build()).setEphemeral(true).queue();
+    private class ButtonListener extends ListenerAdapter {
+        @Override
+        public void onButtonInteraction(@NotNull ButtonInteractionEvent e) {
+            if (e.getMessageIdLong() == message.getIdLong() && e.getComponentId().equalsIgnoreCase("start")) {
+                ProgramCreatorChannel channel = ProgramCreatorChannel.getChannelByUser(e.getUser().getIdLong());
+                if (channel == null) {
+                    e.deferReply().setEphemeral(true).queue();
+                    new ProgramCreatorChannel(bot, e.getUser(), e.getHook());
+                }
+                else {
+                    EmbedMessage msg = new EmbedMessage(bot, bot.getGuild().getJDA().getSelfUser(),
+                            bot.getLanguageManager().get("program-creator.already-creating.title"),
+                            bot.getLanguageManager().get("program-creator.already-creating.description"), bot.getErrorColor());
+                    e.replyEmbeds(msg.build()).setEphemeral(true).queue();
+                }
             }
         }
     }

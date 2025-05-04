@@ -1,10 +1,10 @@
-package dev.acrispycookie.managers.todo;
+package dev.acrispycookie.todo;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import dev.acrispycookie.Main;
+import dev.acrispycookie.KoukBot;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,27 +12,30 @@ import java.util.ArrayList;
 
 public class ToDoChannel {
 
-    long userId;
-    long channelId;
-    ArrayList<ToDo> toDos = new ArrayList<>();
-    static ArrayList<ToDoChannel> channels = new ArrayList<>();
+    private final KoukBot bot;
+    private final long userId;
+    private final long channelId;
+    private ArrayList<ToDo> toDos = new ArrayList<>();
+    private final static ArrayList<ToDoChannel> channels = new ArrayList<>();
 
-    public ToDoChannel(long userId, long channelId){
+    public ToDoChannel(KoukBot bot, long userId, long channelId) {
+        this.bot = bot;
         this.userId = userId;
         this.channelId = channelId;
         saveChannel();
         channels.add(this);
     }
 
-    public ToDoChannel(long userId, long channelId, ArrayList<ToDo> toDos){
+    public ToDoChannel(KoukBot bot, long userId, long channelId, ArrayList<ToDo> toDos) {
+        this.bot = bot;
         this.userId = userId;
         this.channelId = channelId;
         this.toDos = toDos;
         channels.add(this);
     }
 
-    private void saveChannel(){
-        JsonObject userObject = Main.getInstance().getToDoManager().getJson();
+    private void saveChannel() {
+        JsonObject userObject = bot.getToDoManager().getJson();
         JsonObject toAdd = new JsonObject();
         toAdd.add("userId", new JsonPrimitive(userId));
         toAdd.add("toDos", new JsonArray());
@@ -47,48 +50,48 @@ public class ToDoChannel {
         }
     }
 
-    public long getChannelId(){
+    public long getChannelId() {
         return channelId;
     }
 
-    public long getUserId(){
+    public long getUserId() {
         return userId;
     }
 
-    public void addToDo(ToDo toDo){
+    public void addToDo(ToDo toDo) {
         toDos.add(toDo);
     }
 
-    public ToDo getByMessageId(long messageId){
-        for(ToDo toDo : toDos){
-            if(toDo.getMessageId() == messageId){
+    public ToDo getByMessageId(long messageId) {
+        for (ToDo toDo : toDos) {
+            if (toDo.getMessageId() == messageId) {
                 return toDo;
             }
         }
         return null;
     }
 
-    public static ToDoChannel getByChannelId(long channelId){
-        for(ToDoChannel channel : channels) {
-            if(channel.getChannelId() == channelId){
+    public static ToDoChannel getByChannelId(long channelId) {
+        for (ToDoChannel channel : channels) {
+            if (channel.getChannelId() == channelId) {
                 return channel;
             }
         }
         return null;
     }
 
-    public static boolean isToDoChannel(long channelId){
-        for(ToDoChannel channel : channels){
-            if(channel.getChannelId() == channelId){
+    public static boolean isToDoChannel(long channelId) {
+        for (ToDoChannel channel : channels) {
+            if (channel.getChannelId() == channelId) {
                 return true;
             }
         }
         return false;
     }
 
-    public static ToDoChannel getChannelByUser(long userId){
-        for(ToDoChannel channel : channels){
-            if(channel.getUserId() == userId){
+    public static ToDoChannel getChannelByUser(long userId) {
+        for (ToDoChannel channel : channels) {
+            if (channel.getUserId() == userId) {
                 return channel;
             }
         }

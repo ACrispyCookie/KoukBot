@@ -44,7 +44,7 @@ public enum EnumLesson {
     String url[];
     String emoji;
 
-    EnumLesson(String name, String[] url, String emoji){
+    EnumLesson(String name, String[] url, String emoji) {
         this.name = name;
         this.url = url;
         this.emoji = emoji;
@@ -58,11 +58,11 @@ public enum EnumLesson {
         return emoji;
     }
 
-    public String getUrl(int index){
+    public String getUrl(int index) {
         return this.url[index];
     }
 
-    public static EnumLesson get(int index){
+    public static EnumLesson get(int index) {
         return values()[index];
     }
 }

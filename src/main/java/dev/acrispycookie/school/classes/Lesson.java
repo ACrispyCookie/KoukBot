@@ -1,15 +1,19 @@
 package dev.acrispycookie.school.classes;
 
+import dev.acrispycookie.KoukBot;
+
 public abstract class Lesson {
 
-    long timeToAnnouce;
+    protected final KoukBot bot;
+    protected final long timeToAnnouce;
     public abstract void startAnnouncements();
 
-    public Lesson(long timeToAnnounce){
+    public Lesson(KoukBot bot, long timeToAnnounce) {
+        this.bot = bot;
         this.timeToAnnouce = timeToAnnounce;
     }
 
-    public long getTimeToAnnouce(){
+    public long getTimeToAnnouce() {
         return timeToAnnouce;
     }
 
