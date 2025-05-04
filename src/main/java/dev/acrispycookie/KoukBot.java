@@ -27,6 +27,7 @@ import java.awt.*;
 public class KoukBot {
 
     private JDA bot;
+    private final JDABuilder builder = JDABuilder.createDefault("");
     private static final KoukBot instance = new KoukBot();
 
     public static void main(String[] args) {
@@ -40,7 +41,7 @@ public class KoukBot {
     private void load() {
         for (Manager m : Manager.values()) {
             m.getFeatureManager().load();
-            if (m == Manager.USERDATA_MANAGER)
+            if (m == Manager.MUSIC_MANAGER)
                 instance.startBot();
         }
     }
@@ -75,15 +76,15 @@ public class KoukBot {
         Console.println("Starting discord bot...");
         try {
             ConfigManager configManager = (ConfigManager) Manager.CONFIG_MANAGER.getFeatureManager();
-            bot = JDABuilder.createDefault(configManager.get("bot.botToken"))
+            bot = builder.setToken(configManager.get("bot.botToken"))
                     .addEventListeners(new BotCommand(instance) { @Override public void execute(SlashCommandInteractionEvent e, String label, Member m) { } })
                     .addEventListeners(new XPGainEvent())
                     //.addEventListeners(new StatusListener(instance))
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .enableCache(CacheFlag.ACTIVITY)
-                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                    .enableIntents(GatewayIntent.GUILD_PRESENCES)
+                    .enableCache(CacheFlag.ACTIVITY, CacheFlag.VOICE_STATE)
+                    .enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_VOICE_STATES)
                     .setActivity(Activity.of(Activity.ActivityType.valueOf(configManager.get("bot.activity.type")), configManager.get("bot.activity.status")))
                     .build();
             bot.awaitReady();
@@ -163,6 +164,10 @@ public class KoukBot {
         return bot;
     }
 
+    public JDABuilder getBuilder() {
+        return builder;
+    }
+
     public static KoukBot getCmdInstance() {
         return instance;
     }
@@ -171,8 +176,8 @@ public class KoukBot {
         CONFIG_MANAGER(new ConfigManager(instance, "CONFIG_MANAGER")),
         LANGUAGE_MANAGER(new LanguageManager(instance, "LANGUAGE_MANAGER")),
         USERDATA_MANAGER(new UserDataManager(instance, "USERDATA_MANAGER")),
-        LEADERBOARD_MANAGER(new LeaderboardManager(instance, "LEADERBOARD_MANAGER")),
         MUSIC_MANAGER(new MusicManager(instance, "MUSIC_MANAGER")),
+        LEADERBOARD_MANAGER(new LeaderboardManager(instance, "LEADERBOARD_MANAGER")),
         PERMISSION_MANAGER(new PermissionManager(instance, "PERMISSION_MANAGER")),
         TODO_MANAGER(new ToDoManager(instance, "TODO_MANAGER")),
         SCHOOL_MANAGER(new SchoolManager(instance, "SCHOOL_MANAGER")),

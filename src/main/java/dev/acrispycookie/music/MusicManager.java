@@ -8,6 +8,7 @@ import dev.arbjerg.lavalink.client.event.TrackEndEvent;
 import dev.arbjerg.lavalink.client.loadbalancing.RegionGroup;
 import dev.arbjerg.lavalink.client.loadbalancing.builtin.VoiceRegionPenaltyProvider;
 import dev.arbjerg.lavalink.client.player.*;
+import dev.arbjerg.lavalink.libraries.jda.JDAVoiceUpdateListener;
 import dev.arbjerg.lavalink.protocol.v4.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -42,8 +43,9 @@ public class MusicManager extends FeatureManager {
         long startTime = System.currentTimeMillis();
         this.scheduler = new TrackScheduler();
         this.msgHelper = new PlayerMessageHelper(bot, this, scheduler);
-        Console.println("Starting lavalink client...");
+        bot.getBuilder().addEventListeners(new MusicPlayerListener(bot));
 
+        Console.println("Starting lavalink client...");
         String token = bot.getConfigManager().get("bot.botToken");
         String uri = bot.getConfigManager().get("lavalink-client.uri");
         String password = bot.getConfigManager().get("lavalink-client.password");
@@ -52,7 +54,7 @@ public class MusicManager extends FeatureManager {
         );
         client.getLoadBalancer().addPenaltyProvider(new VoiceRegionPenaltyProvider());
 
-        LavalinkNode node = client.addNode(new NodeOptions.Builder().setName("localhost")
+        LavalinkNode node = client.addNode(new NodeOptions.Builder().setName("KoukBot")
                 .setServerUri(URI.create(uri))
                 .setPassword(password)
                 .setRegionFilter(RegionGroup.EUROPE)
@@ -63,8 +65,9 @@ public class MusicManager extends FeatureManager {
             if (event.getEndReason() == Message.EmittedEvent.TrackEndEvent.AudioTrackEndReason.FINISHED)
                 onTrackEnd();
         });
-
         Console.println("Lavalink client has been loaded successfully! Took " + (System.currentTimeMillis() - startTime) + "ms");
+
+        bot.getBuilder().setVoiceDispatchInterceptor(new JDAVoiceUpdateListener(client));
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import dev.acrispycookie.Console;
 import dev.acrispycookie.KoukBot;
 import dev.acrispycookie.levelsystem.LevelUser;
+import dev.acrispycookie.levelsystem.XPGainEvent;
 import dev.acrispycookie.utility.ConfigurationFile;
 
 import java.awt.*;
